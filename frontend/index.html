@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>命轨</title>
+    <link rel="stylesheet" href="./src/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Rust / JavaScript</p>
+        <h1>命轨</h1>
+      </div>
+      <div class="status-pill" id="health-pill">
+        <span class="status-dot"></span>
+        <span id="health-label">未连接</span>
+      </div>
+    </header>
+
+    <main class="workspace">
+      <section class="panel control-panel" aria-labelledby="control-title">
+        <div class="panel-heading">
+          <h2 id="control-title">后端连接</h2>
+          <button id="refresh-button" type="button">刷新</button>
+        </div>
+        <label class="field">
+          <span>API 地址</span>
+          <input id="api-base" type="url" autocomplete="off" />
+        </label>
+      </section>
+
+      <section class="panel data-panel" aria-labelledby="data-title">
+        <div class="panel-heading">
+          <h2 id="data-title">农历数据</h2>
+          <span id="data-range">等待数据</span>
+        </div>
+        <dl class="metric-grid">
+          <div>
+            <dt>年份数</dt>
+            <dd id="year-count">--</dd>
+          </div>
+          <div>
+            <dt>节气数</dt>
+            <dd id="term-count">--</dd>
+          </div>
+          <div>
+            <dt>版本</dt>
+            <dd id="data-version">--</dd>
+          </div>
+          <div>
+            <dt>体积</dt>
+            <dd id="data-bytes">--</dd>
+          </div>
+        </dl>
+        <p class="source-path" id="source-path">--</p>
+      </section>
+    </main>
+
+    <script src="./src/main.js"></script>
+  </body>
+</html>
+
