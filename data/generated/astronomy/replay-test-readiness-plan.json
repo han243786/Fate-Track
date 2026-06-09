@@ -1,0 +1,50 @@
+{
+  "replay_test_readiness_plan_id": "m9-replay-test-materialization-readiness-v1",
+  "status": "readiness_only",
+  "replay_policy": "data/generated/astronomy/replay-policy-draft.md",
+  "precloseout_audit_id": "m9-astronomy-precloseout-audit-v1",
+  "comparison_runner_plan_id": "m9-android-astronomy-comparison-runner-plan-v1",
+  "android_algorithm_version": "android-date-layer-v1",
+  "android_ruleset_id": "ft-date-layer-android-v1",
+  "required_before_replay_tests": [
+    "existing chart snapshots preserve algo_version",
+    "existing chart snapshots preserve ruleset_id",
+    "android-date-layer-v1 replay path remains available",
+    "generated astronomy rows exist before comparison replay",
+    "comparison runner produces classified differences",
+    "replacement ADR exists before default behavior changes"
+  ],
+  "readiness_controls": [
+    {
+      "id": "preserve-algo-version",
+      "status": "required_not_executed"
+    },
+    {
+      "id": "preserve-ruleset-id",
+      "status": "required_not_executed"
+    },
+    {
+      "id": "android-replay-available",
+      "status": "required_not_executed"
+    },
+    {
+      "id": "comparison-replay-ready",
+      "status": "blocked_until_generated_rows"
+    },
+    {
+      "id": "replacement-adr",
+      "status": "required_not_executed"
+    }
+  ],
+  "generated_artifact_status": "boundary_placeholder",
+  "generated_artifact_materialization_id": "m10-generated-artifact-materialization-v1",
+  "generated_artifact_note": "Generated artifacts exist as boundary placeholders. Replay tests cannot be executed until real astronomical data is computed and the replacement ADR exists.",
+  "forbidden_in_readiness_stage": [
+    "execute replay tests",
+    "recompute old snapshots with astronomy engine",
+    "change default runtime behavior",
+    "replace android-date-layer-v1",
+    "mark replay policy accepted",
+    "claim astronomy-engine supported"
+  ]
+}

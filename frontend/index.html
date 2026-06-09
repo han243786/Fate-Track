@@ -3,25 +3,25 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>命轨</title>
+    <title>命轨工作台</title>
     <link rel="stylesheet" href="./src/styles.css" />
   </head>
   <body>
     <header class="topbar">
       <div>
-        <p class="eyebrow">Rust / JavaScript</p>
+        <p class="eyebrow">Rust 后端 / JavaScript 前端</p>
         <h1>命轨</h1>
       </div>
       <div class="status-pill" id="health-pill">
         <span class="status-dot"></span>
-        <span id="health-label">未连接</span>
+        <span id="health-label">离线</span>
       </div>
     </header>
 
     <main class="workspace">
       <section class="panel control-panel" aria-labelledby="control-title">
         <div class="panel-heading">
-          <h2 id="control-title">后端连接</h2>
+          <h2 id="control-title">连接</h2>
           <button id="refresh-button" type="button">刷新</button>
         </div>
         <label class="field">
@@ -30,10 +30,121 @@
         </label>
       </section>
 
+      <section class="panel form-panel" aria-labelledby="chart-form-title">
+        <div class="panel-heading">
+          <h2 id="chart-form-title">排盘输入</h2>
+          <span class="surface-badge">已支持</span>
+        </div>
+        <div class="form-grid">
+          <label class="field">
+            <span>日期</span>
+            <input id="chart-date" type="date" />
+          </label>
+          <label class="field">
+            <span>时间</span>
+            <input id="chart-time" type="time" />
+          </label>
+          <label class="field">
+            <span>时区</span>
+            <input id="chart-timezone" type="text" autocomplete="off" />
+          </label>
+          <label class="field">
+            <span>精度</span>
+            <select id="chart-time-precision">
+              <option value="exact">精确</option>
+              <option value="unknown">未知</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>案例标题</span>
+            <input id="case-title" type="text" autocomplete="off" />
+          </label>
+          <label class="field">
+            <span>标签</span>
+            <input id="case-tags" type="text" autocomplete="off" />
+          </label>
+          <label class="field full-field">
+            <span>私密备注</span>
+            <textarea id="case-note" rows="3"></textarea>
+          </label>
+        </div>
+        <div class="action-row">
+          <button id="chart-run-button" type="button">排盘</button>
+          <button id="case-save-button" type="button">保存案例</button>
+          <button id="share-create-button" type="button">分享预览</button>
+        </div>
+      </section>
+
+      <section class="panel chart-panel" aria-labelledby="chart-title">
+        <div class="panel-heading">
+          <h2 id="chart-title">八字排盘</h2>
+          <span class="probe-status" id="chart-status">空闲</span>
+        </div>
+        <dl class="pillar-grid" id="pillar-grid"></dl>
+        <div class="status-list" id="chart-warnings"></div>
+      </section>
+
+      <section class="panel analysis-panel" aria-labelledby="analysis-title">
+        <div class="panel-heading">
+          <h2 id="analysis-title">结构化分析</h2>
+          <span class="surface-badge">已支持</span>
+        </div>
+        <div class="metric-columns" id="analysis-metrics"></div>
+        <div class="analysis-cards" id="analysis-cards"></div>
+      </section>
+
+      <section class="panel case-panel" aria-labelledby="case-title-heading">
+        <div class="panel-heading">
+          <h2 id="case-title-heading">案例</h2>
+          <span class="surface-badge restricted">受限</span>
+        </div>
+        <div id="case-list" class="case-list"></div>
+      </section>
+
+      <section class="panel share-panel" aria-labelledby="share-title">
+        <div class="panel-heading">
+          <h2 id="share-title">分享预览</h2>
+          <span class="surface-badge restricted">受限</span>
+        </div>
+        <div id="share-preview" class="share-preview"></div>
+      </section>
+
+      <section class="panel calendar-panel" aria-labelledby="calendar-title">
+        <div class="panel-heading">
+          <h2 id="calendar-title">日期层</h2>
+          <span class="probe-status" id="calendar-status">空闲</span>
+        </div>
+        <div class="probe-control">
+          <label class="field compact-field">
+            <span>日期</span>
+            <input id="calendar-date" type="date" />
+          </label>
+          <button id="calendar-query-button" type="button">查询</button>
+        </div>
+        <dl class="probe-grid">
+          <div>
+            <dt>公历</dt>
+            <dd id="calendar-gregorian">--</dd>
+          </div>
+          <div>
+            <dt>农历</dt>
+            <dd id="calendar-lunar">--</dd>
+          </div>
+          <div>
+            <dt>干支</dt>
+            <dd id="calendar-ganzhi">--</dd>
+          </div>
+          <div>
+            <dt>规则集</dt>
+            <dd id="calendar-ruleset">--</dd>
+          </div>
+        </dl>
+      </section>
+
       <section class="panel data-panel" aria-labelledby="data-title">
         <div class="panel-heading">
-          <h2 id="data-title">农历数据</h2>
-          <span id="data-range">等待数据</span>
+          <h2 id="data-title">数据源</h2>
+          <span id="data-range">等待中</span>
         </div>
         <dl class="metric-grid">
           <div>
@@ -49,15 +160,21 @@
             <dd id="data-version">--</dd>
           </div>
           <div>
-            <dt>体积</dt>
+            <dt>大小</dt>
             <dd id="data-bytes">--</dd>
           </div>
         </dl>
         <p class="source-path" id="source-path">--</p>
       </section>
+
+      <section class="panel capability-panel" aria-labelledby="capability-title">
+        <div class="panel-heading">
+          <h2 id="capability-title">能力边界</h2>
+        </div>
+        <ul class="capability-list" id="capability-list"></ul>
+      </section>
     </main>
 
-    <script src="./src/main.js"></script>
+    <script type="module" src="./src/main.js"></script>
   </body>
 </html>
-

@@ -1,0 +1,56 @@
+{
+  "implementation_entry_id": "m10-generator-implementation-entry-v1",
+  "milestone": "M10",
+  "loop": "LOOP-038",
+  "work_package": "M10-WP1",
+  "status": "guarded_entrypoint_only",
+  "capability": "astronomy-engine",
+  "capability_status": "target",
+  "source_policy_id": "m9-astronomy-source-stack-v1",
+  "generator_contract_id": "m9-astronomy-generator-contract-v1",
+  "manifest_id": "astronomy-engine-v0-draft",
+  "non_dry_run_entrypoint_available": true,
+  "command": "powershell -NoProfile -ExecutionPolicy Bypass -File tools/generate-astronomy-tables.ps1 -ProjectRoot . -Manifest data/generated/astronomy/manifests/astronomy-engine-v0-draft.json -PrepareImplementation",
+  "guard_flags": [
+    "AllowSourceSnapshotUse",
+    "AllowArtifactWrite",
+    "AllowManifestUpdate"
+  ],
+  "guard_flag_policy": {
+    "default": "all_false",
+    "allow_source_snapshot_use": "blocked_until_source_snapshot_manifest_exists",
+    "allow_artifact_write": "blocked_until_source_snapshot_manifest_and_generation_adapter_exist",
+    "allow_manifest_update": "blocked_until_artifact_hashes_and_comparison_evidence_exist"
+  },
+  "source_snapshot_manifest": {
+    "path": "data/generated/astronomy/source-snapshots/source-snapshot-manifest.json",
+    "status": "metadata_only_no_source_payload",
+    "required_before_generation": true
+  },
+  "block_reasons": [
+    "source snapshot payloads are not materialized",
+    "local generation adapter is not implemented",
+    "planned artifacts do not exist",
+    "sha256 hashes do not exist",
+    "comparison report is not completed",
+    "golden rows are not generated",
+    "replay tests are not executed",
+    "replacement ADR is missing"
+  ],
+  "entrypoint_result_policy": {
+    "writes_performed": false,
+    "hashes_computed": 0,
+    "acceptance_status_changed": false,
+    "runtime_behavior_changed": false,
+    "generated_artifacts_accepted": false
+  },
+  "forbidden_until_later_evidence": [
+    "write generated artifact files",
+    "compute hashes for generated artifacts",
+    "mark manifest accepted",
+    "change calendar-date-query runtime behavior",
+    "change chart-create runtime behavior",
+    "replace android-date-layer-v1",
+    "claim astronomy-engine supported"
+  ]
+}

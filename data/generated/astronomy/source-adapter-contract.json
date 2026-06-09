@@ -1,0 +1,51 @@
+{
+  "source_adapter_contract_id": "m9-astronomy-source-adapter-contract-v1",
+  "status": "contract_only",
+  "source_policy_id": "m9-astronomy-source-stack-v1",
+  "generator_contract_id": "m9-astronomy-generator-contract-v1",
+  "adapters": [
+    {
+      "source_id": "gb-t-33661-2017",
+      "adapter_role": "calendar-rule-reference",
+      "input_mode": "manual-reference-and-rule-audit",
+      "runtime_dependency": false,
+      "output_claim_allowed": false
+    },
+    {
+      "source_id": "jpl-horizons-api",
+      "adapter_role": "online-validation-sample-source",
+      "input_mode": "explicit-query-snapshot-required-before-acceptance",
+      "runtime_dependency": false,
+      "output_claim_allowed": false
+    },
+    {
+      "source_id": "iau-sofa-ansi-c",
+      "adapter_role": "standards-routine-target",
+      "input_mode": "future-local-build-or-port-contract",
+      "runtime_dependency": false,
+      "output_claim_allowed": false
+    },
+    {
+      "source_id": "naif-cspice",
+      "adapter_role": "offline-reproducibility-candidate",
+      "input_mode": "future-kernel-and-toolkit-contract",
+      "runtime_dependency": false,
+      "output_claim_allowed": false
+    }
+  ],
+  "required_before_generated_acceptance": [
+    "adapter input snapshots or local routine versions recorded",
+    "adapter provenance recorded in manifest source_references",
+    "validation sample timestamps recorded",
+    "offline dependency versions recorded when used",
+    "no runtime network dependency"
+  ],
+  "forbidden_in_contract_stage": [
+    "call external API during full project gate",
+    "treat source availability as generated data",
+    "make Horizons a runtime dependency",
+    "claim SOFA or SPICE integration",
+    "replace android-date-layer-v1",
+    "claim astronomy-engine supported"
+  ]
+}

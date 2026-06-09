@@ -1,0 +1,130 @@
+{
+  "generated_artifact_materialization_preflight_id": "m10-generated-artifact-materialization-preflight-v1",
+  "milestone": "M10",
+  "loop": "LOOP-055",
+  "work_package": "M10-WP3/M10-WP4",
+  "status": "preflight_only",
+  "generator_contract_id": "m9-astronomy-generator-contract-v1",
+  "artifact_writer_plan_id": "m9-astronomy-artifact-writer-plan-v1",
+  "source_payload_materialization_policy_id": "m10-source-payload-materialization-policy-v1",
+  "source_snapshot_manifest_id": "m10-source-snapshot-manifest-v1",
+  "source_payload_prerequisites": [
+    {
+      "source_id": "naif-cspice",
+      "payload_path": "data/generated/astronomy/source-snapshots/payloads/naif-cspice-kernel-boundary.json",
+      "sha256": "4c946457eb38425feb7bf87fce47583cd75456447c33f5152f4890f786afe5a2",
+      "status": "materialized"
+    },
+    {
+      "source_id": "iau-sofa-ansi-c",
+      "payload_path": "data/generated/astronomy/source-snapshots/payloads/iau-sofa-routine-version.json",
+      "sha256": "436e197eb7e5aa24e22a493b6d7a79214ff4d7e5255b8f7763a4fbb3385d556f",
+      "status": "materialized"
+    },
+    {
+      "source_id": "jpl-horizons-api",
+      "payload_path": "data/generated/astronomy/source-snapshots/payloads/jpl-horizons-validation-samples.json",
+      "sha256": "acddbee906bd4540795993a828b9308af5ab964c002739929e44e28249b444f9",
+      "status": "materialized"
+    },
+    {
+      "source_id": "gb-t-33661-2017",
+      "payload_path": "data/generated/astronomy/source-snapshots/payloads/gb-t-33661-2017-rule-reference.json",
+      "sha256": "7145ecb921d55580eac71d266b31f961b1b9e497cda805c942647737aa764f31",
+      "status": "materialized"
+    }
+  ],
+  "planned_generated_artifacts": [
+    {
+      "path": "data/generated/astronomy/out/solar-terms-1901-2100.json",
+      "kind": "solar-term-crossing-table",
+      "status": "not_generated",
+      "hash_status": "not_computed",
+      "checks": [
+        "json array of solar-term crossing entries",
+        "each entry has gregorian_utc, term_name, term_index, jd_tt",
+        "range 1901-2100 inclusive"
+      ]
+    },
+    {
+      "path": "data/generated/astronomy/out/new-moons-1901-2100.json",
+      "kind": "new-moon-table",
+      "status": "not_generated",
+      "hash_status": "not_computed",
+      "checks": [
+        "json array of new-moon entries",
+        "each entry has gregorian_utc, jd_tt",
+        "range 1901-2100 inclusive"
+      ]
+    },
+    {
+      "path": "data/generated/astronomy/out/lunar-calendar-1901-2100.json",
+      "kind": "derived-chinese-calendar-table",
+      "status": "not_generated",
+      "hash_status": "not_computed",
+      "checks": [
+        "json array of lunar-calendar month entries",
+        "each year has 12-13 month entries with day counts and leap flag",
+        "range 1901-2100 inclusive"
+      ]
+    },
+    {
+      "path": "data/generated/astronomy/out/android-comparison-1901-2100.json",
+      "kind": "android-vs-astronomy-comparison",
+      "status": "not_generated",
+      "hash_status": "not_computed",
+      "checks": [
+        "json array of comparison entries",
+        "each entry classifies difference by taxonomy category",
+        "range 1901-2100 inclusive"
+      ]
+    }
+  ],
+  "output_directory_policy": {
+    "path": "data/generated/astronomy/out",
+    "current_status": "not_created",
+    "create_allowed_in_this_loop": false,
+    "next_loop_write_scope": "planned_artifacts_only"
+  },
+  "artifact_write_policy": {
+    "write_allowed_in_this_loop": false,
+    "next_loop_write_scope": "planned_artifacts_only",
+    "canonical_json_required": true,
+    "hash_algorithm": "sha256",
+    "hash_allowed_in_this_loop": false,
+    "next_loop_hash_scope": "generated_artifacts_only"
+  },
+  "preflight_checks": [
+    "all 4 source payload prerequisites are materialized with correct sha256",
+    "generator contract remains contract_only",
+    "artifact writer plan remains dry_run_only",
+    "output directory does not exist",
+    "no generated artifact files exist",
+    "no generated artifact hashes computed",
+    "draft manifest remains not_accepted",
+    "runtime behavior unchanged",
+    "android-date-layer-v1 remains accepted-current",
+    "astronomy-engine remains target"
+  ],
+  "materialization_allowed_after_preflight": {
+    "generated_astronomy_artifacts": true,
+    "generated_artifact_hashes": true,
+    "artifact_count": 4,
+    "artifact_scope": "planned_artifacts_only",
+    "draft_manifest_acceptance_change": false,
+    "runtime_behavior_change": false,
+    "android_baseline_replacement": false,
+    "capability_promotion": false
+  },
+  "forbidden_in_preflight_stage": [
+    "create output directory",
+    "write generated astronomy artifact files",
+    "compute generated artifact hashes",
+    "mark draft manifest artifact_hashes present",
+    "mark draft manifest accepted",
+    "change calendar-date-query runtime behavior",
+    "change chart-create runtime behavior",
+    "replace android-date-layer-v1",
+    "claim astronomy-engine supported"
+  ]
+}

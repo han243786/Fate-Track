@@ -1,0 +1,34 @@
+{
+  "comparison_runner_plan_id": "m9-android-astronomy-comparison-runner-plan-v1",
+  "status": "dry_run_only",
+  "comparison_schema_id": "fate-track-android-astronomy-comparison-v1",
+  "artifact_writer_plan_id": "m9-astronomy-artifact-writer-plan-v1",
+  "android_algorithm_version": "android-date-layer-v1",
+  "android_ruleset_id": "ft-date-layer-android-v1",
+  "future_comparison_artifact": "data/generated/astronomy/out/android-comparison-1901-2100.json",
+  "required_bindings": [
+    "android_algorithm_version",
+    "android_ruleset_id",
+    "manifest_id",
+    "source_policy_id",
+    "generated_range",
+    "difference_taxonomy"
+  ],
+  "generated_artifact_status": "boundary_placeholder",
+  "generated_artifact_materialization_id": "m10-generated-artifact-materialization-v1",
+  "generated_artifact_note": "The comparison output artifact exists as a boundary placeholder with empty entries. Real comparison requires astronomically computed data in the astronomy artifacts.",
+  "dry_run_result_policy": {
+    "rows_compared": 0,
+    "difference_rows": 0,
+    "writes_performed": false,
+    "accepted_evidence": false
+  },
+  "forbidden_in_dry_run": [
+    "read generated astronomy rows",
+    "write comparison artifact",
+    "classify real differences",
+    "mark comparison report completed",
+    "replace android-date-layer-v1",
+    "claim astronomy-engine supported"
+  ]
+}

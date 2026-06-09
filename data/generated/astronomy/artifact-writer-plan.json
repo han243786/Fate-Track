@@ -1,0 +1,43 @@
+{
+  "artifact_writer_plan_id": "m9-astronomy-artifact-writer-plan-v1",
+  "status": "dry_run_only",
+  "generator_contract_id": "m9-astronomy-generator-contract-v1",
+  "source_adapter_contract_id": "m9-astronomy-source-adapter-contract-v1",
+  "output_directory": "data/generated/astronomy/out",
+  "hash_algorithm": "sha256",
+  "write_mode": "no_write_preview",
+  "planned_artifacts": [
+    {
+      "path": "data/generated/astronomy/out/solar-terms-1901-2100.json",
+      "kind": "solar-term-crossing-table",
+      "hash_status": "not_computed",
+      "write_status": "not_written"
+    },
+    {
+      "path": "data/generated/astronomy/out/new-moons-1901-2100.json",
+      "kind": "new-moon-table",
+      "hash_status": "not_computed",
+      "write_status": "not_written"
+    },
+    {
+      "path": "data/generated/astronomy/out/lunar-calendar-1901-2100.json",
+      "kind": "derived-chinese-calendar-table",
+      "hash_status": "not_computed",
+      "write_status": "not_written"
+    },
+    {
+      "path": "data/generated/astronomy/out/android-comparison-1901-2100.json",
+      "kind": "android-vs-astronomy-comparison",
+      "hash_status": "not_computed",
+      "write_status": "not_written"
+    }
+  ],
+  "forbidden_in_dry_run": [
+    "create output directory",
+    "write artifact file",
+    "compute hash for nonexistent artifact",
+    "mark manifest artifact_hashes present",
+    "mark manifest accepted",
+    "claim generated rows exist"
+  ]
+}

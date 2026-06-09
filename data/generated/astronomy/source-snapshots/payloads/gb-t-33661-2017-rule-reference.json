@@ -1,0 +1,71 @@
+{
+  "payload_id": "m10-gb-t-33661-rule-reference-payload-v1",
+  "source_id": "gb-t-33661-2017",
+  "payload_kind": "calendar-rule-reference",
+  "source_reference": {
+    "name": "GB/T 33661-2017 Calculation and promulgation of the Chinese calendar",
+    "standard_id": "GB/T 33661-2017",
+    "official_url": "https://std.samr.gov.cn/gb/search/gbDetailed?id=71F772D817FDD3A7E05397BE0A0AB82A",
+    "source_role": "modern Chinese calendar rule reference",
+    "runtime_dependency": false,
+    "output_claim_allowed": false
+  },
+  "rule_scope": {
+    "calendar_rule_reference": {
+      "scope": "modern Chinese calendar calculation and publication governance",
+      "capture_status": "reference_boundary_materialized_no_rule_text_copied"
+    },
+    "leap_month_rule_reference": {
+      "scope": "future generated astronomy validation must classify leap-month handling against the selected standard reference",
+      "capture_status": "reference_boundary_materialized_no_rule_text_copied"
+    },
+    "solar_term_rule_reference": {
+      "scope": "future generated astronomy validation must classify solar-term boundary handling against the selected standard reference",
+      "capture_status": "reference_boundary_materialized_no_rule_text_copied"
+    },
+    "range_policy": {
+      "start_year": 1901,
+      "end_year": 2100,
+      "policy": "match-v1-official-validation-range-before-expansion"
+    }
+  },
+  "captured_rules": [
+    {
+      "rule_reference_id": "gb-t-33661-calendar-rule-reference",
+      "topic": "calendar calculation and publication reference",
+      "capture_status": "source_reference_only",
+      "local_rule_text_present": false,
+      "generated_artifact_allowed": false,
+      "runtime_dependency": false,
+      "output_claim_allowed": false
+    },
+    {
+      "rule_reference_id": "gb-t-33661-leap-month-reference",
+      "topic": "leap month rule reference boundary",
+      "capture_status": "source_reference_only",
+      "local_rule_text_present": false,
+      "generated_artifact_allowed": false,
+      "runtime_dependency": false,
+      "output_claim_allowed": false
+    },
+    {
+      "rule_reference_id": "gb-t-33661-solar-term-reference",
+      "topic": "solar term rule reference boundary",
+      "capture_status": "source_reference_only",
+      "local_rule_text_present": false,
+      "generated_artifact_allowed": false,
+      "runtime_dependency": false,
+      "output_claim_allowed": false
+    }
+  ],
+  "provenance": {
+    "source_name": "GB/T 33661-2017 Calculation and promulgation of the Chinese calendar",
+    "official_url": "https://std.samr.gov.cn/gb/search/gbDetailed?id=71F772D817FDD3A7E05397BE0A0AB82A",
+    "source_snapshot_manifest_id": "m10-source-snapshot-manifest-v1",
+    "selected_gb_t_payload_materialization_preflight_id": "m10-gb-t-payload-materialization-preflight-v1",
+    "source_stack_decision": "docs/decisions/0016-m9-astronomy-source-stack.md",
+    "capture_note": "This payload materializes only the GB/T 33661-2017 rule-reference boundary. It does not copy standard text, does not implement Chinese-calendar rules, does not write generated astronomy outputs, does not change runtime behavior, and does not replace the Android date layer."
+  },
+  "hash_algorithm": "sha256",
+  "created_at_utc": "2026-06-09T00:00:00Z"
+}

@@ -1,0 +1,73 @@
+{
+  "source_snapshot_manifest_plan_id": "m10-source-snapshot-manifest-plan-v1",
+  "milestone": "M10",
+  "loop": "LOOP-040",
+  "work_package": "M10-WP2",
+  "status": "manifest_materialized_metadata_only",
+  "schema_id": "m10-source-snapshot-manifest-schema-v1",
+  "manifest_path": "data/generated/astronomy/source-snapshots/source-snapshot-manifest.json",
+  "manifest_status": "metadata_only_no_source_payload",
+  "source_policy_id": "m9-astronomy-source-stack-v1",
+  "generator_contract_id": "m9-astronomy-generator-contract-v1",
+  "source_adapter_contract_id": "m9-astronomy-source-adapter-contract-v1",
+  "snapshot_range": {
+    "start_year": 1901,
+    "end_year": 2100,
+    "policy": "match-v1-official-validation-range-before-expansion"
+  },
+  "planned_sources": [
+    {
+      "source_id": "gb-t-33661-2017",
+      "adapter_role": "calendar-rule-reference",
+      "snapshot_mode": "manual-reference-and-rule-audit",
+      "local_materialization_status": "not_materialized",
+      "runtime_dependency": false,
+      "output_claim_allowed": false
+    },
+    {
+      "source_id": "jpl-horizons-api",
+      "adapter_role": "online-validation-sample-source",
+      "snapshot_mode": "explicit-query-snapshot-required-before-acceptance",
+      "local_materialization_status": "not_materialized",
+      "runtime_dependency": false,
+      "output_claim_allowed": false
+    },
+    {
+      "source_id": "iau-sofa-ansi-c",
+      "adapter_role": "standards-routine-target",
+      "snapshot_mode": "future-local-build-or-port-contract",
+      "local_materialization_status": "not_materialized",
+      "runtime_dependency": false,
+      "output_claim_allowed": false
+    },
+    {
+      "source_id": "naif-cspice",
+      "adapter_role": "offline-reproducibility-candidate",
+      "snapshot_mode": "future-kernel-and-toolkit-contract",
+      "local_materialization_status": "not_materialized",
+      "runtime_dependency": false,
+      "output_claim_allowed": false
+    }
+  ],
+  "materialized_manifest": {
+    "path": "data/generated/astronomy/source-snapshots/source-snapshot-manifest.json",
+    "status": "metadata_only_no_source_payload",
+    "source_payloads_materialized": 0,
+    "generated_artifacts_written": 0,
+    "artifact_hashes_computed": 0
+  },
+  "required_before_source_payload_materialization": [
+    "local snapshot path policy defined",
+    "provenance policy defined",
+    "per-source payload format defined",
+    "no runtime network dependency policy preserved",
+    "source payload dry-run added"
+  ],
+  "forbidden_in_manifest_materialization_stage": [
+    "write source snapshot files",
+    "write generated astronomy artifacts",
+    "compute generated artifact hashes",
+    "mark draft manifest accepted",
+    "claim astronomy-engine supported"
+  ]
+}

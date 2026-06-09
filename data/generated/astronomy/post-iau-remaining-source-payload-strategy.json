@@ -1,0 +1,89 @@
+{
+  "post_iau_remaining_source_payload_strategy_id": "m10-post-iau-remaining-source-payload-strategy-v1",
+  "milestone": "M10",
+  "loop": "LOOP-050",
+  "work_package": "M10-WP2",
+  "status": "strategy_decision_only",
+  "source_payload_materialization_policy_id": "m10-source-payload-materialization-policy-v1",
+  "source_capture_procedure_id": "m10-source-capture-procedure-v1",
+  "source_snapshot_manifest_id": "m10-source-snapshot-manifest-v1",
+  "selected_iau_sofa_payload_materialization_id": "m10-iau-sofa-payload-materialization-v1",
+  "previous_remaining_source_payload_strategy_id": "m10-remaining-source-payload-strategy-v1",
+  "currently_materialized_sources": [
+    {
+      "source_id": "naif-cspice",
+      "payload_kind": "offline-kernel-toolkit-boundary",
+      "payload_path": "data/generated/astronomy/source-snapshots/payloads/naif-cspice-kernel-boundary.json",
+      "sha256": "4c946457eb38425feb7bf87fce47583cd75456447c33f5152f4890f786afe5a2"
+    },
+    {
+      "source_id": "iau-sofa-ansi-c",
+      "payload_kind": "local-routine-version-record",
+      "payload_path": "data/generated/astronomy/source-snapshots/payloads/iau-sofa-routine-version.json",
+      "sha256": "436e197eb7e5aa24e22a493b6d7a79214ff4d7e5255b8f7763a4fbb3385d556f"
+    }
+  ],
+  "remaining_source_sequence": [
+    {
+      "order": 1,
+      "source_id": "jpl-horizons-api",
+      "payload_kind": "validation-query-snapshot-set",
+      "payload_path": "data/generated/astronomy/source-snapshots/payloads/jpl-horizons-validation-samples.json",
+      "next_loop_action": "selected_source_payload_preflight_only",
+      "selection_reason": "JPL Horizons requires an offline query parameter and sample boundary before any external request, generated artifact, full-gate dependency, or runtime validation claim; it should be preflighted before text-rule capture."
+    },
+    {
+      "order": 2,
+      "source_id": "gb-t-33661-2017",
+      "payload_kind": "calendar-rule-reference",
+      "payload_path": "data/generated/astronomy/source-snapshots/payloads/gb-t-33661-2017-rule-reference.json",
+      "next_loop_action": "manual_rule_reference_scope_after_jpl_boundary",
+      "selection_reason": "GB/T 33661 requires careful rule-reference scope control before any text capture, local rule payload, generated artifact, runtime replacement, or implementation claim."
+    }
+  ],
+  "next_selected_source": {
+    "source_id": "jpl-horizons-api",
+    "payload_kind": "validation-query-snapshot-set",
+    "schema_path": "data/generated/astronomy/source-payload-schemas/jpl-horizons-validation-samples.schema.json",
+    "payload_path": "data/generated/astronomy/source-snapshots/payloads/jpl-horizons-validation-samples.json",
+    "payload_format": "utf-8-json"
+  },
+  "allowed_next_loop": {
+    "selected_source_payload_preflight": true,
+    "selected_source_id": "jpl-horizons-api",
+    "payload_materialization": false,
+    "payload_hash_computation": false,
+    "generated_astronomy_artifacts": false,
+    "generated_artifact_hashes": false,
+    "draft_manifest_acceptance_change": false,
+    "runtime_behavior_change": false,
+    "capability_promotion": false
+  },
+  "strategy_checks": [
+    "exactly two source payloads are materialized before post-IAU strategy decision",
+    "naif-cspice payload hash remains unchanged",
+    "iau-sofa payload hash remains unchanged",
+    "JPL Horizons payload is absent before preflight",
+    "GB/T payload is absent before preflight",
+    "next source is selected from remaining sources",
+    "next loop is preflight-only",
+    "no external API call in full project gate",
+    "generated artifact paths remain absent",
+    "draft manifest remains not_accepted",
+    "runtime behavior unchanged",
+    "astronomy-engine remains target"
+  ],
+  "forbidden_in_strategy_stage": [
+    "write jpl-horizons payload file",
+    "write gb-t payload file",
+    "compute new source payload hash",
+    "perform external API call in full project gate",
+    "write generated astronomy artifacts",
+    "compute generated artifact hashes",
+    "mark draft manifest accepted",
+    "change calendar-date-query runtime behavior",
+    "change chart-create runtime behavior",
+    "replace android-date-layer-v1",
+    "claim astronomy-engine supported"
+  ]
+}

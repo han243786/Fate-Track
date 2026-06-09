@@ -1,0 +1,29 @@
+{
+  "schema_id": "m10-gb-t-33661-rule-reference-payload-schema-v1",
+  "source_id": "gb-t-33661-2017",
+  "payload_kind": "calendar-rule-reference",
+  "status": "schema_only",
+  "required_fields": [
+    "payload_id",
+    "source_id",
+    "payload_kind",
+    "source_reference",
+    "rule_scope",
+    "captured_rules",
+    "provenance",
+    "hash_algorithm",
+    "created_at_utc"
+  ],
+  "required_rule_scope_fields": [
+    "calendar_rule_reference",
+    "leap_month_rule_reference",
+    "solar_term_rule_reference",
+    "range_policy"
+  ],
+  "forbidden_claims": [
+    "local rule payload materialized",
+    "generated astronomy artifact",
+    "runtime calendar replacement",
+    "astronomy-engine supported"
+  ]
+}

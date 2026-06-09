@@ -1,0 +1,93 @@
+{
+  "source_payload_materialization_policy_id": "m10-source-payload-materialization-policy-v1",
+  "milestone": "M10",
+  "loop": "LOOP-041",
+  "work_package": "M10-WP2",
+  "status": "selected_source_payload_materialized",
+  "source_snapshot_manifest_id": "m10-source-snapshot-manifest-v1",
+  "source_snapshot_manifest_path": "data/generated/astronomy/source-snapshots/source-snapshot-manifest.json",
+  "source_policy_id": "m9-astronomy-source-stack-v1",
+  "source_adapter_contract_id": "m9-astronomy-source-adapter-contract-v1",
+  "payload_directory": {
+    "path": "data/generated/astronomy/source-snapshots/payloads",
+    "status": "exists_selected_source_only",
+    "create_allowed": true,
+      "allowed_materialized_sources": [
+        "naif-cspice",
+        "iau-sofa-ansi-c",
+        "jpl-horizons-api",
+        "gb-t-33661-2017"
+      ]
+  },
+  "planned_payloads": [
+    {
+      "source_id": "gb-t-33661-2017",
+      "path": "data/generated/astronomy/source-snapshots/payloads/gb-t-33661-2017-rule-reference.json",
+      "schema_path": "data/generated/astronomy/source-payload-schemas/gb-t-33661-2017-rule-reference.schema.json",
+      "schema_status": "schema_only",
+      "payload_kind": "calendar-rule-reference",
+      "payload_format": "utf-8-json",
+      "payload_status": "materialized",
+      "hash_status": "computed",
+      "sha256": "7145ecb921d55580eac71d266b31f961b1b9e497cda805c942647737aa764f31",
+      "runtime_dependency": false,
+      "output_claim_allowed": false
+    },
+    {
+      "source_id": "jpl-horizons-api",
+      "path": "data/generated/astronomy/source-snapshots/payloads/jpl-horizons-validation-samples.json",
+      "schema_path": "data/generated/astronomy/source-payload-schemas/jpl-horizons-validation-samples.schema.json",
+      "schema_status": "schema_only",
+      "payload_kind": "validation-query-snapshot-set",
+      "payload_format": "utf-8-json",
+      "payload_status": "materialized",
+      "hash_status": "computed",
+      "sha256": "acddbee906bd4540795993a828b9308af5ab964c002739929e44e28249b444f9",
+      "runtime_dependency": false,
+      "output_claim_allowed": false
+    },
+    {
+      "source_id": "iau-sofa-ansi-c",
+      "path": "data/generated/astronomy/source-snapshots/payloads/iau-sofa-routine-version.json",
+      "schema_path": "data/generated/astronomy/source-payload-schemas/iau-sofa-routine-version.schema.json",
+      "schema_status": "schema_only",
+      "payload_kind": "local-routine-version-record",
+      "payload_format": "utf-8-json",
+      "payload_status": "materialized",
+      "hash_status": "computed",
+      "sha256": "436e197eb7e5aa24e22a493b6d7a79214ff4d7e5255b8f7763a4fbb3385d556f",
+      "runtime_dependency": false,
+      "output_claim_allowed": false
+    },
+    {
+      "source_id": "naif-cspice",
+      "path": "data/generated/astronomy/source-snapshots/payloads/naif-cspice-kernel-boundary.json",
+      "schema_path": "data/generated/astronomy/source-payload-schemas/naif-cspice-kernel-boundary.schema.json",
+      "schema_status": "schema_only",
+      "payload_kind": "offline-kernel-toolkit-boundary",
+      "payload_format": "utf-8-json",
+      "payload_status": "materialized",
+      "hash_status": "computed",
+      "sha256": "4c946457eb38425feb7bf87fce47583cd75456447c33f5152f4890f786afe5a2",
+      "runtime_dependency": false,
+      "output_claim_allowed": false
+    }
+  ],
+  "required_before_payload_materialization": [
+    "selected-source-only payload directory policy approved",
+    "per-source payload schema files defined",
+    "manual or external source capture procedure documented",
+    "no external API call in full project gate policy preserved",
+    "selected source payload hash recorded"
+  ],
+  "forbidden_in_policy_stage": [
+    "write unselected source payload files",
+    "compute unselected source payload hashes",
+    "write generated astronomy artifacts",
+    "compute generated artifact hashes",
+    "mark draft manifest accepted",
+    "change calendar-date-query runtime behavior",
+    "change chart-create runtime behavior",
+    "claim astronomy-engine supported"
+  ]
+}

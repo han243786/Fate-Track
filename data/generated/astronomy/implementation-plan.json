@@ -1,0 +1,54 @@
+{
+  "implementation_plan_id": "m9-generated-data-implementation-plan-v1",
+  "status": "planning_only",
+  "decision": "continue_m9_generated_data_planning",
+  "decision_adr": "docs/decisions/0017-m9-generated-data-implementation-path.md",
+  "source_policy_id": "m9-astronomy-source-stack-v1",
+  "manifest_id": "astronomy-engine-v0-draft",
+  "precloseout_audit_id": "m9-astronomy-precloseout-audit-v1",
+  "capability_status": "target",
+  "stages": [
+    {
+      "id": "generator-contract",
+      "status": "contract_defined",
+      "purpose": "define deterministic inputs, outputs, manifest updates, and hash requirements before any generated row exists"
+    },
+    {
+      "id": "source-adapter-contract",
+      "status": "contract_defined",
+      "purpose": "define how GB/T, Horizons validation samples, SOFA routines, and SPICE candidates map to reproducible generation inputs"
+    },
+    {
+      "id": "artifact-writer-dry-run",
+      "status": "dry_run_defined",
+      "purpose": "prepare output paths and hash calculation without accepting generated artifacts"
+    },
+    {
+      "id": "comparison-runner-dry-run",
+      "status": "dry_run_defined",
+      "purpose": "bind Android baseline rows to future astronomy rows without accepting differences"
+    },
+    {
+      "id": "golden-row-materialization",
+      "status": "readiness_defined",
+      "purpose": "materialize required golden rows only after generator contract and hash policy are stable"
+    },
+    {
+      "id": "replay-test-materialization",
+      "status": "readiness_defined",
+      "purpose": "prove old android-date-layer-v1 snapshots remain reproducible"
+    }
+  ],
+  "forbidden_until_later_acceptance": [
+    "generated artifact acceptance",
+    "android baseline replacement",
+    "calendar-date-query runtime change",
+    "chart-create runtime change",
+    "astronomy-engine supported",
+    "wider date range supported",
+    "true solar time supported",
+    "timezone history supported"
+  ],
+  "next_loop": "LOOP-037",
+  "next_work_package": "M9 preflight milestone closeout decision"
+}

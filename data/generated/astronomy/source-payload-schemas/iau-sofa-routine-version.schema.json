@@ -1,0 +1,30 @@
+{
+  "schema_id": "m10-iau-sofa-routine-version-payload-schema-v1",
+  "source_id": "iau-sofa-ansi-c",
+  "payload_kind": "local-routine-version-record",
+  "status": "schema_only",
+  "required_fields": [
+    "payload_id",
+    "source_id",
+    "payload_kind",
+    "routine_collection",
+    "routine_versions",
+    "license_or_notice_reference",
+    "local_build_or_port_status",
+    "provenance",
+    "hash_algorithm",
+    "created_at_utc"
+  ],
+  "required_routine_version_fields": [
+    "routine_name",
+    "routine_role",
+    "version_or_release",
+    "local_materialization_status"
+  ],
+  "forbidden_claims": [
+    "SOFA routine integrated",
+    "runtime dependency enabled",
+    "generated astronomy artifact",
+    "astronomy-engine supported"
+  ]
+}

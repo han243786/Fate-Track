@@ -1,0 +1,52 @@
+{
+  "decision_id": "m9-preflight-closeout-decision-v1",
+  "milestone": "M9",
+  "loop": "LOOP-037",
+  "decision": "close_m9_as_preflight_only",
+  "m9_preflight_closed": true,
+  "m9_full_astronomy_engine_closed": false,
+  "capability": "astronomy-engine",
+  "capability_status": "target",
+  "preflight_evidence_ready": true,
+  "generated_artifacts_accepted": false,
+  "android_baseline_replacement_allowed": false,
+  "calendar_date_query_runtime_change_allowed": false,
+  "chart_create_runtime_change_allowed": false,
+  "wider_range_supported": false,
+  "true_solar_time_supported": false,
+  "timezone_history_supported": false,
+  "closeout_basis": [
+    "ADR 0015 parallel-first strategy",
+    "ADR 0016 selected source stack",
+    "ADR 0017 generated-data planning path",
+    "precloseout-audit.json allows preflight closeout only",
+    "generator, source-adapter, artifact-writer, comparison, golden-row, and replay readiness controls exist"
+  ],
+  "blocking_full_closeout_items": [
+    "generated astronomy artifacts",
+    "sha256 artifact hashes",
+    "completed Android-vs-astronomy comparison report",
+    "generated golden rows",
+    "executed replay tests",
+    "runtime astronomy integration",
+    "replacement ADR"
+  ],
+  "next_milestone": {
+    "id": "M10",
+    "file": "markdown/20-roadmap/45-milestone-10-generated-astronomy-implementation.md",
+    "name": "Generated Astronomy Implementation",
+    "entry_loop": "LOOP-038",
+    "entry_work_package": "M10 generated astronomy implementation entry",
+    "capability_status_at_entry": "target"
+  },
+  "forbidden_after_closeout": [
+    "treat M9 preflight closeout as generated-data acceptance",
+    "mark astronomy-engine supported",
+    "replace android-date-layer-v1",
+    "change calendar-date-query default runtime behavior",
+    "change chart-create default runtime behavior",
+    "claim wider date range support",
+    "claim true solar time support",
+    "claim timezone history support"
+  ]
+}

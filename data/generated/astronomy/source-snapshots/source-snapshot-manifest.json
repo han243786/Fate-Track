@@ -1,0 +1,105 @@
+{
+  "source_snapshot_manifest_id": "m10-source-snapshot-manifest-v1",
+  "status": "selected_source_payload_materialized",
+  "source_policy_id": "m9-astronomy-source-stack-v1",
+  "generator_contract_id": "m9-astronomy-generator-contract-v1",
+  "source_adapter_contract_id": "m9-astronomy-source-adapter-contract-v1",
+  "snapshot_range": {
+    "start_year": 1901,
+    "end_year": 2100,
+    "policy": "match-v1-official-validation-range-before-expansion"
+  },
+  "sources": [
+    {
+      "source_id": "gb-t-33661-2017",
+      "adapter_role": "calendar-rule-reference",
+      "snapshot_mode": "manual-reference-and-rule-audit",
+      "provenance": {
+        "name": "GB/T 33661-2017 Calculation and promulgation of the Chinese calendar",
+        "official_url": "https://std.samr.gov.cn/gb/search/gbDetailed?id=71F772D817FDD3A7E05397BE0A0AB82A",
+        "materialization_note": "rule-reference boundary payload materialized in LOOP-054; no standard text is copied, no generated astronomy artifact is written, and no runtime dependency is enabled"
+      },
+      "local_materialization_status": "rule_reference_payload_materialized",
+      "source_payload_path": "data/generated/astronomy/source-snapshots/payloads/gb-t-33661-2017-rule-reference.json",
+      "source_payload_hash": {
+        "algorithm": "sha256",
+        "value": "7145ecb921d55580eac71d266b31f961b1b9e497cda805c942647737aa764f31"
+      },
+      "runtime_dependency": false,
+      "output_claim_allowed": false
+    },
+    {
+      "source_id": "jpl-horizons-api",
+      "adapter_role": "online-validation-sample-source",
+      "snapshot_mode": "explicit-query-snapshot-required-before-acceptance",
+      "provenance": {
+        "name": "NASA/JPL Horizons API",
+        "official_url": "https://ssd-api.jpl.nasa.gov/doc/horizons.html",
+        "api_endpoint": "https://ssd.jpl.nasa.gov/api/horizons.api",
+        "materialization_note": "validation-query snapshot boundary payload materialized in LOOP-052; no response bodies are captured, no full-gate online query is executed, and no runtime dependency is enabled"
+      },
+      "local_materialization_status": "validation_query_snapshot_payload_materialized",
+      "source_payload_path": "data/generated/astronomy/source-snapshots/payloads/jpl-horizons-validation-samples.json",
+      "source_payload_hash": {
+        "algorithm": "sha256",
+        "value": "acddbee906bd4540795993a828b9308af5ab964c002739929e44e28249b444f9"
+      },
+      "runtime_dependency": false,
+      "output_claim_allowed": false
+    },
+    {
+      "source_id": "iau-sofa-ansi-c",
+      "adapter_role": "standards-routine-target",
+      "snapshot_mode": "future-local-build-or-port-contract",
+      "provenance": {
+        "name": "IAU SOFA ANSI C software collection",
+        "official_url": "https://www.iausofa.org/",
+        "materialization_note": "routine/version boundary payload materialized in LOOP-049; no SOFA source code is vendored, compiled, linked, or used at runtime"
+      },
+      "local_materialization_status": "routine_version_payload_materialized",
+      "source_payload_path": "data/generated/astronomy/source-snapshots/payloads/iau-sofa-routine-version.json",
+      "source_payload_hash": {
+        "algorithm": "sha256",
+        "value": "436e197eb7e5aa24e22a493b6d7a79214ff4d7e5255b8f7763a4fbb3385d556f"
+      },
+      "runtime_dependency": false,
+      "output_claim_allowed": false
+    },
+    {
+      "source_id": "naif-cspice",
+      "adapter_role": "offline-reproducibility-candidate",
+      "snapshot_mode": "future-kernel-and-toolkit-contract",
+      "provenance": {
+        "name": "NAIF CSPICE / SPICE kernels",
+        "official_url": "https://naif.jpl.nasa.gov/naif/toolkit.html",
+        "materialization_note": "metadata record only; no toolkit or kernel snapshot has been materialized in LOOP-040"
+      },
+      "local_materialization_status": "source_boundary_payload_materialized",
+      "source_payload_path": "data/generated/astronomy/source-snapshots/payloads/naif-cspice-kernel-boundary.json",
+      "source_payload_hash": {
+        "algorithm": "sha256",
+        "value": "4c946457eb38425feb7bf87fce47583cd75456447c33f5152f4890f786afe5a2"
+      },
+      "runtime_dependency": false,
+      "output_claim_allowed": false
+    }
+  ],
+  "acceptance_requirements": [
+    "all selected source ids represented",
+    "local snapshot or pinned routine version recorded for every represented source",
+    "provenance recorded for every represented source",
+    "runtime_dependency false for every represented source",
+    "output_claim_allowed false for every represented source",
+    "no external API call in full project gate"
+  ],
+  "forbidden_until_acceptance": [
+    "write generated astronomy artifacts",
+    "compute generated artifact hashes",
+    "mark draft manifest accepted",
+    "change calendar-date-query runtime behavior",
+    "change chart-create runtime behavior",
+    "replace android-date-layer-v1",
+    "claim astronomy-engine supported"
+  ],
+  "created_at_utc": "2026-06-08T00:00:00Z"
+}

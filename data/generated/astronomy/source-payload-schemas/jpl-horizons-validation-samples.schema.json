@@ -1,0 +1,33 @@
+{
+  "schema_id": "m10-jpl-horizons-validation-samples-payload-schema-v1",
+  "source_id": "jpl-horizons-api",
+  "payload_kind": "validation-query-snapshot-set",
+  "status": "schema_only",
+  "required_fields": [
+    "payload_id",
+    "source_id",
+    "payload_kind",
+    "query_snapshots",
+    "query_parameters",
+    "response_metadata",
+    "provenance",
+    "hash_algorithm",
+    "created_at_utc"
+  ],
+  "required_query_snapshot_fields": [
+    "query_id",
+    "target",
+    "center",
+    "time_start",
+    "time_stop",
+    "step_size",
+    "quantities",
+    "response_status"
+  ],
+  "forbidden_claims": [
+    "runtime network dependency",
+    "online query executed in full gate",
+    "generated astronomy artifact",
+    "astronomy-engine supported"
+  ]
+}

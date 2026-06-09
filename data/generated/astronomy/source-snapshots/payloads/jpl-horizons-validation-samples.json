@@ -1,0 +1,76 @@
+{
+  "payload_id": "m10-jpl-horizons-validation-samples-payload-v1",
+  "source_id": "jpl-horizons-api",
+  "payload_kind": "validation-query-snapshot-set",
+  "query_snapshots": [
+    {
+      "query_id": "jpl-horizons-sun-geocenter-1901-start",
+      "target": "10",
+      "center": "500@399",
+      "time_start": "1901-01-01T00:00:00Z",
+      "time_stop": "1901-01-01T00:00:00Z",
+      "step_size": "1d",
+      "quantities": "31",
+      "response_status": "not_executed_in_full_gate",
+      "capture_status": "query_parameters_materialized_response_not_included",
+      "local_response_body_present": false
+    },
+    {
+      "query_id": "jpl-horizons-sun-geocenter-2000-j2000",
+      "target": "10",
+      "center": "500@399",
+      "time_start": "2000-01-01T12:00:00Z",
+      "time_stop": "2000-01-01T12:00:00Z",
+      "step_size": "1d",
+      "quantities": "31",
+      "response_status": "not_executed_in_full_gate",
+      "capture_status": "query_parameters_materialized_response_not_included",
+      "local_response_body_present": false
+    },
+    {
+      "query_id": "jpl-horizons-sun-geocenter-2100-end",
+      "target": "10",
+      "center": "500@399",
+      "time_start": "2100-12-31T00:00:00Z",
+      "time_stop": "2100-12-31T00:00:00Z",
+      "step_size": "1d",
+      "quantities": "31",
+      "response_status": "not_executed_in_full_gate",
+      "capture_status": "query_parameters_materialized_response_not_included",
+      "local_response_body_present": false
+    }
+  ],
+  "query_parameters": {
+    "api_endpoint": "https://ssd.jpl.nasa.gov/api/horizons.api",
+    "format": "json",
+    "make_ephem": "YES",
+    "ephem_type": "OBSERVER",
+    "command": "10",
+    "center": "500@399",
+    "quantities": "31",
+    "time_format": "UTC ISO-8601",
+    "sample_range_policy": "match-v1-official-validation-range-before-expansion",
+    "network_execution_policy": "no_external_calls_in_full_project_gate"
+  },
+  "response_metadata": {
+    "response_body_materialized": false,
+    "online_query_executed_in_full_gate": false,
+    "external_calls_performed": false,
+    "response_capture_status": "not_captured_in_repo",
+    "future_capture_required_before_generated_artifacts": true,
+    "generated_artifact_allowed": false,
+    "runtime_dependency": false,
+    "output_claim_allowed": false
+  },
+  "provenance": {
+    "source_name": "NASA/JPL Horizons API",
+    "official_doc_url": "https://ssd-api.jpl.nasa.gov/doc/horizons.html",
+    "api_endpoint": "https://ssd.jpl.nasa.gov/api/horizons.api",
+    "source_snapshot_manifest_id": "m10-source-snapshot-manifest-v1",
+    "post_iau_remaining_source_payload_strategy_id": "m10-post-iau-remaining-source-payload-strategy-v1",
+    "selected_jpl_horizons_payload_materialization_preflight_id": "m10-jpl-horizons-payload-materialization-preflight-v1",
+    "capture_note": "This payload materializes the offline JPL Horizons validation-query snapshot boundary only. It records fixed query parameters and sample ids, does not include response bodies, does not execute online queries in the full project gate, does not enable a runtime network dependency, and does not generate astronomy outputs."
+  },
+  "hash_algorithm": "sha256",
+  "created_at_utc": "2026-06-08T00:00:00Z"
+}

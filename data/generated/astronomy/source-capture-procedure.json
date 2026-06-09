@@ -1,0 +1,149 @@
+{
+  "source_capture_procedure_id": "m10-source-capture-procedure-v1",
+  "milestone": "M10",
+  "loop": "LOOP-043",
+  "work_package": "M10-WP2",
+  "status": "selected_source_payload_materialized",
+  "source_snapshot_manifest_id": "m10-source-snapshot-manifest-v1",
+  "source_payload_materialization_policy_id": "m10-source-payload-materialization-policy-v1",
+  "payload_directory": {
+    "path": "data/generated/astronomy/source-snapshots/payloads",
+    "status": "exists_selected_source_only",
+    "create_allowed": true,
+      "allowed_materialized_sources": [
+        "naif-cspice",
+        "iau-sofa-ansi-c",
+        "jpl-horizons-api",
+        "gb-t-33661-2017"
+      ]
+  },
+  "full_gate_network_policy": "no_external_calls",
+  "payload_materialization_allowed": true,
+  "payload_materialization_scope": "selected_source_only",
+  "payload_hash_computation_allowed": true,
+  "payload_hash_computation_scope": "selected_source_payload_only",
+  "generated_artifact_allowed": false,
+  "generated_artifact_hash_allowed": false,
+  "manifest_acceptance_change_allowed": false,
+  "runtime_behavior_change_allowed": false,
+  "capability_status": "target",
+  "procedures": [
+    {
+      "source_id": "gb-t-33661-2017",
+      "payload_kind": "calendar-rule-reference",
+      "schema_path": "data/generated/astronomy/source-payload-schemas/gb-t-33661-2017-rule-reference.schema.json",
+      "payload_path": "data/generated/astronomy/source-snapshots/payloads/gb-t-33661-2017-rule-reference.json",
+      "capture_status": "completed_for_rule_reference_boundary",
+      "materialization_status": "rule_reference_payload_materialized",
+      "hash_status": "computed",
+      "sha256": "7145ecb921d55580eac71d266b31f961b1b9e497cda805c942647737aa764f31",
+      "capture_steps": [
+        "verify official source reference",
+        "record rule scope before copying or summarizing any source content",
+        "map captured rule references to schema required fields",
+        "record provenance and reviewer note",
+        "keep payload absent until materialization decision closes"
+      ],
+      "required_evidence_fields": [
+        "source_reference",
+        "rule_scope",
+        "captured_rules",
+        "provenance",
+        "hash_algorithm"
+      ]
+    },
+    {
+      "source_id": "jpl-horizons-api",
+      "payload_kind": "validation-query-snapshot-set",
+      "schema_path": "data/generated/astronomy/source-payload-schemas/jpl-horizons-validation-samples.schema.json",
+      "payload_path": "data/generated/astronomy/source-snapshots/payloads/jpl-horizons-validation-samples.json",
+      "capture_status": "completed_for_validation_query_snapshot_boundary",
+      "materialization_status": "validation_query_snapshot_payload_materialized",
+      "hash_status": "computed",
+      "sha256": "acddbee906bd4540795993a828b9308af5ab964c002739929e44e28249b444f9",
+      "capture_steps": [
+        "define offline query parameter set before any external request",
+        "record response metadata requirements",
+        "map query snapshots to schema required fields",
+        "record provenance and reviewer note",
+        "keep full project gate free of online calls"
+      ],
+      "required_evidence_fields": [
+        "query_snapshots",
+        "query_parameters",
+        "response_metadata",
+        "provenance",
+        "hash_algorithm"
+      ]
+    },
+    {
+      "source_id": "iau-sofa-ansi-c",
+      "payload_kind": "local-routine-version-record",
+      "schema_path": "data/generated/astronomy/source-payload-schemas/iau-sofa-routine-version.schema.json",
+      "payload_path": "data/generated/astronomy/source-snapshots/payloads/iau-sofa-routine-version.json",
+      "capture_status": "completed_for_routine_version_payload",
+      "materialization_status": "routine_version_payload_materialized",
+      "hash_status": "computed",
+      "sha256": "436e197eb7e5aa24e22a493b6d7a79214ff4d7e5255b8f7763a4fbb3385d556f",
+      "capture_steps": [
+        "record SOFA collection/version reference",
+        "record local build or port status before integration",
+        "map routine versions to schema required fields",
+        "record license or notice reference",
+        "keep runtime dependency disabled"
+      ],
+      "required_evidence_fields": [
+        "routine_collection",
+        "routine_versions",
+        "license_or_notice_reference",
+        "local_build_or_port_status",
+        "provenance",
+        "hash_algorithm"
+      ]
+    },
+    {
+      "source_id": "naif-cspice",
+      "payload_kind": "offline-kernel-toolkit-boundary",
+      "schema_path": "data/generated/astronomy/source-payload-schemas/naif-cspice-kernel-boundary.schema.json",
+      "payload_path": "data/generated/astronomy/source-snapshots/payloads/naif-cspice-kernel-boundary.json",
+      "capture_status": "completed_for_boundary_payload",
+      "materialization_status": "source_boundary_payload_materialized",
+      "hash_status": "computed",
+      "sha256": "4c946457eb38425feb7bf87fce47583cd75456447c33f5152f4890f786afe5a2",
+      "capture_steps": [
+        "record CSPICE toolkit reference",
+        "record intended kernel set policy",
+        "map toolkit and kernel boundary to schema required fields",
+        "record local materialization status",
+        "keep toolkit and kernels absent until materialization decision closes"
+      ],
+      "required_evidence_fields": [
+        "toolkit_reference",
+        "kernel_set",
+        "kernel_policy",
+        "local_materialization_status",
+        "provenance",
+        "hash_algorithm"
+      ]
+    }
+  ],
+  "required_before_first_payload": [
+    "procedure dry-run passes",
+    "payload directory creation policy approved",
+    "one source-specific materialization decision recorded",
+    "manual reviewer confirms provenance handling",
+    "payload hash recording policy defined",
+    "no external API call in full project gate policy preserved"
+  ],
+  "forbidden_in_procedure_stage": [
+    "write unselected source payload files",
+    "compute unselected source payload hashes",
+    "perform external API call in full project gate",
+    "write generated astronomy artifacts",
+    "compute generated artifact hashes",
+    "mark draft manifest accepted",
+    "change calendar-date-query runtime behavior",
+    "change chart-create runtime behavior",
+    "claim astronomy-engine supported"
+  ]
+}

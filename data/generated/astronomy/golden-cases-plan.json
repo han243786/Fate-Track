@@ -1,0 +1,38 @@
+{
+  "golden_plan_id": "astronomy-engine-v0-golden-cases-plan",
+  "status": "planned_not_generated",
+  "manifest_id": "astronomy-engine-v0-draft",
+  "required_categories": [
+    {
+      "id": "1901-2100-boundary",
+      "minimum_cases": 4,
+      "status": "not_generated"
+    },
+    {
+      "id": "2033-anomaly",
+      "minimum_cases": 6,
+      "status": "not_generated"
+    },
+    {
+      "id": "lichun-boundary",
+      "minimum_cases": 6,
+      "status": "not_generated"
+    },
+    {
+      "id": "qingming-boundary",
+      "minimum_cases": 4,
+      "status": "not_generated"
+    },
+    {
+      "id": "jiazi-day-anchor",
+      "minimum_cases": 4,
+      "status": "not_generated"
+    },
+    {
+      "id": "near-midnight-solar-lunar-event",
+      "minimum_cases": 6,
+      "status": "not_generated"
+    }
+  ],
+  "acceptance_rule": "Every category must have generated cases, source references, expected Android value, expected astronomy value, and difference classification before manifest acceptance."
+}

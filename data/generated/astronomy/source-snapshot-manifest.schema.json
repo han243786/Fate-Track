@@ -1,0 +1,48 @@
+{
+  "schema_id": "m10-source-snapshot-manifest-schema-v1",
+  "status": "schema_only",
+  "required_fields": [
+    "source_snapshot_manifest_id",
+    "status",
+    "source_policy_id",
+    "generator_contract_id",
+    "source_adapter_contract_id",
+    "snapshot_range",
+    "sources",
+    "acceptance_requirements",
+    "forbidden_until_acceptance",
+    "created_at_utc"
+  ],
+  "source_required_fields": [
+    "source_id",
+    "adapter_role",
+    "snapshot_mode",
+    "provenance",
+    "local_materialization_status",
+    "runtime_dependency",
+    "output_claim_allowed"
+  ],
+  "allowed_source_ids": [
+    "gb-t-33661-2017",
+    "jpl-horizons-api",
+    "iau-sofa-ansi-c",
+    "naif-cspice"
+  ],
+  "required_acceptance_requirements": [
+    "all selected source ids represented",
+    "local snapshot or pinned routine version recorded for every represented source",
+    "provenance recorded for every represented source",
+    "runtime_dependency false for every represented source",
+    "output_claim_allowed false for every represented source",
+    "no external API call in full project gate"
+  ],
+  "forbidden_until_acceptance": [
+    "write generated astronomy artifacts",
+    "compute generated artifact hashes",
+    "mark draft manifest accepted",
+    "change calendar-date-query runtime behavior",
+    "change chart-create runtime behavior",
+    "replace android-date-layer-v1",
+    "claim astronomy-engine supported"
+  ]
+}

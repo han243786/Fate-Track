@@ -1,0 +1,49 @@
+{
+  "source_payload_materialization_decision_id": "m10-first-source-payload-materialization-decision-v1",
+  "milestone": "M10",
+  "loop": "LOOP-044",
+  "work_package": "M10-WP2",
+  "status": "decision_only",
+  "decision": "select_first_source_payload_candidate",
+  "source_capture_procedure_id": "m10-source-capture-procedure-v1",
+  "source_payload_materialization_policy_id": "m10-source-payload-materialization-policy-v1",
+  "source_snapshot_manifest_id": "m10-source-snapshot-manifest-v1",
+  "selected_source": {
+    "source_id": "naif-cspice",
+    "payload_kind": "offline-kernel-toolkit-boundary",
+    "schema_path": "data/generated/astronomy/source-payload-schemas/naif-cspice-kernel-boundary.schema.json",
+    "payload_path": "data/generated/astronomy/source-snapshots/payloads/naif-cspice-kernel-boundary.json",
+    "payload_format": "utf-8-json",
+    "selection_reason": "lowest first-payload risk: records offline toolkit/kernel boundary policy without online full-gate calls, runtime integration, generated astronomy output, or copied standard text"
+  },
+  "decision_scope": "single_source_only",
+  "payload_materialization_allowed_in_this_loop": false,
+  "payload_directory_creation_allowed_in_this_loop": false,
+  "payload_hash_computation_allowed_in_this_loop": false,
+  "generated_artifact_allowed_in_this_loop": false,
+  "generated_artifact_hash_allowed_in_this_loop": false,
+  "manifest_acceptance_change_allowed_in_this_loop": false,
+  "runtime_behavior_change_allowed_in_this_loop": false,
+  "capability_status": "target",
+  "required_before_selected_payload_materialization": [
+    "decision dry-run passes",
+    "payload directory creation policy changes from missing to approved for selected source only",
+    "selected payload canonical JSON writer or manual file procedure is defined",
+    "selected payload hash recording policy is defined",
+    "selected payload remains source evidence only, not generated astronomy artifact",
+    "no external API call in full project gate policy preserved"
+  ],
+  "forbidden_in_decision_stage": [
+    "create payload directory",
+    "write selected source payload file",
+    "write any other source payload file",
+    "compute source payload hash",
+    "perform external API call in full project gate",
+    "write generated astronomy artifacts",
+    "compute generated artifact hashes",
+    "mark draft manifest accepted",
+    "change calendar-date-query runtime behavior",
+    "change chart-create runtime behavior",
+    "claim astronomy-engine supported"
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "source_policy_id": "m9-astronomy-source-stack-v1",
+  "calendar_standard": {
+    "id": "gb-t-33661-2017",
+    "name": "GB/T 33661-2017 Calculation and promulgation of the Chinese calendar",
+    "role": "calendar-rule-reference",
+    "official_url": "https://std.samr.gov.cn/gb/search/gbDetailed?id=71F772D817FDD3A7E05397BE0A0AB82A",
+    "status": "current-reference"
+  },
+  "online_validation_source": {
+    "id": "jpl-horizons-api",
+    "name": "NASA/JPL Horizons API",
+    "role": "online-ephemeris-validation-source",
+    "official_url": "https://ssd-api.jpl.nasa.gov/doc/horizons.html",
+    "api_endpoint": "https://ssd.jpl.nasa.gov/api/horizons.api",
+    "status": "validation-source-only"
+  },
+  "standards_routine_source": {
+    "id": "iau-sofa-ansi-c",
+    "name": "IAU SOFA ANSI C software collection",
+    "role": "time-scale-and-fundamental-astronomy-standards",
+    "official_url": "https://www.iausofa.org/",
+    "status": "target-dependency-only"
+  },
+  "offline_reproducibility_source": {
+    "id": "naif-cspice",
+    "name": "NAIF CSPICE / SPICE kernels",
+    "role": "future-offline-kernel-workflow",
+    "official_url": "https://naif.jpl.nasa.gov/naif/toolkit.html",
+    "status": "target-dependency-only"
+  },
+  "first_generated_range": {
+    "start_year": 1901,
+    "end_year": 2100,
+    "policy": "match-v1-official-validation-range-before-expansion"
+  },
+  "required_golden_categories": [
+    "1901-2100-boundary",
+    "2033-anomaly",
+    "lichun-boundary",
+    "qingming-boundary",
+    "jiazi-day-anchor",
+    "near-midnight-solar-lunar-event"
+  ],
+  "forbidden_until_generated": [
+    "astronomy-engine supported",
+    "android-date-layer replacement",
+    "wider date range supported",
+    "true solar time supported",
+    "IANA timezone-history runtime support"
+  ]
+}

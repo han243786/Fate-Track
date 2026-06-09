@@ -1,0 +1,39 @@
+{
+  "schema_id": "fate-track-astronomy-generated-manifest-v1",
+  "required_fields": [
+    "source_policy_id",
+    "manifest_id",
+    "acceptance_status",
+    "artifact_type",
+    "engine_id",
+    "engine_version",
+    "source_references",
+    "generated_range",
+    "generation_command",
+    "artifact_hashes",
+    "comparison_report",
+    "difference_taxonomy",
+    "evidence_requirements",
+    "acceptance_blockers",
+    "created_at_utc"
+  ],
+  "allowed_acceptance_status": [
+    "draft",
+    "not_accepted",
+    "accepted"
+  ],
+  "required_difference_taxonomy": [
+    "android_table_difference",
+    "astronomy_source_difference",
+    "ruleset_difference",
+    "timezone_history_difference",
+    "unresolved"
+  ],
+  "forbidden_claims_before_acceptance": [
+    "astronomy-engine supported",
+    "wider date range supported",
+    "true solar time supported",
+    "timezone history supported",
+    "android baseline replaced"
+  ]
+}

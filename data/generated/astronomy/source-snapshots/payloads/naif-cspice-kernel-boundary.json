@@ -1,0 +1,54 @@
+{
+  "payload_id": "m10-naif-cspice-kernel-boundary-payload-v1",
+  "source_id": "naif-cspice",
+  "payload_kind": "offline-kernel-toolkit-boundary",
+  "toolkit_reference": {
+    "name": "NAIF CSPICE / SPICE toolkit",
+    "official_url": "https://naif.jpl.nasa.gov/naif/toolkit.html",
+    "local_toolkit_status": "not_integrated",
+    "runtime_dependency": false,
+    "output_claim_allowed": false
+  },
+  "kernel_set": [
+    {
+      "kernel_id": "de-series-ephemeris-placeholder",
+      "kernel_role": "future solar-system ephemeris boundary candidate",
+      "expected_range": {
+        "start_year": 1901,
+        "end_year": 2100,
+        "policy": "match-v1-official-validation-range-before-expansion"
+      },
+      "local_materialization_status": "not_materialized"
+    },
+    {
+      "kernel_id": "leapseconds-placeholder",
+      "kernel_role": "future time-scale boundary candidate",
+      "expected_range": {
+        "start_year": 1901,
+        "end_year": 2100,
+        "policy": "match-v1-official-validation-range-before-expansion"
+      },
+      "local_materialization_status": "not_materialized"
+    }
+  ],
+  "kernel_policy": {
+    "materialization_scope": "boundary_record_only",
+    "kernel_files_present": false,
+    "toolkit_files_present": false,
+    "runtime_integration_allowed": false,
+    "generated_artifact_allowed": false,
+    "acceptance_status_change_allowed": false,
+    "replacement_allowed": false
+  },
+  "local_materialization_status": "source_boundary_payload_materialized_no_toolkit_or_kernel_files",
+  "provenance": {
+    "source_name": "NAIF CSPICE / SPICE kernels",
+    "official_url": "https://naif.jpl.nasa.gov/naif/toolkit.html",
+    "source_snapshot_manifest_id": "m10-source-snapshot-manifest-v1",
+    "source_payload_materialization_decision_id": "m10-first-source-payload-materialization-decision-v1",
+    "selected_source_payload_materialization_preflight_id": "m10-naif-cspice-payload-materialization-preflight-v1",
+    "capture_note": "This payload records the offline toolkit/kernel boundary only. It does not vendor CSPICE, does not include SPICE kernels, does not enable runtime dependency, and does not generate astronomy outputs."
+  },
+  "hash_algorithm": "sha256",
+  "created_at_utc": "2026-06-08T00:00:00Z"
+}

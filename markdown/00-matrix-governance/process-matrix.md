@@ -30,13 +30,67 @@
 - Validation commands.
 - Rollback or refusal behavior.
 
-## 4. Current Validation Set
+## 4. Research Intake Checklist
+
+Use this checklist before implementing any externally supplied research report.
+
+- Source report path.
+- Chinese translation path.
+- Research intake row in `markdown/reserch/00-research-intake.md`.
+- ADR decision or target record.
+- Impacted module IDs.
+- Capability status: `supported`, `target`, `planned`, `deferred`, or `rejected`.
+- Required golden cases or validation evidence.
+- Privacy/security classification for new fields.
+- Explicit non-goals and unsupported behavior.
+
+Research conclusions must not skip directly from report text to supported UI/API claims.
+
+## 5. Milestone Execution Checklist
+
+Use this checklist before implementing code for any roadmap milestone.
+
+- Read `markdown/20-roadmap/00-roadmap-index.md`.
+- Read the active milestone file.
+- Check `markdown/20-roadmap/90-decision-gates.md` for blockers.
+- Check `markdown/20-roadmap/91-anti-regression-and-governance-lock.md`.
+- Check `markdown/20-roadmap/92-risk-register.md` for S0/P1 risks.
+- Check `markdown/20-roadmap/93-capability-promotion-ledger.md` before changing capability status.
+- List docs that must be synchronized: module tree, engineering tree, README, policy, standards, ADR.
+- Plan closeout evidence using `markdown/20-roadmap/94-closeout-evidence-template.md`.
+
+Milestones cannot close with unresolved S0 risks or unsynchronized supported capability claims.
+
+## 6. Recursive Loop Checklist
+
+Use this checklist for every recursive development loop.
+
+- Read `markdown/20-roadmap/95-recursive-development-protocol.md`.
+- Read and update `markdown/20-roadmap/96-recursive-cursor.md`.
+- Read the previous entry in `markdown/20-roadmap/97-loop-closeout-log.md`.
+- Confirm loop mode: `design_only`, `single_loop`, `milestone_loop`, or `goal_run`.
+- Confirm allowed scope and forbidden scope.
+- Run Preflight Gate before implementation.
+- Complete Govern step before validation.
+- Run Postflight Gate after validation.
+- Write LoopResult to closeout log.
+- Advance cursor or mark it `blocked` / `paused`.
+
+In `design_only`, code implementation, API behavior changes, frontend feature advancement, and capability promotion are prohibited.
+
+## 7. Current Validation Set
 
 ```powershell
 cargo fmt --check
-cargo check
-node --check frontend/server.mjs
-node --check frontend/src/main.js
+cargo test
+cd frontend
+npm.cmd run check
+cd ..
 powershell -NoProfile -ExecutionPolicy Bypass -File tools/check-governance-scaffold.ps1 -ProjectRoot .
 ```
 
+Or run the complete wrapper:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File tools/check-project.ps1
+```

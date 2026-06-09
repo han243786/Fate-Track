@@ -1,0 +1,123 @@
+{
+  "selected_source_payload_materialization_preflight_id": "m10-jpl-horizons-payload-materialization-preflight-v1",
+  "milestone": "M10",
+  "loop": "LOOP-051",
+  "work_package": "M10-WP2",
+  "status": "preflight_only",
+  "post_iau_remaining_source_payload_strategy_id": "m10-post-iau-remaining-source-payload-strategy-v1",
+  "source_payload_materialization_policy_id": "m10-source-payload-materialization-policy-v1",
+  "source_capture_procedure_id": "m10-source-capture-procedure-v1",
+  "source_snapshot_manifest_id": "m10-source-snapshot-manifest-v1",
+  "selected_source": {
+    "source_id": "jpl-horizons-api",
+    "payload_kind": "validation-query-snapshot-set",
+    "schema_path": "data/generated/astronomy/source-payload-schemas/jpl-horizons-validation-samples.schema.json",
+    "payload_path": "data/generated/astronomy/source-snapshots/payloads/jpl-horizons-validation-samples.json",
+    "payload_format": "utf-8-json"
+  },
+  "current_materialized_payloads": [
+    {
+      "source_id": "naif-cspice",
+      "payload_path": "data/generated/astronomy/source-snapshots/payloads/naif-cspice-kernel-boundary.json",
+      "sha256": "4c946457eb38425feb7bf87fce47583cd75456447c33f5152f4890f786afe5a2"
+    },
+    {
+      "source_id": "iau-sofa-ansi-c",
+      "payload_path": "data/generated/astronomy/source-snapshots/payloads/iau-sofa-routine-version.json",
+      "sha256": "436e197eb7e5aa24e22a493b6d7a79214ff4d7e5255b8f7763a4fbb3385d556f"
+    }
+  ],
+  "payload_directory_policy": {
+    "path": "data/generated/astronomy/source-snapshots/payloads",
+    "current_status": "exists_selected_source_only",
+    "existing_materialized_source_count": 2,
+    "create_allowed_in_this_loop": false,
+    "next_loop_write_scope": "selected_source_only"
+  },
+  "selected_payload_write_policy": {
+    "write_allowed_in_this_loop": false,
+    "next_loop_write_scope": "selected_source_only",
+    "canonical_json_required": true,
+    "allowed_payload_claim": "offline-validation-query-snapshot-boundary-only",
+    "forbidden_payload_claims": [
+      "runtime network dependency",
+      "online query executed in full gate",
+      "generated astronomy artifact",
+      "astronomy-engine supported",
+      "Android baseline replaced"
+    ]
+  },
+  "selected_payload_hash_policy": {
+    "hash_algorithm": "sha256",
+    "hash_allowed_in_this_loop": false,
+    "next_loop_hash_scope": "selected_source_payload_only",
+    "hash_record_destination": "source payload manifest or selected payload metadata only"
+  },
+  "offline_query_boundary_policy": {
+    "full_gate_network_policy": "no_external_calls",
+    "query_execution_allowed_in_this_loop": false,
+    "query_execution_allowed_in_full_gate": false,
+    "manual_or_external_capture_may_be_recorded_after_preflight": true,
+    "sample_set_scope": "validation-query-snapshot-set",
+    "required_query_snapshot_fields": [
+      "query_id",
+      "target",
+      "center",
+      "time_start",
+      "time_stop",
+      "step_size",
+      "quantities",
+      "response_status"
+    ],
+    "required_payload_fields": [
+      "payload_id",
+      "source_id",
+      "payload_kind",
+      "query_snapshots",
+      "query_parameters",
+      "response_metadata",
+      "provenance",
+      "hash_algorithm",
+      "created_at_utc"
+    ]
+  },
+  "preflight_checks": [
+    "post-IAU remaining source strategy dry-run passes",
+    "selected source remains jpl-horizons-api",
+    "selected schema remains schema_only",
+    "existing naif-cspice payload hash remains unchanged",
+    "existing iau-sofa payload hash remains unchanged",
+    "jpl-horizons payload is absent before materialization",
+    "gb-t payload is absent before materialization",
+    "no external API call in full project gate",
+    "query execution is not part of full project gate",
+    "generated artifact paths remain absent",
+    "draft manifest remains not_accepted",
+    "runtime behavior unchanged",
+    "astronomy-engine remains target"
+  ],
+  "materialization_allowed_after_preflight": {
+    "selected_source_payload": true,
+    "selected_source_id": "jpl-horizons-api",
+    "other_remaining_source_payloads": false,
+    "generated_astronomy_artifacts": false,
+    "generated_artifact_hashes": false,
+    "draft_manifest_acceptance_change": false,
+    "runtime_behavior_change": false,
+    "capability_promotion": false
+  },
+  "forbidden_in_preflight_stage": [
+    "write jpl-horizons payload file",
+    "write gb-t payload file",
+    "compute new source payload hash",
+    "perform external API call in full project gate",
+    "execute online JPL Horizons query in full project gate",
+    "write generated astronomy artifacts",
+    "compute generated artifact hashes",
+    "mark draft manifest accepted",
+    "change calendar-date-query runtime behavior",
+    "change chart-create runtime behavior",
+    "replace android-date-layer-v1",
+    "claim astronomy-engine supported"
+  ]
+}

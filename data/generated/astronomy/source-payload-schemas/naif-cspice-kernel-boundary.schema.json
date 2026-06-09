@@ -1,0 +1,30 @@
+{
+  "schema_id": "m10-naif-cspice-kernel-boundary-payload-schema-v1",
+  "source_id": "naif-cspice",
+  "payload_kind": "offline-kernel-toolkit-boundary",
+  "status": "schema_only",
+  "required_fields": [
+    "payload_id",
+    "source_id",
+    "payload_kind",
+    "toolkit_reference",
+    "kernel_set",
+    "kernel_policy",
+    "local_materialization_status",
+    "provenance",
+    "hash_algorithm",
+    "created_at_utc"
+  ],
+  "required_kernel_fields": [
+    "kernel_id",
+    "kernel_role",
+    "expected_range",
+    "local_materialization_status"
+  ],
+  "forbidden_claims": [
+    "SPICE kernel materialized",
+    "CSPICE toolkit integrated",
+    "generated astronomy artifact",
+    "astronomy-engine supported"
+  ]
+}

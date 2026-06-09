@@ -21,7 +21,7 @@ const server = createServer(async (request, response) => {
 
   if (!candidate.startsWith(resolve(root))) {
     response.writeHead(403, { "Content-Type": "text/plain; charset=utf-8" });
-    response.end("Forbidden");
+    response.end("禁止访问");
     return;
   }
 
@@ -37,11 +37,11 @@ const server = createServer(async (request, response) => {
     createReadStream(candidate).pipe(response);
   } catch {
     response.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" });
-    response.end("Not Found");
+    response.end("未找到");
   }
 });
 
 server.listen(port, "127.0.0.1", () => {
-  console.log(`minggui frontend listening on http://127.0.0.1:${port}`);
+  console.log(`命轨前端监听 http://127.0.0.1:${port}`);
 });
 

@@ -28,10 +28,11 @@ request
 
 | # | Gate | Command or Check | Stage | Blocking |
 | --- | --- | --- | --- | --- |
-| 1 | Governance scaffold | `tools/check-governance-scaffold.ps1` | pre-commit/CI | yes |
+| 1 | Project full check | `tools/check-project.ps1` | pre-commit/CI | yes |
+| 1a | Governance scaffold | `tools/check-governance-scaffold.ps1` | pre-commit/CI | yes |
 | 2 | Rust format | `cargo fmt --check` | pre-commit/CI | yes |
-| 3 | Rust compile | `cargo check` | CI | yes |
-| 4 | JS syntax | `node --check frontend/server.mjs`; `node --check frontend/src/main.js` | CI | yes |
+| 3 | Rust tests | `cargo test` | CI | yes |
+| 4 | JS syntax and tests | `npm.cmd run check` in `frontend/` | CI | yes |
 | 5 | Full tree drift | review changed files against full tree | closeout | yes |
 | 6 | Module tree drift | review boundary changes against module tree | closeout | yes |
 | 7 | Data provenance | raw/derived lunar data source review | closeout | yes for data changes |
@@ -57,4 +58,3 @@ request
 - Residual risk.
 - Follow-up owner and milestone.
 - Whether governance docs or gates must evolve.
-

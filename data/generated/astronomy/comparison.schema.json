@@ -1,0 +1,37 @@
+{
+  "schema_id": "fate-track-android-astronomy-comparison-v1",
+  "status": "schema_only",
+  "required_fields": [
+    "comparison_id",
+    "manifest_id",
+    "source_policy_id",
+    "android_algorithm_version",
+    "astronomy_engine_version",
+    "generated_range",
+    "rows_compared",
+    "difference_summary",
+    "difference_rows",
+    "created_at_utc"
+  ],
+  "required_difference_row_fields": [
+    "date",
+    "field",
+    "android_value",
+    "astronomy_value",
+    "category",
+    "resolution_status"
+  ],
+  "allowed_categories": [
+    "android_table_difference",
+    "astronomy_source_difference",
+    "ruleset_difference",
+    "timezone_history_difference",
+    "unresolved"
+  ],
+  "allowed_resolution_status": [
+    "accepted_android_baseline",
+    "accepted_astronomy_candidate",
+    "requires_manual_review",
+    "unresolved"
+  ]
+}

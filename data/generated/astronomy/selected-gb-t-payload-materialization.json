@@ -1,0 +1,70 @@
+{
+  "selected_source_payload_materialization_id": "m10-gb-t-payload-materialization-v1",
+  "milestone": "M10",
+  "loop": "LOOP-054",
+  "work_package": "M10-WP2",
+  "status": "selected_source_payload_materialized",
+  "selected_gb_t_payload_materialization_preflight_id": "m10-gb-t-payload-materialization-preflight-v1",
+  "source_payload_materialization_policy_id": "m10-source-payload-materialization-policy-v1",
+  "source_capture_procedure_id": "m10-source-capture-procedure-v1",
+  "source_snapshot_manifest_id": "m10-source-snapshot-manifest-v1",
+  "selected_source": {
+    "source_id": "gb-t-33661-2017",
+    "payload_kind": "calendar-rule-reference",
+    "payload_path": "data/generated/astronomy/source-snapshots/payloads/gb-t-33661-2017-rule-reference.json",
+    "payload_format": "utf-8-json",
+    "payload_status": "materialized",
+    "hash_algorithm": "sha256",
+    "sha256": "7145ecb921d55580eac71d266b31f961b1b9e497cda805c942647737aa764f31"
+  },
+  "current_materialized_sources": [
+    {
+      "source_id": "naif-cspice",
+      "payload_path": "data/generated/astronomy/source-snapshots/payloads/naif-cspice-kernel-boundary.json",
+      "sha256": "4c946457eb38425feb7bf87fce47583cd75456447c33f5152f4890f786afe5a2"
+    },
+    {
+      "source_id": "iau-sofa-ansi-c",
+      "payload_path": "data/generated/astronomy/source-snapshots/payloads/iau-sofa-routine-version.json",
+      "sha256": "436e197eb7e5aa24e22a493b6d7a79214ff4d7e5255b8f7763a4fbb3385d556f"
+    },
+    {
+      "source_id": "jpl-horizons-api",
+      "payload_path": "data/generated/astronomy/source-snapshots/payloads/jpl-horizons-validation-samples.json",
+      "sha256": "acddbee906bd4540795993a828b9308af5ab964c002739929e44e28249b444f9"
+    },
+    {
+      "source_id": "gb-t-33661-2017",
+      "payload_path": "data/generated/astronomy/source-snapshots/payloads/gb-t-33661-2017-rule-reference.json",
+      "sha256": "7145ecb921d55580eac71d266b31f961b1b9e497cda805c942647737aa764f31"
+    }
+  ],
+  "materialized_payload_count": 4,
+  "allowed_materialized_sources": [
+    "naif-cspice",
+    "iau-sofa-ansi-c",
+    "jpl-horizons-api",
+    "gb-t-33661-2017"
+  ],
+  "source_payload_claim": "calendar-rule-reference-boundary-only",
+  "standard_text_copied": false,
+  "external_calls_performed": false,
+  "generated_artifact_allowed": false,
+  "generated_artifact_hash_allowed": false,
+  "manifest_acceptance_change_allowed": false,
+  "runtime_behavior_change_allowed": false,
+  "android_baseline_replacement_allowed": false,
+  "capability_status": "target",
+  "forbidden_after_materialization": [
+    "copy GB/T standard text into repository",
+    "treat GB/T rule-reference boundary as implemented calendar algorithm",
+    "write generated astronomy artifacts",
+    "compute generated artifact hashes",
+    "perform external API call in full project gate",
+    "mark draft manifest accepted",
+    "change calendar-date-query runtime behavior",
+    "change chart-create runtime behavior",
+    "replace android-date-layer-v1",
+    "claim astronomy-engine supported"
+  ]
+}

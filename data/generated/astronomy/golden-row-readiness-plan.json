@@ -1,0 +1,66 @@
+{
+  "golden_row_readiness_plan_id": "m9-golden-row-materialization-readiness-v1",
+  "status": "readiness_only",
+  "golden_plan_id": "astronomy-engine-v0-golden-cases-plan",
+  "generator_contract_id": "m9-astronomy-generator-contract-v1",
+  "artifact_writer_plan_id": "m9-astronomy-artifact-writer-plan-v1",
+  "comparison_runner_plan_id": "m9-android-astronomy-comparison-runner-plan-v1",
+  "category_status_required": "not_generated",
+  "required_before_materialization": [
+    "generator contract remains contract_only",
+    "artifact writer dry-run remains no_write_preview",
+    "comparison runner dry-run remains zero-row",
+    "source references are available for every category",
+    "expected Android and astronomy values are specified before row acceptance",
+    "difference classification is required before manifest acceptance"
+  ],
+  "category_readiness": [
+    {
+      "id": "1901-2100-boundary",
+      "minimum_cases": 4,
+      "status": "not_generated",
+      "readiness_status": "blocked_until_generated_rows"
+    },
+    {
+      "id": "2033-anomaly",
+      "minimum_cases": 6,
+      "status": "not_generated",
+      "readiness_status": "blocked_until_generated_rows"
+    },
+    {
+      "id": "lichun-boundary",
+      "minimum_cases": 6,
+      "status": "not_generated",
+      "readiness_status": "blocked_until_generated_rows"
+    },
+    {
+      "id": "qingming-boundary",
+      "minimum_cases": 4,
+      "status": "not_generated",
+      "readiness_status": "blocked_until_generated_rows"
+    },
+    {
+      "id": "jiazi-day-anchor",
+      "minimum_cases": 4,
+      "status": "not_generated",
+      "readiness_status": "blocked_until_generated_rows"
+    },
+    {
+      "id": "near-midnight-solar-lunar-event",
+      "minimum_cases": 6,
+      "status": "not_generated",
+      "readiness_status": "blocked_until_generated_rows"
+    }
+  ],
+  "generated_artifact_status": "boundary_placeholder",
+  "generated_artifact_materialization_id": "m10-generated-artifact-materialization-v1",
+  "generated_artifact_note": "Generated artifacts exist as boundary placeholders. Golden rows cannot be materialized until real astronomical data is computed.",
+  "forbidden_in_readiness_stage": [
+    "generate golden rows",
+    "write golden fixture file",
+    "mark golden category generated",
+    "claim boundary tests passed",
+    "mark manifest accepted",
+    "claim astronomy-engine supported"
+  ]
+}

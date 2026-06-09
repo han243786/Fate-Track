@@ -1,0 +1,64 @@
+{
+  "audit_id": "m9-astronomy-precloseout-audit-v1",
+  "milestone": "M9",
+  "status": "full_m9_closeout_blocked_preflight_ready",
+  "capability": "astronomy-engine",
+  "capability_status": "target",
+  "preflight_closeout_allowed": true,
+  "full_closeout_allowed": false,
+  "generated_artifacts_accepted": false,
+  "android_baseline_replacement_allowed": false,
+  "wider_range_supported": false,
+  "true_solar_time_supported": false,
+  "timezone_history_supported": false,
+  "blocking_acceptance_items": [
+    {
+      "id": "generated-astronomy-table",
+      "m9_acceptance": "星历黄金表生成可复现",
+      "current_evidence": "generation-plan.json and dry-run generator only",
+      "status": "missing"
+    },
+    {
+      "id": "artifact-hashes",
+      "m9_acceptance": "生成数据必须有 hash",
+      "current_evidence": "draft manifest artifact_hashes.status is missing",
+      "status": "missing"
+    },
+    {
+      "id": "android-comparison-report",
+      "m9_acceptance": "Android 对照差异报告完整",
+      "current_evidence": "comparison-report-template.md and comparison dry-run only",
+      "status": "missing"
+    },
+    {
+      "id": "golden-case-rows",
+      "m9_acceptance": "2033、立春、清明、甲子日、真太阳时边界测试通过",
+      "current_evidence": "golden-cases-plan.json and golden dry-run only",
+      "status": "missing"
+    },
+    {
+      "id": "replay-tests",
+      "m9_acceptance": "旧版本命盘可复现",
+      "current_evidence": "replay-policy-draft.md and replay-policy dry-run only",
+      "status": "missing"
+    },
+    {
+      "id": "runtime-integration",
+      "m9_acceptance": "星历/天文事件驱动的历法引擎",
+      "current_evidence": "no runtime astronomy engine integration",
+      "status": "missing"
+    }
+  ],
+  "preflight_evidence_files": [
+    "markdown/20-roadmap/27-milestone-09-preflight.md",
+    "markdown/20-roadmap/28-milestone-09-source-availability.md",
+    "markdown/20-roadmap/29-milestone-09-manifest-draft.md",
+    "markdown/20-roadmap/30-milestone-09-generation-plan.md",
+    "markdown/20-roadmap/31-milestone-09-generator-dry-run.md",
+    "markdown/20-roadmap/32-milestone-09-comparison-golden-replay-plan.md",
+    "markdown/20-roadmap/33-milestone-09-comparison-dry-run.md",
+    "markdown/20-roadmap/34-milestone-09-golden-dry-run.md",
+    "markdown/20-roadmap/35-milestone-09-replay-policy-dry-run.md"
+  ],
+  "next_required_work": "start generated-data implementation planning without capability promotion, or split actual astronomy-engine implementation into a later milestone if M9 closes only as preflight"
+}
