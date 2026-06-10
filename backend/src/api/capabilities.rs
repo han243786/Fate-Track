@@ -17,7 +17,7 @@ pub fn capabilities() -> Response {
     Response::json(format!("{{\"capabilities\":[{items}]}}"))
 }
 
-fn capability_catalog() -> [Capability; 16] {
+fn capability_catalog() -> [Capability; 17] {
     [
         Capability {
             id: "health",
@@ -114,6 +114,12 @@ fn capability_catalog() -> [Capability; 16] {
             status: "supported",
             route: "data/generated/astronomy/out/*",
             source: "astronomy-engine-v1-adr-0019",
+        },
+        Capability {
+            id: "chart-report",
+            status: "restricted",
+            route: "/api/charts/report",
+            source: "colloquial-report-v1",
         },
     ]
 }
@@ -229,5 +235,22 @@ mod tests {
         let body = capabilities().body;
         assert!(body.contains("\"id\":\"astronomy-engine\""));
         assert!(body.contains("\"status\":\"supported\""));
+    }
+
+    #[test]
+    fn exposes_chart_report_as_restricted_after_m24() {
+        let catalog = capability_catalog();
+        let capability = catalog
+            .iter()
+            .find(|capability| capability.id == "chart-report")
+            .expect("chart-report capability should be declared");
+
+        assert_eq!(capability.status, "restricted");
+        assert_eq!(capability.route, "/api/charts/report");
+        assert_eq!(capability.source, "colloquial-report-v1");
+
+        let body = capabilities().body;
+        assert!(body.contains("\"id\":\"chart-report\""));
+        assert!(body.contains("\"status\":\"restricted\""));
     }
 }

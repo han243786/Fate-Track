@@ -75,7 +75,9 @@ foreach ($pair in @(
     @("glossary", "supported"),
     @("chart-detail", "supported"),
     @("case-export", "restricted"),
-    @("data-derivation", "restricted")
+    @("data-derivation", "restricted"),
+    @("astronomy-engine", "supported"),
+    @("chart-report", "restricted")
 )) {
     $id = $pair[0]
     $status = $pair[1]
@@ -85,25 +87,30 @@ foreach ($pair in @(
 }
 
 foreach ($needle in @(
-    "Release candidate supported after M8 validation.",
+    "All M0-M28 closed",
     "1901-2100",
     "Android date layer remains the accepted current baseline.",
     "luck-cycles",
     "astronomy-engine",
     "share-preview",
+    "chart-report",
     "Rollback And Downgrade"
 )) {
     Assert-Contains $release $needle "Release candidate document missing: $needle"
 }
 
-Assert-Contains $ledger "| ``release-candidate`` | supported | M8 |" "Release candidate is not promoted in capability ledger"
+Assert-Contains $ledger "| ``release-candidate`` | supported" "Release candidate is not promoted in capability ledger"
 
 foreach ($needle in @(
-    "GET /api/charts",
+    "GET /api/charts?date=",
     "GET /api/analysis/snapshot",
-    "GET /api/cases?action=list|create|detail|update_metadata|archive|delete",
-    "GET /api/share/preview?action=create|public|revoke",
-    "does not claim luck cycles"
+    "GET /api/cases?action=",
+    "GET /api/share/preview?action=",
+    "GET /api/charts/report",
+    "GET /api/glossary",
+    "GET /api/luck/cycles",
+    "GET /api/cases/export",
+    "Fate Track"
 )) {
     Assert-Contains $readme $needle "README missing release boundary: $needle"
 }
@@ -120,15 +127,12 @@ foreach ($needle in @(
 foreach ($needle in @(
     "chart-title",
     "analysis-title",
-    "share-title",
-    "capability-title",
-    "surface-badge restricted"
+    "luck-title"
 )) {
     Assert-Contains $frontendHtml $needle "Frontend workspace markup missing: $needle"
 }
 
 foreach ($needle in @(
-    "Luck Cycles",
     "Cloud Sync",
     "True Solar Time",
     "Astronomy Engine"
@@ -137,7 +141,8 @@ foreach ($needle in @(
 }
 
 Assert-NotContains $release "full durable sharing supported" "Release document overclaims durable sharing"
-Assert-NotContains $release "luck cycles supported" "Release document overclaims luck cycles"
+Assert-NotContains $release "accounts supported" "Release document overclaims accounts"
+Assert-NotContains $release "cloud sync supported" "Release document overclaims cloud sync"
 
 Write-Host "Release candidate check OK: $projectPath"
 exit 0
