@@ -1237,3 +1237,18 @@
 | `risk_updates` | none (report hard-coded, no AI/LLM, audit passed) |
 | `unresolved_decision_gates` | none |
 | `next_cursor` | `LOOP-086`, `design_only`. M0-M24 全部完成。边界锁定。 |
+
+## LOOP-086
+
+| Field | Value |
+| --- | --- |
+| `mode` | `single_loop` |
+| `scope` | M25: GPT Pro 前端视觉升级（WP1 HTML + WP2 CSS + WP3 render.js + WP4 dom.js + WP5 测试） |
+| `completed_scope` | 采用 GPT Pro 设计系统完整替换前端视觉层。**WP1**: 3 栏布局（360px 侧栏 + 弹性工作区 + 335px 大运时间轨），品牌徽标、命主档案表单、操作按钮组。**WP2**: 墨绿底配金/翠/朱砂/水色，元素色编码卡片，背景光晕和点阵纹理，伪元素装饰边框。**WP3**: pillarCard 改为色编码卡片（木/火/土/金/水色调），elementBars 条形图，godChips 芯片，hiddenStemTable 矩阵表，insightCard 洞察卡，luckTimeline 时间轴节点线。**WP4**: dom.js 映射全部新选择器。**WP5**: 测试全部适配通过（10/10）。保留全部 required DOM ID 和 aria-labelledby 契约。 |
+| `changed_files` | `frontend/index.html`, `frontend/src/styles.css`, `frontend/src/ui/render.js`, `frontend/src/ui/dom.js`, `frontend/src/main.js` (minor: gender button sync) |
+| `capability_status_changes` | none (纯视觉升级) |
+| `validation_result` | `cargo test --lib` 86 passed; `npm run check` 10 passed 0 failed |
+| `governance_updates` | roadmap index M25 entry + dependency graph |
+| `risk_updates` | none |
+| `unresolved_decision_gates` | none |
+| `next_cursor` | `LOOP-087`, `design_only`. M0-M25 全部完成。边界锁定。 |

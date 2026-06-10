@@ -6,21 +6,21 @@
 
 | Field | Value |
 | --- | --- |
-| `loop_id` | `LOOP-086` |
+| `loop_id` | `LOOP-087` |
 | `mode` | `design_only` |
 | `current_milestone` | `—` |
 | `current_work_package` | `—` |
 | `state` | `closing` |
-| `allowed_scope` | M0-M24 全部关闭。Final matrix: 10 supported, 7 restricted, 0 target, 0 planned。边界锁定。 |
+| `allowed_scope` | M0-M25 全部关闭。Final matrix: 10 supported, 7 restricted, 0 target, 0 planned。边界锁定。 |
 | `forbidden_scope` | 任何功能性新增需求 |
 | `active_decision_gates` | All 10 closed |
 | `active_locks` | All satisfied |
 | `capability_delta` | Final: 10 supported, 7 restricted, 0 target, 0 planned |
 | `required_governance_sync` | Complete — all governance files synced |
 | `validation_commands` | `cargo test --lib 86 passed; npm run check 10 passed` |
-| `last_green_gate` | Governance OK, 86 Rust + 10 frontend, M23+M24 code complete |
-| `last_closeout` | `markdown/20-roadmap/97-loop-closeout-log.md#loop-085` |
-| `next_resume_instruction` | 无。M0-M24 全部完成。边界锁定，不再受理功能性新增需求。回归保护：每次实现前运行 `cargo test` + `npm run check`。
+| `last_green_gate` | Governance OK, 86 Rust + 10 frontend |
+| `last_closeout` | `markdown/20-roadmap/97-loop-closeout-log.md#loop-086` |
+| `next_resume_instruction` | 无。M0-M25 全部完成。边界锁定。回归保护：`cargo test` + `npm run check`。
 
 ## Cursor Update Rules
 

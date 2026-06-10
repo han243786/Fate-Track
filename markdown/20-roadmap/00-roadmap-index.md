@@ -42,8 +42,9 @@
 | M22 | `82-milestone-22-frontend-report-export.md` | 前端导出分析报告按钮（纯本地） | export button + JSON download |
 | M23 | `83-milestone-23-astronomy-engine-promotion.md` | 天文引擎从 target 晋级 supported：replacement ADR + 运行时集成 + 能力晋级 | astronomy-engine supported |
 | M24 | `84-milestone-24-chart-report.md` | 新增排盘口语化报告：后端内容生成（硬编码模板）+ 前端单按钮渲染 | chart-report restricted |
+| M25 | `85-milestone-25-frontend-visual-upgrade.md` | 采用 GPT Pro 设计系统替换前端视觉：3 栏布局、元素色编码四柱、条形图五行、芯片十神、时间轴大运 | 无能力变化，纯视觉升级 |
 
-**All milestones M0-M24 closed. 86 Rust + 10 frontend tests pass. 10 supported, 7 restricted, 0 target, 0 planned. 边界已锁定。**
+**All milestones M0-M25 closed. 86 Rust + 10 frontend tests pass. 10 supported, 7 restricted, 0 target, 0 planned. 边界已锁定。**
 
 ## 3. 横向治理文件
 
@@ -156,6 +157,7 @@ flowchart TD
     M12 --> M24
     M13 --> M24
     M21 --> M24
+    M24 --> M25["M25 Frontend Visual Upgrade (GPT Pro design)"]
 ```
 
 ## 5. 不变量

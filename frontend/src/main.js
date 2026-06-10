@@ -14,6 +14,7 @@ const dom = getDom();
 const state = createAppState({ apiBase: loadApiBase() ?? defaultApiBase });
 
 hydrateForm();
+bindSexButtons();
 
 dom.chartForm.runButton.addEventListener("click", () => {
   readChartForm();
@@ -46,12 +47,22 @@ async function runChartWorkspace(client = new ApiClient(state.apiBase)) {
       const luck = await client.luckCycles(chartRequest());
       renderLuckCycles(dom, luck);
     } catch (e) {
-      dom.luck.container.innerHTML = `<p class="empty-state">大运: ${e.message}</p>`;
+      dom.luck.container.innerHTML = `<li class="empty-state">大运: ${e.message}</li>`;
     }
   } catch (error) {
     renderChartError(dom, error);
     renderAnalysisError(dom, error);
   }
+}
+
+function bindSexButtons() {
+  dom.chartForm.sexButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      dom.chartForm.sexButtons.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      dom.chartForm.sex.value = btn.dataset.sex || "unspecified";
+    });
+  });
 }
 
 function showLunar(lunar) {
@@ -64,6 +75,10 @@ function hydrateForm() {
   dom.chartForm.date.value = state.chartForm.date;
   dom.chartForm.time.value = state.chartForm.time;
   dom.chartForm.sex.value = state.chartForm.sex;
+  // Sync sex buttons
+  dom.chartForm.sexButtons.forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.sex === state.chartForm.sex);
+  });
 }
 
 function readChartForm() {

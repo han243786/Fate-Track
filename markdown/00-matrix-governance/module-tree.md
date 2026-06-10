@@ -30,7 +30,7 @@
 | `frontend.shell` | `frontend/index.html`, `frontend/server.mjs`, `frontend/package.json` | 前端页面壳、本地静态服务、脚本入口 |
 | `frontend.api` | `frontend/src/api/client.js`, `frontend/src/config.js`, `frontend/tests/api-client.test.mjs` | Backend API client for date-layer, chart, analysis, local cases, restricted share preview, and capability tests |
 | `frontend.state` | `frontend/src/state.js`, `frontend/src/main.js` | 应用状态与启动编排 |
-| `frontend.ui` | `frontend/src/ui/*`, `frontend/src/styles.css` | M7 workspace DOM mapping, rendering, restricted/supported labels, and responsive layout |
+| `frontend.ui` | `frontend/src/ui/*`, `frontend/src/styles.css` | M25 GPT Pro 设计：3 栏布局，色编码四柱卡片，条形图五行，芯片十神，藏干矩阵，洞察卡，大运时间轴；完整暗色主题 |
 | `frontend.utils` | `frontend/src/utils/format.js`, `frontend/tests/format.test.mjs` | 纯格式化函数和测试 |
 | `data.lunar.raw` | `data/README.md`, `data/raw/lunar_data.yaml` | 农历基础数据真源 |
 | `governance.matrix` | `markdown/**`, `docs/decisions/*` | 治理文档和决策记录 |

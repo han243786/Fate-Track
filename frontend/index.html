@@ -1,81 +1,147 @@
 <!doctype html>
 <html lang="zh-CN">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>命轨工作台</title>
-    <link rel="stylesheet" href="./src/styles.css" />
-  </head>
-  <body>
-    <div class="app-shell">
-      <aside class="side-desk" aria-label="起盘侧栏">
-        <header class="topbar">
-          <div class="brand-lockup">
-            <h1>命轨排盘</h1>
-          </div>
-        </header>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>命轨工作台 · Fate Track</title>
+  <link rel="stylesheet" href="./src/styles.css" />
+</head>
+<body>
+  <main class="app-shell" aria-label="命轨命盘工作台">
+    <aside class="side-desk" aria-label="起盘侧栏">
+      <section class="brand-card" aria-label="品牌">
+        <div class="logo-mark" aria-hidden="true">
+          <span class="logo-orbit orbit-a"></span>
+          <span class="logo-orbit orbit-b"></span>
+          <span class="logo-needle"></span>
+          <span class="logo-core"></span>
+        </div>
+        <div>
+          <div class="brand-title">命轨</div>
+          <div class="brand-subtitle">Fate Track</div>
+        </div>
+        <span class="seal-mark" aria-hidden="true">命<br />理</span>
+      </section>
 
-        <section class="panel form-panel" aria-labelledby="chart-form-title">
-          <div class="panel-heading">
-            <h2 id="chart-form-title">命主资料</h2>
+      <section class="desk-section" aria-labelledby="chart-form-title">
+        <div class="section-heading">
+          <span class="heading-icon">▣</span>
+          <span id="chart-form-title">命主档案台</span>
+        </div>
+
+        <div class="archive-card ornament-card">
+          <div class="form-section-title" style="display:flex;align-items:center;gap:8px;margin-bottom:16px;font-size:0.78rem;color:var(--muted);">
+            <span id="chart-form-title">命主信息</span>
+            <em style="margin-left:auto;font-size:0.7rem;color:var(--faint);">出生资料</em>
           </div>
-          <div class="form-grid birth-grid">
-            <label class="field">
-              <span>公历日期</span>
+
+          <label class="field-row">
+            <span class="field-label"><span aria-hidden="true" class="field-icon">◴</span>公历日期</span>
+            <span class="field-shell">
               <input id="chart-date" type="date" />
-            </label>
-            <label class="field">
-              <span>出生时间</span>
+            </span>
+          </label>
+
+          <label class="field-row">
+            <span class="field-label"><span aria-hidden="true" class="field-icon">◷</span>出生时间</span>
+            <span class="field-shell">
               <input id="chart-time" type="time" />
-            </label>
-            <label class="field">
-              <span>性别</span>
-              <select id="chart-sex">
-                <option value="unspecified">未指定</option>
-                <option value="male">男</option>
-                <option value="female">女</option>
-              </select>
-            </label>
-          </div>
-          <dl class="lunar-inline" id="lunar-inline">
-            <div><dt>农历</dt><dd id="lunar-display">--</dd></div>
-          </dl>
-          <div class="action-row">
-            <button id="chart-run-button" type="button">排盘</button>
-            <button id="chart-report-button" type="button">查看命盘报告</button>
-          </div>
-        </section>
-      </aside>
+            </span>
+          </label>
 
-      <main class="workspace">
-        <section class="panel chart-panel" aria-labelledby="chart-title">
-          <div class="panel-heading">
-            <h2 id="chart-title">四柱命盘</h2>
+          <div class="field-row gender-row">
+            <span class="field-label">性别</span>
+            <span class="gender-options" role="group" aria-label="性别">
+              <button class="gender-option" type="button" data-sex="unspecified"><span>—</span>未指定</button>
+              <button class="gender-option" type="button" data-sex="male"><span>♂</span>男</button>
+              <button class="gender-option" type="button" data-sex="female"><span>♀</span>女</button>
+            </span>
+            <input id="chart-sex" type="hidden" value="unspecified" />
           </div>
-          <div class="chart-board" aria-label="四柱排盘结果">
-            <dl class="pillar-grid" id="pillar-grid"></dl>
+
+          <div class="lunar-card">
+            <div class="lunar-title">✦ 农历</div>
+            <div class="lunar-value">
+              <span id="lunar-display">--</span>
+            </div>
           </div>
-        </section>
+        </div>
 
-        <section class="panel luck-panel" aria-labelledby="luck-title">
-          <div class="panel-heading">
-            <h2 id="luck-title">大运排盘</h2>
-          </div>
-          <div id="luck-cycles" class="luck-cycles"></div>
-        </section>
+        <div class="action-stack" aria-label="操作">
+          <button id="chart-run-button" class="primary-action" type="button"><span>✥</span>起盘</button>
+          <button id="chart-report-button" class="secondary-action" type="button"><span>▤</span>查看命盘报告</button>
+        </div>
+      </section>
 
-        <div class="analysis-cards" id="analysis-cards"></div>
+      <div class="boundary-note">
+        <span class="shield">◇</span>
+        <span>只读排盘工作台 · 边界锁定</span>
+        <span class="lock">▣</span>
+      </div>
 
-        <section class="panel analysis-panel" aria-labelledby="analysis-title">
-          <div class="panel-heading">
-            <h2 id="analysis-title">格局分析</h2>
-          </div>
-          <div class="metric-columns" id="analysis-metrics"></div>
-        </section>
+      <footer class="side-footer">
+        <span>命轨 v1.0</span>
+        <span>引擎：微盘·三统</span>
+        <strong><i></i>就绪</strong>
+      </footer>
+    </aside>
 
-      </main>
-    </div>
+    <section class="workspace" aria-label="四柱命盘工作区" aria-labelledby="chart-title">
+      <header class="workspace-topbar">
+        <div class="title-flourish" aria-hidden="true">☁</div>
+        <h1 id="chart-title">四柱命盘</h1>
+        <div class="title-flourish mirrored" aria-hidden="true">☁</div>
+      </header>
 
-    <script type="module" src="./src/main.js"></script>
-  </body>
+      <section class="chart-hero ornament-card">
+        <div class="luopan" aria-hidden="true">
+          <span class="ring ring-1"></span>
+          <span class="ring ring-2"></span>
+          <span class="ring ring-3"></span>
+          <span class="ring ring-4"></span>
+          <span class="axis axis-v"></span>
+          <span class="axis axis-h"></span>
+          <span class="center-star"></span>
+        </div>
+        <div class="pillar-stage" id="pillar-grid" aria-label="四柱"></div>
+        <div class="summary-strip" id="chart-summary" aria-label="命盘摘要"></div>
+      </section>
+
+      <section class="data-grid" aria-label="结构数据">
+        <article class="data-panel ornament-card element-panel">
+          <div class="panel-title"><h2>五行结构</h2><span>ⓘ</span><em>权重</em></div>
+          <div id="elementBars" class="element-bars"></div>
+          <p class="panel-note">※ 五行强弱由八字干支统计得出，仅供参考</p>
+        </article>
+
+        <article class="data-panel ornament-card metric-panel">
+          <div class="panel-title"><h2>十神分布</h2><span>ⓘ</span></div>
+          <div id="godChips" class="god-chips"></div>
+          <div class="god-total"><span>合计</span><strong id="godTotal">0</strong></div>
+        </article>
+
+        <article class="data-panel ornament-card matrix-panel" id="analysis-metrics" aria-labelledby="analysis-title">
+          <div class="panel-title"><h2 id="analysis-title">藏干与格局</h2><span>ⓘ</span></div>
+          <div id="hiddenStemTable"></div>
+        </article>
+      </section>
+
+      <section class="insight-grid" id="analysis-cards" aria-label="洞察卡"></section>
+    </section>
+
+    <aside class="timeline-panel" aria-label="大运时间轨" aria-labelledby="luck-title">
+      <header class="timeline-header">
+        <div>
+          <span class="orbit-icon">◌</span>
+          <h2 id="luck-title">大运时间轨</h2>
+        </div>
+        <span id="luck-direction" style="font-size:0.72rem;color:var(--muted);"></span>
+      </header>
+      <ol class="luck-timeline" id="luck-cycles"></ol>
+      <div class="current-luck ornament-card" id="currentLuck"></div>
+    </aside>
+  </main>
+
+  <script type="module" src="./src/main.js"></script>
+</body>
 </html>
