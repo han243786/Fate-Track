@@ -1143,6 +1143,88 @@ html.report-root {
   .report-block { padding: 28px 18px; }
 }
 
+/* ── M26.1 Report layout fix: 固定目录 + 章节居中 ── */
+html.report-root {
+  scroll-padding-top: 88px;
+  scroll-snap-type: y proximity;
+}
+.report-hero,
+.report-block,
+.report-archive-footer {
+  scroll-snap-align: center;
+  scroll-margin-block: 10vh;
+}
+
+@media (min-width: 901px) {
+  .report-layout {
+    position: relative;
+    display: grid;
+    grid-template-columns: 230px minmax(0, 1fr);
+    gap: 30px;
+    align-items: start;
+  }
+  .report-index {
+    position: fixed;
+    top: 96px;
+    left: max(24px, calc((100vw - 1180px) / 2));
+    width: 230px;
+    max-height: calc(100dvh - 124px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    z-index: 18;
+    opacity: 0;
+    transform: translateX(-12px);
+    pointer-events: none;
+    transition: opacity 320ms ease, transform 320ms ease, border-color 320ms ease, box-shadow 320ms ease;
+  }
+  .report-body.report-index-live .report-index {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: auto;
+  }
+  .report-chapters {
+    grid-column: 2;
+    width: 100%;
+    align-items: center;
+  }
+  .report-disclaimer,
+  .report-block,
+  .report-archive-footer {
+    width: min(100%, 900px);
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .report-block {
+    min-height: calc(100dvh - 132px);
+    display: grid;
+    align-content: center;
+  }
+  .report-block-kicker,
+  .report-block-title,
+  .report-block-rule,
+  .report-block-body,
+  .report-block-footer { width: 100%; }
+  .report-block-title,
+  .report-block-body { max-width: 790px; }
+  .report-disclaimer { margin-top: 2vh; margin-bottom: 6vh; }
+  .report-archive-footer { min-height: calc(100dvh - 132px); }
+}
+
+@media (min-width: 901px) and (max-width: 1120px) {
+  .report-layout { grid-template-columns: 200px minmax(0, 1fr); gap: 22px; }
+  .report-index { left: 24px; width: 200px; }
+  .report-disclaimer,
+  .report-block,
+  .report-archive-footer { width: min(100%, 820px); }
+}
+
+@media (max-width: 900px) {
+  html.report-root { scroll-snap-type: none; }
+  .report-hero,
+  .report-block,
+  .report-archive-footer { scroll-snap-align: none; }
+}
+
 /* ── Desktop viewport lock: 主界面一屏填满，不产生 body 纵向滚动 ── */
 @media (min-width: 1201px) {
   html:not(.report-root),

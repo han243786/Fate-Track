@@ -224,6 +224,7 @@
           if (hero) {
             const rect = hero.getBoundingClientRect();
             const hh = Math.max(1, hero.offsetHeight);
+            body.classList.toggle("report-index-live", scrollTop > hh * 0.72);
             const hp = clamp(-rect.top / hh, 0, 1);
             hero.style.setProperty("--hero-y", `${hp * -54}px`);
             hero.style.setProperty("--hero-scale", `${1 - hp * 0.045}`);
@@ -276,17 +277,21 @@
           activeRatios.forEach((ratio, id) => { if (ratio > bestRatio) { bestRatio = ratio; bestId = id; } });
           setActiveTarget(bestId);
           requestTick();
-        }, { threshold: buildThresholdList(10), rootMargin: "-22% 0px -42% 0px" });
+        }, { threshold: buildThresholdList(10), rootMargin: "-42% 0px -42% 0px" });
         activeTargets.forEach((target) => activeObserver.observe(target));
 
-        indexLinks.forEach((link) => {
+        const jumpLinks = document.querySelectorAll(".report-index a, .report-enter");
+        jumpLinks.forEach((link) => {
           link.addEventListener("click", (event) => {
             const href = link.getAttribute("href");
             if (!href || !href.startsWith("#")) return;
             const target = document.querySelector(href);
             if (!target) return;
             event.preventDefault();
-            target.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" });
+            target.scrollIntoView({
+              behavior: reducedMotion ? "auto" : "smooth",
+              block: target.classList.contains("report-hero") ? "start" : "center"
+            });
           });
         });
 
