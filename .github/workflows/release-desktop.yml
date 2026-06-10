@@ -1,0 +1,167 @@
+name: Release Desktop Preview
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Quality gate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Rust
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: stable
+      - name: Run backend tests
+        run: cargo test --lib
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Run frontend checks
+        run: |
+          cd frontend
+          npm install
+          npm run check
+
+  build-linux:
+    name: Build Linux binary
+    runs-on: ubuntu-latest
+    needs: test
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Install system dependencies
+        run: sudo apt-get update && sudo apt-get install -y libwebkit2gtk-4.1-dev
+      - name: Set up Rust
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: stable
+      - name: Build Linux binary
+        run: cargo build -p minggui-desktop --release --locked
+      - name: Create Linux archive
+        run: |
+          mkdir -p dist
+          cp target/release/minggui-desktop dist/
+          cd dist
+          tar czf ../Fate-Track-Linux-x64.tar.gz minggui-desktop
+      - name: Upload Linux artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Fate-Track-Linux-x64
+          path: Fate-Track-Linux-x64.tar.gz
+
+  build-windows:
+    name: Build Windows binary
+    runs-on: windows-latest
+    needs: test
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Rust
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: stable
+      - name: Build Windows binary
+        run: cargo build -p minggui-desktop --release --locked
+      - name: Create Windows zip
+        run: |
+          $ErrorActionPreference = 'Stop'
+          New-Item -ItemType Directory -Path dist -Force | Out-Null
+          Copy-Item target/release/minggui-desktop.exe dist/
+          Compress-Archive -Path dist/minggui-desktop.exe -DestinationPath Fate-Track-Windows-x64.zip
+      - name: Upload Windows artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Fate-Track-Windows-x64
+          path: Fate-Track-Windows-x64.zip
+
+  build-macos:
+    name: Build macOS binary (arm64)
+    runs-on: macos-latest
+    needs: test
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Rust
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: stable
+      - name: Build macOS binary
+        run: cargo build -p minggui-desktop --release --locked
+      - name: Create macOS zip
+        run: |
+          mkdir -p dist
+          cp target/release/minggui-desktop dist/
+          cd dist
+          zip -r ../Fate-Track-macOS-arm64.zip minggui-desktop
+      - name: Upload macOS artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Fate-Track-macOS-arm64
+          path: Fate-Track-macOS-arm64.zip
+
+  checksum:
+    name: Generate checksums
+    runs-on: ubuntu-latest
+    needs: [build-linux, build-windows, build-macos]
+    steps:
+      - name: Download Linux artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: Fate-Track-Linux-x64
+      - name: Download Windows artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: Fate-Track-Windows-x64
+      - name: Download macOS artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: Fate-Track-macOS-arm64
+      - name: Compute SHA256 checksums
+        run: |
+          sha256sum Fate-Track-Linux-x64.tar.gz > SHA256SUMS.txt
+          sha256sum Fate-Track-Windows-x64.zip >> SHA256SUMS.txt
+          sha256sum Fate-Track-macOS-arm64.zip >> SHA256SUMS.txt
+      - name: Upload SHA256SUMS
+        uses: actions/upload-artifact@v4
+        with:
+          name: SHA256SUMS
+          path: SHA256SUMS.txt
+
+  assemble:
+    name: Assemble all-platforms zip
+    runs-on: ubuntu-latest
+    needs: checksum
+    steps:
+      - name: Download Linux artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: Fate-Track-Linux-x64
+      - name: Download Windows artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: Fate-Track-Windows-x64
+      - name: Download macOS artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: Fate-Track-macOS-arm64
+      - name: Download SHA256SUMS
+        uses: actions/download-artifact@v4
+        with:
+          name: SHA256SUMS
+      - name: Create all-platforms zip
+        run: zip -r Fate-Track-Desktop-All-Platforms.zip Fate-Track-Linux-x64.tar.gz Fate-Track-Windows-x64.zip Fate-Track-macOS-arm64.zip SHA256SUMS.txt
+      - name: Upload unified zip
+        uses: actions/upload-artifact@v4
+        with:
+          name: Fate-Track-Desktop-All-Platforms
+          path: Fate-Track-Desktop-All-Platforms.zip
