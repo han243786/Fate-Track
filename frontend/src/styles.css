@@ -355,6 +355,104 @@ button { color:inherit; border:0; cursor:pointer; }
 .report-block-title { font-family:var(--serif); font-size:1.15rem; color:var(--gold); margin:0 0 10px; letter-spacing:0.04em; }
 .report-block-body { font-family:var(--serif); font-size:0.98rem; line-height:1.9; color:var(--ink); margin:0; text-align:justify; }
 
+/* ── Desktop viewport lock: 主界面一屏填满，不产生 body 纵向滚动 ── */
+@media (min-width: 1201px) {
+  html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+  body { min-height: 100dvh; }
+
+  .app-shell {
+    --shell-pad: 4px;
+    --shell-gap: clamp(10px, 1vw, 18px);
+    --panel-gap: clamp(10px, 1.2vh, 16px);
+    width: min(100vw, 1920px);
+    height: 100dvh;
+    min-height: 0;
+    padding: var(--shell-pad);
+    gap: var(--shell-gap);
+    overflow: hidden;
+    grid-template-columns: clamp(300px, 18.8vw, 360px) minmax(0, 1fr) clamp(280px, 17.5vw, 335px);
+  }
+  .side-desk, .workspace, .timeline-panel {
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+  }
+  .side-desk, .timeline-panel { position: relative; top: auto; }
+
+  /* ── Left sidebar grid ── */
+  .side-desk { display: grid; grid-template-rows: auto minmax(0, 1fr) auto auto; }
+  .brand-card { height: clamp(104px, 13vh, 132px); padding: clamp(18px, 2vh, 26px) clamp(22px, 1.6vw, 30px); }
+  .desk-section { min-height: 0; padding: clamp(16px, 2vh, 22px) clamp(22px, 1.6vw, 30px); overflow: hidden; }
+  .archive-card { padding: clamp(16px, 1.8vh, 22px); }
+  .field-row { margin-bottom: clamp(9px, 1.25vh, 14px); }
+  .field-shell { padding: clamp(8px, 1.1vh, 11px) 14px; }
+  .action-stack { margin-top: clamp(12px, 1.5vh, 20px); }
+  .primary-action, .secondary-action { padding: clamp(10px, 1.4vh, 14px); }
+  .boundary-note { padding: clamp(9px, 1.2vh, 12px) 30px; }
+  .side-footer { padding: clamp(10px, 1.2vh, 14px) 30px; }
+
+  /* ── Workspace grid ── */
+  .workspace {
+    display: grid;
+    grid-template-rows: auto minmax(220px, 0.92fr) minmax(170px, 0.72fr) minmax(0, 0.68fr);
+    gap: var(--panel-gap);
+    padding-right: 0;
+  }
+  .workspace-topbar { padding: clamp(6px, 1vh, 10px) 8px clamp(8px, 1.2vh, 14px); }
+  .chart-hero {
+    height: 100%; min-height: 0; margin-bottom: 0;
+    padding: clamp(18px, 2.3vh, 28px) clamp(16px, 1.5vw, 22px) clamp(14px, 1.8vh, 22px);
+    display: grid; grid-template-rows: minmax(0, 1fr) auto; align-items: center;
+  }
+  .pillar-stage { align-items: center; }
+  .pillar-card { padding: clamp(12px, 1.7vh, 18px) 12px; }
+  .stem-branch { font-size: clamp(1.35rem, 2.2vw, 2.05rem); }
+  .summary-strip { margin-top: clamp(10px, 1.5vh, 18px); padding-top: clamp(10px, 1.4vh, 16px); }
+
+  /* ── Data grid 三列一行 ── */
+  .data-grid {
+    height: 100%; min-height: 0; margin-bottom: 0;
+    display: grid; grid-template-columns: 0.9fr 1fr 1.35fr; gap: var(--panel-gap);
+  }
+  .data-panel { min-height: 0; padding: clamp(14px, 1.8vh, 20px); overflow: hidden; }
+  .matrix-panel { grid-column: auto; overflow: hidden; }
+  .matrix-panel table { font-size: clamp(0.72rem, 0.82vw, 0.82rem); }
+  .matrix-panel th, .matrix-panel td { padding: clamp(5px, 0.8vh, 8px) 8px; }
+  .element-bars { gap: clamp(5px, 0.9vh, 8px); }
+  .god-chips { gap: clamp(5px, 0.8vh, 8px); }
+  .god-chip { padding: clamp(4px, 0.7vh, 6px) 10px; }
+
+  /* ── Insight cards 横向三张 ── */
+  .insight-grid {
+    height: 100%; min-height: 0;
+    display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--panel-gap);
+    overflow: hidden;
+  }
+  .insight-card { min-height: 0; padding: clamp(14px, 1.8vh, 20px); overflow: hidden; }
+  .insight-title { margin-bottom: clamp(6px, 1vh, 10px); }
+  .insight-card p {
+    font-size: clamp(0.76rem, 0.86vw, 0.88rem); line-height: 1.65;
+    display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .insight-tag { margin-top: auto; }
+
+  /* ── Right timeline equal height ── */
+  .timeline-panel {
+    display: grid; grid-template-rows: auto minmax(0, 1fr) auto;
+    gap: clamp(10px, 1.2vh, 18px); padding: clamp(16px, 2vh, 22px) clamp(14px, 1.4vw, 20px);
+  }
+  .timeline-header { margin-bottom: 0; padding-bottom: clamp(10px, 1.3vh, 14px); }
+  .luck-timeline { min-height: 0; overflow: hidden; display: grid; grid-auto-rows: minmax(0, 1fr); gap: clamp(6px, 0.9vh, 14px); }
+  .luck-item { min-height: 0; margin-bottom: 0; display: flex; align-items: center; }
+  .luck-card { width: 100%; padding: clamp(8px, 1.1vh, 12px) clamp(10px, 1vw, 14px); }
+  .luck-gz { font-size: clamp(0.95rem, 1.25vw, 1.15rem); margin-bottom: clamp(3px, 0.6vh, 6px); }
+  .current-luck { margin-top: 0; padding: clamp(12px, 1.5vh, 16px); }
+}
+
 /* ── Responsive ── */
 @media (max-width: 1480px) {
   .app-shell { grid-template-columns: 320px minmax(600px, 1fr) 280px; gap:12px; }
