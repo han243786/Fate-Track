@@ -58,7 +58,13 @@ export function renderChartError(dom, error) {
   dom.chart.summary.innerHTML = "";
 }
 
-export function renderAnalysis(dom, snapshot) {
+const BRANCH_HIDDEN = {
+  "子":["癸"], "丑":["己","癸","辛"], "寅":["甲","丙","戊"], "卯":["乙"],
+  "辰":["戊","乙","癸"], "巳":["丙","戊","庚"], "午":["丁","己"], "未":["己","丁","乙"],
+  "申":["庚","壬","戊"], "酉":["辛"], "戌":["戊","辛","丁"], "亥":["壬","甲"]
+};
+
+export function renderAnalysis(dom, snapshot, chartResult) {
   const metrics = snapshot.metrics ?? {};
 
   // Element bars
@@ -93,20 +99,39 @@ export function renderAnalysis(dom, snapshot) {
   });
   dom.analysis.godTotal.textContent = String(total);
 
-  // Hidden stem table
+  // Hidden stem table — derive actual stems from chart pillar branches
   dom.analysis.hiddenStemTable.innerHTML = "";
+  const pillars = chartResult?.pillars ?? {};
+  const branchMap = {
+    year_branch_hidden: pillars.year?.branch || null,
+    month_branch_hidden: pillars.month?.branch || null,
+    day_branch_hidden: pillars.day?.branch || null,
+    hour_branch_hidden: pillars.hour?.branch || null,
+  };
+  const hiddenLabels = { year_branch_hidden:"年支", month_branch_hidden:"月支", day_branch_hidden:"日支", hour_branch_hidden:"时支" };
   const hidden = metrics.hidden_stems ?? [];
+
   if (hidden.length > 0) {
     const table = document.createElement("table");
     table.innerHTML = `
-      <thead><tr><th>柱位</th><th>藏干</th><th>权重</th></tr></thead>
+      <thead><tr><th>柱位</th><th>地支</th><th>藏干</th><th>数量</th></tr></thead>
       <tbody></tbody>
     `;
     const tbody = table.querySelector("tbody");
-    const hiddenLabels = { year_branch_hidden:"年支", month_branch_hidden:"月支", day_branch_hidden:"日支", hour_branch_hidden:"时支" };
-    hidden.forEach(m => {
+
+    const orderedKeys = ["year_branch_hidden","month_branch_hidden","day_branch_hidden","hour_branch_hidden"];
+    orderedKeys.forEach(key => {
+      const metric = hidden.find(m => m.id === key);
+      const branch = branchMap[key];
+      if (!branch) return;
+      const stems = BRANCH_HIDDEN[branch] || [];
       const tr = document.createElement("tr");
-      tr.innerHTML = `<td>${hiddenLabels[m.id]||m.id}</td><td>—</td><td>${m.weight_x2}</td>`;
+      tr.innerHTML = `
+        <td>${hiddenLabels[key]}</td>
+        <td>${branch}</td>
+        <td>${stems.join("、")}</td>
+        <td>${stems.length}</td>
+      `;
       tbody.append(tr);
     });
     dom.analysis.hiddenStemTable.append(table);

@@ -41,7 +41,7 @@ async function runChartWorkspace(client = new ApiClient(state.apiBase)) {
       client.calendarDate(request.date)
     ]);
     renderChart(dom, chart);
-    renderAnalysis(dom, analysis);
+    renderAnalysis(dom, analysis, chart);
     showLunar(lunar);
     try {
       const luck = await client.luckCycles(chartRequest());
