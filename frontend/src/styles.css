@@ -338,31 +338,139 @@ button { color:inherit; border:0; cursor:pointer; }
 /* ── Empty state ── */
 .empty-state { color:var(--muted); font-size:0.88rem; text-align:center; padding:24px; }
 
-/* ── Report page reuse ── */
+/* ── Report portal page: 可滚动沉浸式命盘报告 ── */
+html.report-root,
+html.report-root body.report-body {
+  width: 100%; min-height: 100%; height: auto;
+  overflow-x: hidden; overflow-y: auto; scroll-behavior: smooth;
+}
+.report-body {
+  background:
+    radial-gradient(circle at 50% 10%, rgba(255,225,155,0.14), transparent 26rem),
+    radial-gradient(circle at 18% 42%, rgba(120,217,155,0.10), transparent 30rem),
+    radial-gradient(circle at 78% 66%, rgba(236,106,80,0.07), transparent 28rem),
+    linear-gradient(135deg, #040503 0%, #0a0e0d 48%, #050504 100%);
+}
+.report-body::before {
+  content:""; position:fixed; inset:-20vmax; z-index:-2; pointer-events:none; opacity:0.12;
+  background: repeating-radial-gradient(circle at center, rgba(217,181,106,0.42) 0 1px, transparent 1px 34px);
+  transform: rotate(-8deg);
+}
+.report-body::after {
+  content:""; position:fixed; inset:0; z-index:-1; pointer-events:none;
+  background-image:
+    radial-gradient(circle, rgba(255,233,175,0.65) 0 1px, transparent 1.5px),
+    radial-gradient(circle, rgba(120,217,155,0.38) 0 1px, transparent 1.5px);
+  background-size: 137px 137px, 211px 211px;
+  mask-image: linear-gradient(180deg, #000, #000 72%, transparent);
+  opacity:0.34;
+}
+
 .report-header {
-  display:flex; align-items:center; gap:24px; padding:16px 32px;
-  border-bottom:1px solid var(--line); background:var(--panel-2);
+  position:sticky; top:0; z-index:20; min-height:68px;
+  display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:24px;
+  padding:14px clamp(22px,4vw,64px);
+  border-bottom:1px solid rgba(226,186,99,0.22);
+  background: linear-gradient(180deg, rgba(8,12,10,0.88), rgba(8,12,10,0.58));
+  backdrop-filter: blur(18px);
 }
-.report-back { color:var(--gold); text-decoration:none; font-size:0.95rem; font-weight:500; }
+.report-back { color:var(--gold); text-decoration:none; font-size:0.95rem; font-weight:500; white-space:nowrap; }
 .report-back:hover { color:var(--gold-bright); }
-.report-page { max-width:820px; margin:0 auto; padding:32px 24px; }
-.report-disclaimer {
-  font-size:0.85rem; color:var(--muted); border-left:3px solid var(--gold);
-  padding:10px 16px; margin-bottom:32px; background:rgba(0,0,0,0.2); border-radius:0 var(--radius-md) var(--radius-md) 0; line-height:1.6;
+.report-brand { display:flex; flex-direction:column; align-items:center; line-height:1.2; }
+.report-brand strong { font-family:var(--serif); color:var(--gold-bright); font-size:1.05rem; letter-spacing:0.12em; }
+.report-brand span { color:var(--muted); font-size:0.68rem; letter-spacing:0.16em; text-transform:uppercase; }
+.report-progress-label { color:var(--jade); font-size:0.72rem; letter-spacing:0.08em; }
+.report-progress {
+  position:absolute; left:0; bottom:-1px; width:100%; height:1px;
+  transform:scaleX(0); transform-origin:left center;
+  background: linear-gradient(90deg, var(--jade), var(--gold-bright), var(--cinnabar));
+  box-shadow: 0 0 18px rgba(255,225,155,0.6);
 }
-.report-block { margin-bottom:28px; padding-bottom:24px; border-bottom:1px solid var(--line); }
-.report-block:last-child { border-bottom:0; }
-.report-block-title { font-family:var(--serif); font-size:1.15rem; color:var(--gold); margin:0 0 10px; letter-spacing:0.04em; }
-.report-block-body { font-family:var(--serif); font-size:0.98rem; line-height:1.9; color:var(--ink); margin:0; text-align:justify; }
+
+.report-page { width: min(1180px, calc(100vw - 48px)); max-width:none; margin:0 auto; padding:0 0 96px; }
+
+.report-hero {
+  min-height: calc(100dvh - 68px); display:grid; place-items:center;
+  position:relative; text-align:center; overflow:hidden;
+}
+.report-hero::before {
+  content:""; position:absolute; width: min(78vw, 820px); aspect-ratio:1; border-radius:50%; opacity:0.18;
+  background:
+    repeating-radial-gradient(circle, rgba(217,181,106,0.52) 0 1px, transparent 1px 42px),
+    radial-gradient(circle, rgba(255,225,155,0.2), transparent 58%);
+  box-shadow: inset 0 0 80px rgba(255,225,155,0.12);
+}
+.report-hero-inner { position:relative; z-index:1; max-width:760px; padding:48px 32px; }
+.report-kicker { color:var(--jade); font-size:0.76rem; letter-spacing:0.22em; text-transform:uppercase; }
+.report-hero h1 { margin:16px 0 12px; font-family:var(--serif); font-size:clamp(3rem,8vw,7rem); color:var(--gold-bright); letter-spacing:0.16em; text-shadow:0 0 48px rgba(255,225,155,0.28); }
+.report-hero p { color:var(--muted); line-height:1.9; }
+.report-meta { margin-top:28px; display:flex; justify-content:center; flex-wrap:wrap; gap:10px; }
+.report-meta span { padding:8px 14px; border:1px solid rgba(226,186,99,0.28); border-radius:999px; background:rgba(0,0,0,0.24); color:var(--faint); font-size:0.78rem; }
+
+.report-layout { display:grid; grid-template-columns:220px minmax(0, 1fr); gap:28px; align-items:start; }
+.report-index { position:sticky; top:96px; padding:18px; border:1px solid var(--line); border-radius:var(--radius-lg); background:rgba(10,17,15,0.72); backdrop-filter:blur(16px); }
+.report-index-title { margin-bottom:14px; font-family:var(--serif); color:var(--gold); letter-spacing:0.08em; }
+.report-index a { display:block; padding:9px 10px; color:var(--muted); text-decoration:none; border-radius:10px; font-size:0.82rem; }
+.report-index a:hover, .report-index a.is-active { color:var(--gold-bright); background:rgba(217,181,106,0.08); }
+.report-chapters { display:flex; flex-direction:column; gap:36px; }
+.report-chapters { counter-reset: report-section; }
+
+.report-block {
+  min-height:72vh; margin:0; padding:clamp(30px,5vw,64px); position:relative; overflow:hidden;
+  border:1px solid rgba(226,186,99,0.24); border-radius:28px;
+  background:
+    linear-gradient(135deg, rgba(16,24,20,0.9), rgba(6,9,8,0.92)),
+    radial-gradient(circle at 84% 18%, rgba(217,181,106,0.12), transparent 18rem);
+  box-shadow: inset 0 0 0 1px rgba(255,225,155,0.04), 0 24px 80px rgba(0,0,0,0.42);
+}
+.report-block::before {
+  content: counter(report-section, decimal-leading-zero);
+  counter-increment: report-section;
+  position:absolute; right:clamp(24px,4vw,58px); top:clamp(20px,3vw,44px);
+  font-family:var(--serif); font-size:clamp(3rem,8vw,8rem); color:rgba(217,181,106,0.055); line-height:1;
+}
+.report-block-title {
+  position:relative; margin:0 0 24px; max-width:720px;
+  font-family:var(--serif); font-size:clamp(1.6rem,3vw,3rem); color:var(--gold-bright); letter-spacing:0.08em;
+}
+.report-block-title::after { content:""; display:block; width:96px; height:1px; margin-top:18px; background:linear-gradient(90deg, var(--gold-bright), transparent); }
+.report-block-body { position:relative; max-width:760px; margin:0; font-family:var(--serif); font-size:clamp(1rem,1.2vw,1.18rem); line-height:2.05; color:var(--ink); text-align:justify; }
+
+.report-disclaimer {
+  margin:0 0 28px; padding:18px 22px;
+  border:1px solid rgba(120,217,155,0.24); border-left:3px solid var(--jade);
+  border-radius:var(--radius-lg); background:rgba(120,217,155,0.045);
+  color:var(--muted); line-height:1.8;
+}
+
+.report-reveal { opacity:0; transform:translateY(42px); filter:blur(6px); transition: opacity 700ms ease, transform 700ms ease, filter 700ms ease, border-color 700ms ease; }
+.report-reveal.is-visible { opacity:1; transform:translateY(0); filter:blur(0); }
+.report-block.is-visible { border-color:rgba(226,186,99,0.42); }
+
+@media (prefers-reduced-motion: reduce) {
+  .report-reveal { opacity:1; transform:none; filter:none; transition:none; }
+  html.report-root, html.report-root body.report-body { scroll-behavior:auto; }
+}
+
+@media (max-width: 900px) {
+  .report-header { grid-template-columns:1fr; gap:8px; text-align:center; }
+  .report-page { width: min(100% - 28px, 760px); padding-bottom:64px; }
+  .report-hero { min-height:82vh; }
+  .report-layout { display:block; }
+  .report-index { position:relative; top:auto; margin-bottom:24px; }
+  .report-block { min-height:auto; padding:28px 22px; }
+  .report-block-body { font-size:1rem; line-height:1.9; }
+}
 
 /* ── Desktop viewport lock: 主界面一屏填满，不产生 body 纵向滚动 ── */
 @media (min-width: 1201px) {
-  html, body {
+  html:not(.report-root),
+  html:not(.report-root) body {
     width: 100%;
     height: 100%;
     overflow: hidden;
   }
-  body { min-height: 100dvh; }
+  html:not(.report-root) body { min-height: 100dvh; }
 
   .app-shell {
     --shell-pad: 4px;

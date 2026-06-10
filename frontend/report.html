@@ -1,15 +1,20 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="zh-CN" class="report-root">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>命盘报告 — 命轨</title>
     <link rel="stylesheet" href="./src/styles.css" />
   </head>
-  <body>
+  <body class="report-body">
     <header class="report-header">
       <a class="report-back" href="/">← 返回排盘</a>
-      <h1>命盘报告</h1>
+      <div class="report-brand">
+        <strong>命盘报告</strong>
+        <span>Fate Track Archive</span>
+      </div>
+      <div class="report-progress-label">只读报告</div>
+      <i class="report-progress" id="report-progress" aria-hidden="true"></i>
     </header>
 
     <main class="report-page" id="report-page">
@@ -46,15 +51,52 @@
           container.innerHTML = `<p class="empty-state">暂无报告数据</p>`;
           return;
         }
+        const blocks = data.blocks ?? [];
+
+        // Hero cover
+        const hero = document.createElement("section");
+        hero.className = "report-hero";
+        hero.innerHTML = `
+          <div class="report-hero-inner report-reveal is-visible">
+            <div class="report-kicker">Fate Track Celestial Archive</div>
+            <h1>命盘报告</h1>
+            <p>只读排盘工作台 · 边界锁定 · 结构化命理卷宗</p>
+            <div class="report-meta">
+              <span>日期：${request.date}</span>
+              <span>时间：${request.time || "未知"}</span>
+              <span>性别：${sexLabel(request.sex)}</span>
+              <span>时区：${request.timezone}</span>
+            </div>
+          </div>
+        `;
+
+        // Layout: index + chapters
+        const layout = document.createElement("section");
+        layout.className = "report-layout";
+
+        const index = document.createElement("nav");
+        index.className = "report-index";
+        index.innerHTML = `<div class="report-index-title">报告目录</div>`;
+
+        const chapters = document.createElement("div");
+        chapters.className = "report-chapters";
 
         const disclaimer = document.createElement("p");
-        disclaimer.className = "report-disclaimer";
+        disclaimer.className = "report-disclaimer report-reveal";
         disclaimer.textContent = data.disclaimer ?? "";
-        container.append(disclaimer);
+        chapters.append(disclaimer);
 
-        for (const block of data.blocks ?? []) {
+        blocks.forEach((block, i) => {
+          const id = `report-section-${i + 1}`;
+
+          const link = document.createElement("a");
+          link.href = `#${id}`;
+          link.textContent = `${String(i + 1).padStart(2, "0")} ${block.title}`;
+          index.append(link);
+
           const section = document.createElement("section");
-          section.className = "report-block";
+          section.className = "report-block report-reveal";
+          section.id = id;
 
           const title = document.createElement("h2");
           title.className = "report-block-title";
@@ -65,8 +107,53 @@
           body.textContent = block.body;
 
           section.append(title, body);
-          container.append(section);
+          chapters.append(section);
+        });
+
+        layout.append(index, chapters);
+        container.append(hero, layout);
+        mountReportEffects();
+      }
+
+      function sexLabel(s) {
+        if (s === "male") return "男";
+        if (s === "female") return "女";
+        return "未指定";
+      }
+
+      function mountReportEffects() {
+        const progress = document.getElementById("report-progress");
+        const revealItems = document.querySelectorAll(".report-reveal");
+        const indexLinks = document.querySelectorAll(".report-index a");
+        const sections = document.querySelectorAll(".report-block");
+
+        function updateProgress() {
+          if (!progress) return;
+          const scrollTop = window.scrollY;
+          const max = document.documentElement.scrollHeight - window.innerHeight;
+          const ratio = max > 0 ? scrollTop / max : 0;
+          progress.style.transform = `scaleX(${ratio})`;
         }
+        window.addEventListener("scroll", updateProgress, { passive: true });
+        updateProgress();
+
+        const revealObserver = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            entry.target.classList.toggle("is-visible", entry.isIntersecting);
+          });
+        }, { threshold: 0.18, rootMargin: "0px 0px -8% 0px" });
+        revealItems.forEach((item) => revealObserver.observe(item));
+
+        const sectionObserver = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            const activeId = entry.target.id;
+            indexLinks.forEach((link) => {
+              link.classList.toggle("is-active", link.getAttribute("href") === `#${activeId}`);
+            });
+          });
+        }, { threshold: 0.42 });
+        sections.forEach((section) => sectionObserver.observe(section));
       }
     </script>
   </body>
