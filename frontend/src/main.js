@@ -10,19 +10,24 @@ import {
   renderLuckCycles
 } from "./ui/render.js";
 
+const STORAGE_KEY = "ft-chart-form";
+
 const dom = getDom();
 const state = createAppState({ apiBase: loadApiBase() ?? defaultApiBase });
 
+restoreForm();
 hydrateForm();
 bindSexButtons();
 
 dom.chartForm.runButton.addEventListener("click", () => {
   readChartForm();
+  persistForm();
   runChartWorkspace();
 });
 
 dom.chartForm.reportButton.addEventListener("click", () => {
   readChartForm();
+  persistForm();
   const params = new URLSearchParams();
   params.set("date", state.chartForm.date);
   if (state.chartForm.time) params.set("time", state.chartForm.time);
@@ -71,11 +76,28 @@ function showLunar(lunar) {
     : "--";
 }
 
+function persistForm() {
+  try {
+    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(state.chartForm));
+  } catch { /* storage unavailable */ }
+}
+
+function restoreForm() {
+  try {
+    const raw = sessionStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const saved = JSON.parse(raw);
+      if (saved.date) state.chartForm.date = saved.date;
+      if (saved.time !== undefined) state.chartForm.time = saved.time;
+      if (saved.sex) state.chartForm.sex = saved.sex;
+    }
+  } catch { /* ignore corrupt data */ }
+}
+
 function hydrateForm() {
   dom.chartForm.date.value = state.chartForm.date;
   dom.chartForm.time.value = state.chartForm.time;
   dom.chartForm.sex.value = state.chartForm.sex;
-  // Sync sex buttons
   dom.chartForm.sexButtons.forEach(btn => {
     btn.classList.toggle("active", btn.dataset.sex === state.chartForm.sex);
   });
