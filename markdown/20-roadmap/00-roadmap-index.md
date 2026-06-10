@@ -45,8 +45,9 @@
 | M25 | `85-milestone-25-frontend-visual-upgrade.md` | 采用 GPT Pro 设计系统替换前端视觉：3 栏布局、元素色编码四柱、条形图五行、芯片十神、时间轴大运 | 无能力变化，纯视觉升级 |
 | M26 | `86-milestone-26-report-portal-redesign.md` | 报告页升级为玄金星轨卷宗：封面罗盘、悬浮导航、侧栏目录、章节卡片、滚动动画、归档页尾 | 无能力变化 |
 | M27 | `87-milestone-27-colloquial-report-content.md` | 零基础白话命盘报告：9 章内容全部重写为口语化，专业术语保留但附带白话解释 | 无能力变化 |
+| M28 | `88-milestone-28-desktop-shell.md` | Rust 原生桌面壳：Tao 窗口 + Wry WebView，前端和后端嵌入单一可执行文件 | 无能力变化 |
 
-**All milestones M0-M27 closed. 86 Rust + 10 frontend tests pass. 10 supported, 7 restricted, 0 target, 0 planned. 边界已锁定。**
+**All milestones M0-M28 closed. 86 Rust + 10 frontend tests pass. 10 supported, 7 restricted, 0 target, 0 planned. 边界已锁定。**
 
 ## 3. 横向治理文件
 

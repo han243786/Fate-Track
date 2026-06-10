@@ -66,6 +66,10 @@ FT/
       replay_tests.rs
       run_comparison.rs
     Cargo.toml
+  desktop/
+    src/
+      main.rs
+    Cargo.toml
   data/
     generated/
       astronomy/

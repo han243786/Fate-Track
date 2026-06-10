@@ -36,7 +36,7 @@ node server.mjs
 | 已支持 | 10 | 健康检查、农历数据元信息、公历日期查询、日期层元数据、四柱排盘、命盘快照、结构化分析、大运排盘、术语查询、天文引擎 |
 | 受限 | 7 | 排盘基础预览、案例管理、分享预览、用户设置、案例导出、数据衍生、排盘报告 |
 
-边界已锁定，不再新增功能性需求。详见[能力晋级台账](markdown/20-roadmap/93-capability-promotion-ledger.md)。
+边界已锁定，不再新增功能性需求。M0-M28 已全部关闭。详见[能力晋级台账](markdown/20-roadmap/93-capability-promotion-ledger.md)。
 
 ---
 

@@ -1278,3 +1278,16 @@
 | `validation_result` | `cargo test --lib` 86 passed; `npm run check` 10 passed |
 | `governance_updates` | M26 + M27 milestone files retroactively created |
 | `next_cursor` | `LOOP-089`, `design_only`. M0-M27 全部完成。边界锁定。 |
+
+## LOOP-089
+
+| Field | Value |
+| --- | --- |
+| `mode` | `single_loop` |
+| `scope` | M28: Rust 原生桌面壳（Tao + Wry） |
+| `completed_scope` | 新增 `desktop/` workspace 成员。Tao 创建原生窗口（最大化启动，最小 1180×720）。Wry 加载系统 WebView（Windows: WebView2）。`include_dir!` 编译时嵌入 frontend/。`include_bytes!` 嵌入 lunar_data.yaml。内嵌 HTTP 服务：随机端口，config.js 动态注入。start.bat 支持桌面/开发双模式。零 Electron、零 Node、零 Tauri CLI。 |
+| `changed_files` | `Cargo.toml`, `desktop/Cargo.toml` (new), `desktop/src/main.rs` (new), `start.bat`, `README.md` |
+| `capability_status_changes` | none |
+| `validation_result` | `cargo test --lib` 86 passed; `npm run check` 10 passed; `cargo check -p minggui-desktop` OK |
+| `governance_updates` | M28 milestone file, module tree (desktop domain + module), engineering tree, roadmap index, cursor, closeout log |
+| `next_cursor` | `LOOP-090`, `design_only`. M0-M28 全部完成。边界锁定。 |

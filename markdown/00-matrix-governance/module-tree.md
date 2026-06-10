@@ -9,6 +9,7 @@
 | `system` | workspace、运行入口、构建命令、交付说明 |
 | `backend` | Rust API、HTTP、配置、领域模型、农历数据读取、未来排盘能力 |
 | `frontend` | JS API client、状态、渲染、交互、静态服务 |
+| `desktop` | 原生桌面壳（Tao + Wry），内嵌前端与后端为单一可执行文件 |
 | `data` | 原始数据、衍生产物、数据生命周期 |
 | `governance` | 全量树、模块树、策略矩阵、流程矩阵、ADR、研究纳入台账、中文译文、开发里程碑 |
 | `tools` | 项目检查、脚手架检查、清单生成 |
@@ -17,8 +18,8 @@
 
 | Module ID | Real Files | Responsibility |
 | --- | --- | --- |
-| `system.workspace` | `.gitignore`, `Cargo.toml`, `Cargo.lock`, `README.md` | 工作区、入口说明、忽略规则 |
-| `backend.entrypoint` | `backend/src/main.rs`, `backend/src/lib.rs`, `backend/src/config.rs` | 后端启动、配置、模块导出 |
+| `system.workspace` | `.gitignore`, `Cargo.toml`, `Cargo.lock`, `README.md`, `start.bat` | 工作区、入口说明、忽略规则、一键启动脚本 |
+| `desktop.shell` | `desktop/Cargo.toml`, `desktop/src/main.rs` | Tao 原生窗口 + Wry 系统 WebView，编译时嵌入 frontend/ 和 lunar_data.yaml，运行时启动内嵌 HTTP 服务 |
 | `backend.app` | `backend/src/app.rs`, `backend/src/server.rs`, `backend/src/error.rs` | 请求调度、TCP 服务、统一错误 |
 | `backend.http` | `backend/src/http/*` | HTTP 请求解析、响应、状态码、JSON 字符串工具 |
 | `backend.api` | `backend/src/api/*` (16 files) | M1-M24 全部 API 路由：health, capabilities, lunar, calendar, chart_basis, charts, chart_detail, analysis, luck, cases, derive, share, settings, glossary_data, report |
