@@ -4,50 +4,20 @@
 use crate::api::charts::build_chart_result;
 use crate::config::AppConfig;
 use crate::domain::analysis::{AnalysisSnapshot, audit_text, DISCLAIMER_ID};
-use crate::domain::bazi::{Sex, Pillar};
 use crate::domain::deep_analysis::{assess_strength, classify_pattern, suggest_useful_god};
-use crate::domain::luck::compute_luck_cycles;
 use crate::error::AppError;
 use crate::http::{Request, Response, json};
 use crate::api::chart_basis::chart_request_from_query;
-use crate::domain::bazi::ChartBasis;
-use crate::calendar::lunar_data::LunarDataSource;
 
 pub fn generate(config: &AppConfig, request: &Request) -> Result<Response, AppError> {
     let chart = build_chart_result(config, request)?;
     let snapshot = AnalysisSnapshot::build(&chart);
 
-    let chart_request = chart_request_from_query(request)?;
-    let basis = ChartBasis::build(chart_request)?;
-    let profile = &basis.request.birth_profile;
-    let table = LunarDataSource::new(config.lunar_data_path.clone()).load_table()?;
-    let date_layer = table
-        .lookup(profile.date)
-        .ok_or_else(|| AppError::OutOfRange("date out of range".to_string()))?;
-
-    let year_gan = date_layer.gan_zhi_year.chars().next().unwrap_or('甲').to_string();
-    let month_pillar = Pillar::from_ganzhi(&date_layer.gan_zhi_month)?;
-
-    use crate::astronomy::terms::solar_terms_for_year;
-    let terms = solar_terms_for_year(profile.date.year);
-    let doy = profile.date.day_of_year() as u16;
-
-    let is_forward = {
-        let yang = ["甲","丙","戊","庚","壬"].contains(&year_gan.as_str());
-        let male = matches!(profile.sex, Sex::Male);
-        (yang && male) || (!yang && !male)
-    };
-
-    let days_to_jie = compute_days_to_jie(profile, &terms, doy, is_forward);
-
-    let luck_cycles = compute_luck_cycles(&year_gan, &month_pillar, &profile.sex, days_to_jie);
-    let start_age = if luck_cycles.is_empty() { 0 } else { luck_cycles[0].start_age };
-
     let strength = assess_strength(&chart);
     let pattern = classify_pattern(&chart, &strength);
     let useful_gods = suggest_useful_god(&strength, &pattern);
 
-    let blocks = build_blocks(&chart, &snapshot, &luck_cycles, start_age, is_forward, &strength, &pattern, &useful_gods);
+    let blocks = build_blocks(&chart, &snapshot, &strength, &pattern, &useful_gods);
 
     let assembled = blocks.iter()
         .map(|b| format!("【{}】\n{}", b.title, b.body))
@@ -83,46 +53,6 @@ pub fn generate(config: &AppConfig, request: &Request) -> Result<Response, AppEr
     Ok(Response::json(body))
 }
 
-fn compute_days_to_jie(profile: &crate::domain::bazi::BirthProfile, terms: &[crate::astronomy::terms::SolarTermEntry], doy: u16, is_forward: bool) -> u16 {
-    use crate::astronomy::terms::solar_terms_for_year;
-    if is_forward {
-        let jie_indices = [0,2,4,6,8,10,12,14,16,18,20,22];
-        let mut next_doy = 366u16;
-        for &ji in &jie_indices {
-            if let Some(term) = terms.get(ji) {
-                let td = (term.jd_tt - crate::astronomy::time::gregorian_to_jd(profile.date.year,1,1,0.0).whole()) as u16 + 1;
-                if td > doy && td < next_doy { next_doy = td; }
-            }
-        }
-        if next_doy == 366 {
-            let next_terms = solar_terms_for_year(profile.date.year + 1);
-            if let Some(t) = next_terms.first() {
-                next_doy = (t.jd_tt - crate::astronomy::time::gregorian_to_jd(profile.date.year+1,1,1,0.0).whole()) as u16 + 365;
-            }
-        }
-        next_doy.saturating_sub(doy)
-    } else {
-        let jie_indices = [0,2,4,6,8,10,12,14,16,18,20,22];
-        let mut prev_doy = 0u16;
-        for &ji in &jie_indices {
-            if let Some(term) = terms.get(ji) {
-                let td = (term.jd_tt - crate::astronomy::time::gregorian_to_jd(profile.date.year,1,1,0.0).whole()) as u16 + 1;
-                if td <= doy && td > prev_doy { prev_doy = td; }
-            }
-        }
-        if prev_doy == 0 {
-            let prev_terms = solar_terms_for_year(profile.date.year - 1);
-            if let Some(t) = prev_terms.get(11) {
-                let td = (t.jd_tt - crate::astronomy::time::gregorian_to_jd(profile.date.year-1,1,1,0.0).whole()) as u16 + 1;
-                prev_doy = td;
-            }
-            doy + 365 - prev_doy
-        } else {
-            doy - prev_doy
-        }
-    }
-}
-
 struct ReportBlock { id: String, title: String, body: String }
 
 fn build_disclaimer() -> String {
@@ -132,9 +62,6 @@ fn build_disclaimer() -> String {
 fn build_blocks(
     chart: &crate::domain::bazi::ChartResult,
     snapshot: &AnalysisSnapshot,
-    luck_cycles: &[crate::domain::luck::LuckCycle],
-    start_age: u8,
-    is_forward: bool,
     strength: &crate::domain::deep_analysis::StrengthAssessment,
     pattern: &crate::domain::deep_analysis::PatternInfo,
     useful_gods: &[crate::domain::deep_analysis::UsefulGodHint],
@@ -151,8 +78,7 @@ fn build_blocks(
         block_hidden_stems(chart),
         block_strength(day_stem, day_el, &chart.chart.month.branch, strength),
         block_pattern(pattern),
-        block_useful_god(useful_gods, strength),
-        block_luck(luck_cycles, start_age, is_forward),
+        block_useful_god(useful_gods),
     ]
 }
 
@@ -406,7 +332,7 @@ fn pattern_plain(name: &str) -> &'static str {
 }
 
 // ── Chapter 8: 用神参考 ──
-fn block_useful_god(gods: &[crate::domain::deep_analysis::UsefulGodHint], _strength: &crate::domain::deep_analysis::StrengthAssessment) -> ReportBlock {
+fn block_useful_god(gods: &[crate::domain::deep_analysis::UsefulGodHint]) -> ReportBlock {
     let hints: Vec<String> = gods.iter()
         .map(|h| {
             let el_cn = match h.element {
@@ -434,26 +360,6 @@ fn block_useful_god(gods: &[crate::domain::deep_analysis::UsefulGodHint], _stren
 }
 
 // ── Chapter 9: 大运走势 ──
-fn block_luck(cycles: &[crate::domain::luck::LuckCycle], start_age: u8, is_forward: bool) -> ReportBlock {
-    let direction = if is_forward { "顺" } else { "逆" };
-    let parts: Vec<String> = cycles.iter()
-        .map(|c| format!("「{}」运（{}—{}岁）", c.pillar.ganzhi(), c.start_age, c.end_age))
-        .collect();
-
-    ReportBlock {
-        id: "luck-cycles".into(),
-        title: "大运走势".into(),
-        body: format!(
-            "这一章看的是「大运」。大运可以理解为命盘里的「阶段背景」，不是十年预言。你可以把它想成天气：天气会影响一个人出门时的感受和准备方式，但不会替你决定人生。大运也是类似，它只是在传统命理里描述某个阶段更容易被哪类主题影响。\n\n\
-            本命盘大运为{}行，约 {} 岁起运。当前可计算的大运阶段为：{}。\n\n\
-            换成白话说，这些阶段不是在告诉你某十年一定会发生什么，而是在提示：不同年龄段里，命盘关注的主题会有所变化。有的阶段更强调学习和积累，有的阶段更强调责任和压力，有的阶段更强调表达、资源或行动。\n\n\
-            其中，「顺行」或「逆行」只是排盘规则里的计算方向，不代表好坏。「天干看前五年、地支看后五年」也只是传统阅读习惯，不是现实生活中的硬切分。\n\n\
-            所以，大运最适合当作「阶段气候」来看。它可以帮助你理解不同时期的主题变化，但不能替代现实选择，也不能直接推出确定事件。",
-            direction, start_age, parts.join("；")
-        ),
-    }
-}
-
 // ── Day stem plain descriptions ──
 fn describe_day_stem_full(stem: &str) -> &'static str {
     match stem {
@@ -509,7 +415,6 @@ mod tests {
         assert!(resp.body.contains("日主强弱"));
         assert!(resp.body.contains("格局初判"));
         assert!(resp.body.contains("用神参考"));
-        assert!(resp.body.contains("大运走势"));
     }
 
     #[test]
