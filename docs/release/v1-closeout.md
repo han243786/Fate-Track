@@ -27,7 +27,7 @@ All 10 DG-001 through DG-010 closed.
 
 ## Milestones
 
-M0 through M22 closed. M23 in progress (astronomy-engine target→supported). M24 planned (chart-report).
+M0 through M27 closed. Final capability matrix: 10 supported, 7 restricted, 0 target, 0 planned. Boundary locked.
 
 ## Known Limitations
 

@@ -1252,3 +1252,29 @@
 | `risk_updates` | none |
 | `unresolved_decision_gates` | none |
 | `next_cursor` | `LOOP-087`, `design_only`. M0-M25 全部完成。边界锁定。 |
+
+## LOOP-087
+
+| Field | Value |
+| --- | --- |
+| `mode` | `single_loop` |
+| `scope` | M26: 报告页门户重设计 — 玄金星轨卷宗 |
+| `completed_scope` | 报告页从窄文档升级为沉浸式门户：5 环罗盘封面、毛玻璃悬浮导航、金/翠/朱砂进度条、sticky 侧栏目录（IntersectionObserver 追踪）、74vh+ 章节卡片（frame/aura/scan 三层特效 + 序列揭示动画）、归档页尾朱砂印章。视口锁排除报告页（html:not(.report-root)）。移动端单列自适应。M26.1 补丁修复目录 fixed、章节居中、scrollIntoView center、scroll-snap proximity。 |
+| `changed_files` | `frontend/report.html`, `frontend/src/styles.css` |
+| `capability_status_changes` | none |
+| `validation_result` | `npm run check` 10 passed 0 failed |
+| `governance_updates` | none at time (retroactively created M26 milestone file) |
+| `next_cursor` | `LOOP-088`, `single_loop`, M27 report content rewrite |
+
+## LOOP-088
+
+| Field | Value |
+| --- | --- |
+| `mode` | `single_loop` |
+| `scope` | M27: 零基础白话命盘报告内容重写 + M26.1 补丁 + 表单状态持久化 |
+| `completed_scope` | 全部 9 章报告文案重写为零基础可读版本：免责声明升级、十天干生活化比喻、五行/十神/藏干/强弱/格局/用神/大运各章白话解释。统一语气：你可以理解为…换成白话说…这不是说…更适合当作…。大运章节简化天文依赖（days_to_jie=0）。修复表单状态丢失（sessionStorage 持久化）。 |
+| `changed_files` | `backend/src/api/report.rs`, `frontend/src/main.js` |
+| `capability_status_changes` | none |
+| `validation_result` | `cargo test --lib` 86 passed; `npm run check` 10 passed |
+| `governance_updates` | M26 + M27 milestone files retroactively created |
+| `next_cursor` | `LOOP-089`, `design_only`. M0-M27 全部完成。边界锁定。 |

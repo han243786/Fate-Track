@@ -29,7 +29,7 @@ Research-derived targets are recorded in:
 
 End-to-end development milestones are under `markdown/20-roadmap/`.
 
-M0-M25 closed. V1 capability matrix: 10 supported, 7 restricted, 0 target, 0 planned. GPT Pro 3-column dark theme applied (M25). 边界已锁定，不再受理功能性新增需求。
+M0-M27 closed. V1 capability matrix: 10 supported, 7 restricted, 0 target, 0 planned. GPT Pro 3-column dark theme (M25), report portal (M26), zero-baseline colloquial report (M27). 边界已锁定。
 
 Start with:
 
