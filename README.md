@@ -6,6 +6,16 @@
 
 ## 快速开始
 
+**方式一：桌面应用（推荐）**
+
+```powershell
+cargo run -p minggui-desktop
+```
+
+启动后自动打开原生窗口，无需 Node、无需手动启动后端。
+
+**方式二：开发模式**
+
 ```powershell
 # 终端 1：启动后端
 cargo run -p minggui-backend
@@ -15,7 +25,7 @@ cd frontend
 node server.mjs
 ```
 
-浏览器打开 `http://127.0.0.1:5173`，即可进入排盘工作台。
+浏览器打开 `http://127.0.0.1:5173`。
 
 ---
 
