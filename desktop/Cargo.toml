@@ -1,0 +1,17 @@
+[package]
+name = "minggui-desktop"
+version = "0.1.0"
+edition = "2024"
+description = "命轨 Fate Track desktop shell"
+license = "UNLICENSED"
+publish = false
+
+[dependencies]
+anyhow = "1"
+include_dir = "0.7"
+percent-encoding = "2"
+
+minggui-backend = { path = "../backend" }
+
+tao = { version = "0.35", features = ["rwh_06"] }
+wry = "0.55"

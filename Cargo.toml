@@ -1,4 +1,4 @@
 [workspace]
-members = ["backend"]
+members = ["backend", "desktop"]
 resolver = "3"
 
