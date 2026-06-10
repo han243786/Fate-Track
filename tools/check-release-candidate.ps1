@@ -71,8 +71,11 @@ foreach ($pair in @(
     @("case-management", "restricted"),
     @("share-preview", "restricted"),
     @("settings", "restricted"),
-    @("luck-cycles", "planned"),
-    @("glossary", "planned")
+    @("luck-cycles", "supported"),
+    @("glossary", "supported"),
+    @("chart-detail", "supported"),
+    @("case-export", "restricted"),
+    @("data-derivation", "restricted")
 )) {
     $id = $pair[0]
     $status = $pair[1]
@@ -115,10 +118,10 @@ foreach ($needle in @(
 }
 
 foreach ($needle in @(
-    "Chart Workspace",
-    "Analysis Snapshot",
-    "Share Preview",
-    "Capability Boundary",
+    "chart-title",
+    "analysis-title",
+    "share-title",
+    "capability-title",
     "surface-badge restricted"
 )) {
     Assert-Contains $frontendHtml $needle "Frontend workspace markup missing: $needle"

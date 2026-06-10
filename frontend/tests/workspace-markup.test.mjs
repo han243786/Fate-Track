@@ -5,17 +5,12 @@ import { readFileSync } from "node:fs";
 const html = readFileSync(new URL("../index.html", import.meta.url), "utf8");
 
 describe("workspace markup", () => {
-  it("contains the M7 workspace regions and labeled controls", () => {
+  it("contains the product panels", () => {
     for (const id of [
-      "control-title",
       "chart-form-title",
       "chart-title",
-      "analysis-title",
-      "case-title-heading",
-      "share-title",
-      "calendar-title",
-      "data-title",
-      "capability-title"
+      "luck-title",
+      "analysis-title"
     ]) {
       assert.match(html, new RegExp(`aria-labelledby="${id}"`));
     }
@@ -23,20 +18,15 @@ describe("workspace markup", () => {
     for (const id of [
       "chart-date",
       "chart-time",
-      "chart-timezone",
-      "chart-time-precision",
-      "case-title",
-      "case-tags",
-      "case-note"
+      "chart-sex",
+      "chart-run-button",
+      "lunar-display"
     ]) {
       assert.match(html, new RegExp(`id="${id}"`));
     }
   });
 
-  it("keeps restricted and planned surfaces out of supported copy", () => {
-    assert.match(html, /分享预览/);
-    assert.match(html, /surface-badge restricted/);
-    assert.doesNotMatch(html, /Luck Cycles<\/h2>/);
+  it("keeps unsupported features out of the product", () => {
     assert.doesNotMatch(html, /Cloud Sync/);
     assert.doesNotMatch(html, /True Solar Time/);
     assert.doesNotMatch(html, /Astronomy Engine/);

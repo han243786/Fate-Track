@@ -17,7 +17,7 @@ pub fn capabilities() -> Response {
     Response::json(format!("{{\"capabilities\":[{items}]}}"))
 }
 
-fn capability_catalog() -> [Capability; 15] {
+fn capability_catalog() -> [Capability; 16] {
     [
         Capability {
             id: "health",
@@ -108,6 +108,12 @@ fn capability_catalog() -> [Capability; 15] {
             status: "restricted",
             route: "/api/data/derive",
             source: "aggregate-derivation-v1",
+        },
+        Capability {
+            id: "astronomy-engine",
+            status: "supported",
+            route: "data/generated/astronomy/out/*",
+            source: "astronomy-engine-v1-adr-0019",
         },
     ]
 }
@@ -206,5 +212,22 @@ mod tests {
         assert_eq!(capability.status, "restricted");
         assert_eq!(capability.route, "/api/share/preview");
         assert_eq!(capability.source, "local-volatile-share-store-v1");
+    }
+
+    #[test]
+    fn exposes_astronomy_engine_as_supported_after_m23_promotion() {
+        let catalog = capability_catalog();
+        let capability = catalog
+            .iter()
+            .find(|capability| capability.id == "astronomy-engine")
+            .expect("astronomy-engine capability should be declared");
+
+        assert_eq!(capability.status, "supported");
+        assert_eq!(capability.route, "data/generated/astronomy/out/*");
+        assert_eq!(capability.source, "astronomy-engine-v1-adr-0019");
+
+        let body = capabilities().body;
+        assert!(body.contains("\"id\":\"astronomy-engine\""));
+        assert!(body.contains("\"status\":\"supported\""));
     }
 }

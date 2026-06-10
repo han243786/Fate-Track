@@ -1,4 +1,5 @@
 pub mod calendar;
+pub mod compare;
 pub mod moon;
 pub mod sun;
 pub mod terms;

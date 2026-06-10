@@ -6,30 +6,21 @@
 
 | Field | Value |
 | --- | --- |
-| `loop_id` | `GOAL_COMPLETE` |
-| `mode` | `goal_run` |
-| `current_milestone` | `M15` |
-| `current_work_package` | `V1 closeout` |
+| `loop_id` | `LOOP-086` |
+| `mode` | `design_only` |
+| `current_milestone` | `—` |
+| `current_work_package` | `—` |
 | `state` | `closing` |
-| `allowed_scope` | V1 closeout: 8 supported, 6 restricted, 1 planned (luck-cycles). Astronomy engine implemented, generated artifacts filled with real data. Chart-detail, glossary, case-export, data-derivation routes live. |
-| `forbidden_scope` | Android baseline replacement, runtime behavior changes, `astronomy-engine` promotion |
-| `active_decision_gates` | DG-005 open for luck cycles (M13); DG-008 closed |
-| `active_locks` | `LOCK-001`, `LOCK-002`, `LOCK-003` |
-| `capability_delta` | `astronomy-engine` remains target; real computed data replaces boundary placeholders |
-| `required_governance_sync` | M11 milestone evidence, README, module tree, engineering tree, capability ledger, risk register, cursor, closeout log |
-| `validation_commands` | `cargo test; npm run check` |
-| `last_green_gate` | `cargo test` 68 passed (51 + 17 astronomy); `npm run check` 10 passed; astronomy engine core implemented (time, sun, terms, moon, calendar) |
-| `last_closeout` | `markdown/20-roadmap/97-loop-closeout-log.md#loop-061`; `docs/decisions/0019-m11-astronomy-engine-architecture.md` |
-| `next_resume_instruction` | Start LOOP-062 by reading M11 milestone; fill 4 generated artifacts with real data from astronomy engine; recompute sha256; update comparison artifact; keep manifest not_accepted and `astronomy-engine` target. | may define the next generated-artifact write boundary, planned artifact path set, source-payload prerequisites, dry-run/checker assertions, README, module tree, engineering tree, capability ledger, risk register, cursor, and closeout updates; no generated astronomy artifact files, no generated artifact hashes, no manifest acceptance, no runtime replacement, no Android baseline replacement, no capability promotion |
-| `forbidden_scope` | 云同步、公开分享、token 分享、生成式扩写、大运实现、医疗/死亡/金融/法律/关系确定性断言、IANA 时区历史运行时支持、真太阳时运行时支持、静默星历替换、范围外高置信声明 |
-| `active_decision_gates` | DG-005 open for luck cycles; DG-008 closed for parallel-first preflight by ADR 0015; replacement requires later ADR |
-| `active_locks` | `LOCK-001`, `LOCK-002`, `LOCK-003`, `LOCK-011`, `LOCK-012` |
-| `capability_delta` | none in LOOP-054; four source-boundary payloads now exist and are hashed for `naif-cspice`, `iau-sofa-ansi-c`, `jpl-horizons-api`, and `gb-t-33661-2017`; generated artifacts remain absent, Android baseline remains unchanged, and `astronomy-engine` remains target |
-| `required_governance_sync` | decision gates, risk register, closeout evidence, README, module tree, engineering tree, capability ledger, recursive scale audit, loop closeout |
-| `validation_commands` | `powershell -NoProfile -ExecutionPolicy Bypass -File tools/check-project.ps1` |
-| `last_green_gate` | `tools/check-project.ps1` passed on 2026-06-09 after LOOP-054 closeout; Rust 51 tests passed, frontend 10 tests passed, governance scaffold OK, release candidate check OK, astronomy preflight check OK |
-| `last_closeout` | `markdown/20-roadmap/97-loop-closeout-log.md#loop-054`; `markdown/20-roadmap/62-milestone-10-selected-gb-t-payload-materialization.md`; `data/generated/astronomy/selected-gb-t-payload-materialization.json`; `data/generated/astronomy/source-snapshots/payloads/gb-t-33661-2017-rule-reference.json`; `tools/selected-gb-t-payload-materialization-preflight-dry-run.ps1` |
-| `next_resume_instruction` | Start LOOP-055 by reading `45-milestone-10-generated-astronomy-implementation.md`, `62-milestone-10-selected-gb-t-payload-materialization.md`, source snapshot manifest, source payload materialization policy, source capture procedure, generator contract, artifact writer dry-run, generated manifest draft, capability ledger, risk register, and `tools/check-astronomy-preflight.ps1`; prepare generated astronomy artifact materialization preflight while forbidding actual generated artifact writes, generated artifact hashes, manifest acceptance, Android baseline replacement, runtime behavior changes, and `astronomy-engine` promotion. |
+| `allowed_scope` | M0-M24 全部关闭。Final matrix: 10 supported, 7 restricted, 0 target, 0 planned。边界锁定。 |
+| `forbidden_scope` | 任何功能性新增需求 |
+| `active_decision_gates` | All 10 closed |
+| `active_locks` | All satisfied |
+| `capability_delta` | Final: 10 supported, 7 restricted, 0 target, 0 planned |
+| `required_governance_sync` | Complete — all governance files synced |
+| `validation_commands` | `cargo test --lib 86 passed; npm run check 10 passed` |
+| `last_green_gate` | Governance OK, 86 Rust + 10 frontend, M23+M24 code complete |
+| `last_closeout` | `markdown/20-roadmap/97-loop-closeout-log.md#loop-085` |
+| `next_resume_instruction` | 无。M0-M24 全部完成。边界锁定，不再受理功能性新增需求。回归保护：每次实现前运行 `cargo test` + `npm run check`。
 
 ## Cursor Update Rules
 

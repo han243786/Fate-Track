@@ -33,8 +33,17 @@
 | M13 | `69-milestone-13-luck-cycles.md` | 实现大运排盘（顺逆、起运），关闭 DG-005 | luck-cycles supported |
 | M14 | `70-milestone-14-glossary-export.md` | 实现术语表查询和案例导出 | glossary supported, case-export restricted |
 | M15 | `71-milestone-15-data-derivation-hardening.md` | 数据衍生 + V1 加固收口，全部 planned 清零 | V1 closeout complete |
+| M16 | `76-milestone-16-frontend-redesign.md` | 前端 dark 主题三栏布局重设计，宣纸底/朱砂/金线/深木盘面 | HTML+CSS+render.js replaced, all IDs preserved |
+| M17 | `77-milestone-17-case-export-report.md` | 案例导出 + 分析报告（本地计算，离线） | case-export real implementation |
+| M18 | `78-milestone-18-data-derivation.md` | 本地聚合衍生统计（≥5条阈值，隐私保护） | data-derivation real implementation |
+| M19 | `79-milestone-19-astronomy-comparison.md` | Android vs 天文引擎对照引擎 | comparison engine framework |
+| M20 | `80-milestone-20-golden-replay.md` | 黄金样例 + 重放测试（1901-2100内） | golden rows + replay |
+| M21 | `81-milestone-21-deep-analysis.md` | 三命通会/子平法深层蒸馏分析 | 强弱+格局+用神卡片（3 tests） |
+| M22 | `82-milestone-22-frontend-report-export.md` | 前端导出分析报告按钮（纯本地） | export button + JSON download |
+| M23 | `83-milestone-23-astronomy-engine-promotion.md` | 天文引擎从 target 晋级 supported：replacement ADR + 运行时集成 + 能力晋级 | astronomy-engine supported |
+| M24 | `84-milestone-24-chart-report.md` | 新增排盘口语化报告：后端内容生成（硬编码模板）+ 前端单按钮渲染 | chart-report restricted |
 
-**All milestones M0-M15 closed. V1 capability matrix: 9 supported, 6 restricted, 1 target (astronomy-engine).**
+**All milestones M0-M24 closed. 86 Rust + 10 frontend tests pass. 10 supported, 7 restricted, 0 target, 0 planned. 边界已锁定。**
 
 ## 3. 横向治理文件
 
@@ -141,6 +150,12 @@ flowchart TD
     M13 --> M15["M15 Data Derivation + Hardening"]
     M14 --> M15
     M11 --> M15
+    M11 --> M23["M23 Astronomy Engine Promotion"]
+    M3 --> M24["M24 Chart Report"]
+    M4 --> M24
+    M12 --> M24
+    M13 --> M24
+    M21 --> M24
 ```
 
 ## 5. 不变量
@@ -153,6 +168,7 @@ flowchart TD
 - 不得为了实现进度降低日志、隐私、分享脱敏或安全解释规则。
 - 里程碑关闭前必须同步工程树、模块树、标准矩阵、流程矩阵和能力晋级台账。
 - M9 只允许作为 preflight 里程碑关闭；真实生成数据、hash、对照、黄金样例、replay 和运行时集成必须进入 M10 或后续里程碑。
+- M23/M24 是 V1 最终能力切面。M23 交付后 `astronomy-engine` 晋级 supported；M24 交付后 `chart-report` 保持 restricted。两个里程碑关闭后，能力矩阵锁死，不再受理功能性新增需求。此后只允许治理同步、缺陷修复、性能优化和已有能力的 restricted→supported 晋级。
 
 ## 6. 执行协议
 

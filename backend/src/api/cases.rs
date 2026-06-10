@@ -7,6 +7,7 @@ use crate::domain::cases::{
 };
 use crate::error::AppError;
 use crate::http::{Request, Response, json};
+use std::collections::BTreeMap;
 use std::sync::{Mutex, OnceLock};
 use std::time::{SystemTime, UNIX_EPOCH};
 
@@ -26,8 +27,81 @@ pub fn cases(config: &AppConfig, request: &Request) -> Result<Response, AppError
     }
 }
 
+pub fn export_case(config: &AppConfig, request: &Request) -> Result<Response, AppError> {
+    let id = request
+        .query_value("id")
+        .ok_or_else(|| AppError::BadRequest("missing query parameter: id".to_string()))?;
+    let store = store().lock().unwrap();
+    let record = store
+        .get(&id)
+        .ok_or_else(|| AppError::NotFound(format!("case not found: {id}")))?;
+    let include_notes = request.query_value("include_notes").as_deref() == Some("true");
+
+    // Re-run chart and analysis for this case by reading the stored birth parameters
+    // Since cases store snapshot refs, we include what's available.
+    // Full re-computation requires the original chart API call.
+    let note_json = if include_notes {
+        json::string(record.private_note.as_deref().unwrap_or(""))
+    } else {
+        "null".to_string()
+    };
+
+    let report = build_report(&record);
+
+    let body = format!(
+        concat!(
+            r#"{{"status":"restricted","capability":"case-export","#,
+            r#""export_format":"json-v1","#,
+            r#""case_id":{},"title":{},"tags":{},"case_status":{},"#,
+            r#""chart_snapshot":{{"snapshot_id":{},"algo_version":{},"ruleset_id":{},"day_master":{}}},"#,
+            r#""analysis_snapshot":{{"snapshot_id":{},"algo_version":{},"disclaimer_id":{}}},"#,
+            r#""private_note":{},"#,
+            r#""created_at_unix":{},"updated_at_unix":{},"#,
+            r#""analysis_report":{},"#,
+            r#""compute_note":"Offline local export. Full element/ten-god detail available via chart+analysis API."#,
+            r#"}}"#
+        ),
+        json::string(&record.id),
+        json::string(&record.title),
+        string_array_to_json(&record.tags.iter().map(|s| s.as_str()).collect::<Vec<_>>()),
+        json::string(record.status.as_str()),
+        json::string(&record.chart_snapshot.snapshot_id),
+        json::string(&record.chart_snapshot.chart_algo_version),
+        json::string(&record.chart_snapshot.ruleset_id),
+        json::string(&record.chart_snapshot.day_master),
+        json::string(&record.analysis_snapshot.snapshot_id),
+        json::string(&record.analysis_snapshot.analysis_algo_version),
+        json::string(&record.analysis_snapshot.disclaimer_id),
+        note_json,
+        record.created_at_unix,
+        record.updated_at_unix,
+        report,
+    );
+    Ok(Response::json(body))
+}
+
+fn build_report(record: &CaseRecord) -> String {
+    let dm = &record.chart_snapshot.day_master;
+    let el = match dm.as_str() {
+        "甲"|"乙" => "木", "丙"|"丁" => "火", "戊"|"己" => "土",
+        "庚"|"辛" => "金", "壬"|"癸" => "水", _ => "?",
+    };
+    let polarity = if ["甲","丙","戊","庚","壬"].contains(&dm.as_str()) { "阳" } else { "阴" };
+    format!(
+        r#"{{"summary":"日主{}属{}{}。排盘引擎:{}。规则档:{}。此为本地离线导出摘要。完整五行十神藏干分析请通过排盘API实时计算。","day_master_element":"{}","day_master_polarity":"{}"}}"#,
+        dm, el, polarity,
+        record.chart_snapshot.chart_algo_version,
+        record.chart_snapshot.ruleset_id,
+        el, polarity
+    )
+}
+
 pub(crate) fn case_for_share(id: &str) -> Option<CaseRecord> {
     store().lock().unwrap().get(id).cloned()
+}
+
+pub(crate) fn derive_stats() -> crate::domain::cases::CaseDerivedStats {
+    store().lock().unwrap().derive_stats()
 }
 
 fn list_cases() -> Result<Response, AppError> {
@@ -52,6 +126,17 @@ fn create_case(config: &AppConfig, request: &Request) -> Result<Response, AppErr
     let chart = build_chart_result(config, request)?;
     let analysis = AnalysisSnapshot::build(&chart);
     let now = now_unix();
+
+    // Extract element and ten-god counts for later derivation
+    let element_counts: BTreeMap<String, u32> = analysis.element_metrics.iter()
+        .filter(|m| m.weight_x2 > 0)
+        .map(|m| (m.id.to_string(), m.weight_x2 as u32))
+        .collect();
+    let ten_god_counts: BTreeMap<String, u32> = analysis.ten_god_metrics.iter()
+        .filter(|m| m.weight_x2 > 0)
+        .map(|m| (m.id.to_string(), m.weight_x2 as u32))
+        .collect();
+
     let record = CaseRecord {
         id: id.clone(),
         title,
@@ -63,12 +148,17 @@ fn create_case(config: &AppConfig, request: &Request) -> Result<Response, AppErr
             chart_algo_version: chart.metadata.algo_version.to_string(),
             ruleset_id: chart.metadata.ruleset_id.to_string(),
             day_master: chart.chart.day.stem.clone(),
+            hour_branch: chart.chart.hour.as_ref()
+                .map(|h| h.branch.clone())
+                .unwrap_or_else(|| "未知".to_string()),
         },
         analysis_snapshot: AnalysisSnapshotRef {
             snapshot_id: format!("{}:analysis:{}", id, analysis.algo_version),
             analysis_algo_version: analysis.algo_version.to_string(),
             disclaimer_id: analysis.disclaimer_id.to_string(),
         },
+        element_counts,
+        ten_god_counts,
         created_at_unix: now,
         updated_at_unix: now,
     };

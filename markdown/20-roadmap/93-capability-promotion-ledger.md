@@ -20,6 +20,8 @@
 | `frontend-chart-workspace` | Frontend workspace | M7 app shell + chart/analysis/case/share/calendar/data/capability panels + frontend tests + browser checks | restricted; consumes only supported/restricted backend APIs and must not claim luck cycles, durable sharing, cloud sync, account storage, true solar time, timezone history, glossary, range expansion, or astronomy replacement |
 | `frontend-share-preview` | Frontend share preview panel | M7 redacted share preview panel + M6 share API + browser privacy check | restricted; redacted/read-only only, no durable public link claim |
 | `release-candidate` | `docs/release/v1-release-candidate.md` + `tools/check-release-candidate.ps1` | M8 release freeze, full project gate, M1-M8 closeouts, README/module tree/engineering tree sync | governance/release capability only; no new backend business API or expanded `/api/capabilities` claim |
+| `astronomy-engine` | `data/generated/astronomy/out/*` + `backend/src/astronomy/*` | M11 engine implementation (ADR 0019): solar/terms/moon/calendar/compare, 17 tests, 4800+2474+2474 generated artifacts, 1598 Android comparison 0 diff; M23 promotion (ADR 0021) | supported as verified computation capability; Android date layer remains runtime default; runtime replacement requires separate ADR with true solar time, IANA timezone history, and range expansion prerequisites |
+| `chart-report` | `GET /api/charts/report` | M24: backend colloquial Chinese report with 9 text blocks (chart-overview, day-master-intro, element-distribution, ten-god-relations, hidden-stems, day-master-strength, pattern-classification, useful-god-hints, luck-cycles), forbidden-output audit, pure hard-coded templates | restricted; no AI/LLM generation; report text must not contain deterministic life claims; disclaimer must always appear first |
 
 ## 2. 目标能力晋级条件
 
@@ -44,6 +46,7 @@
 | `data-derivation` | restricted | M15 | `GET /api/data/derive` stub, aggregate derivation after case population |
 | `luck-cycles` | supported | M13 | `backend/src/domain/luck.rs` (5 tests), `backend/src/api/luck.rs`, ADR 0020 closes DG-005 |
 | `astronomy-engine` | target | M10 | 生成引擎、hash、1901-2100 黄金表、Android/星历差异 ADR、replay tests、runtime integration |
+| `chart-report` | — | M24 | 新增 restricted 能力：`GET /api/charts/report` 后端口语化报告组装、文字块模板、禁用词审计、前端单按钮渲染 |
 
 ## 2.1 Recent Evidence Notes
 
@@ -121,3 +124,22 @@
 - 保留失败样例。
 - 更新 README、模块树、前端文案。
 - 关闭前不得继续宣称 supported。
+
+## 5. V1 最终能力边界锁
+
+M23/M24 是 V1 最终能力切面。两个里程碑关闭后，能力矩阵锁定为：
+
+| 状态 | 数量 | 能力 |
+| --- | --- | --- |
+| supported | 10 | health, lunar-data-meta, calendar-date-query, calendar-date-query-v1-meta, chart-create, chart-detail, analysis-snapshot, luck-cycles, glossary, astronomy-engine |
+| restricted | 7 | chart-basis-preview, case-management, share-preview, settings, case-export, data-derivation, chart-report |
+| target | 0 | — |
+| planned | 0 | — |
+
+**M23 closed. M24 closed (code complete + governance sync). 边界已锁定。**
+
+边界锁定后不再受理功能性新增需求。此后只允许：
+- 治理同步（台账、模块树、工程树、README 修正）
+- 缺陷修复
+- 性能优化
+- 已有 restricted 能力的晋级（按 §3 晋级流程）

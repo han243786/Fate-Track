@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>命盘报告 — 命轨</title>
+    <link rel="stylesheet" href="./src/styles.css" />
+  </head>
+  <body>
+    <header class="report-header">
+      <a class="report-back" href="/">← 返回排盘</a>
+      <h1>命盘报告</h1>
+    </header>
+
+    <main class="report-page" id="report-page">
+      <p class="empty-state">正在生成报告…</p>
+    </main>
+
+    <script type="module">
+      import { ApiClient } from "./src/api/client.js";
+      import { defaultApiBase, loadApiBase } from "./src/config.js";
+
+      const apiBase = loadApiBase() ?? defaultApiBase;
+      const client = new ApiClient(apiBase);
+      const container = document.getElementById("report-page");
+
+      const params = new URLSearchParams(window.location.search);
+      const request = {
+        date: params.get("date") || "2025-01-01",
+        time: params.get("time") || "",
+        timezone: params.get("timezone") || "Asia/Shanghai",
+        timePrecision: params.get("time_precision") || "unknown",
+        sex: params.get("sex") || "unspecified"
+      };
+
+      try {
+        const data = await client.chartReport(request);
+        renderReport(data);
+      } catch (error) {
+        container.innerHTML = `<p class="empty-state">报告生成失败：${error.message}</p>`;
+      }
+
+      function renderReport(data) {
+        container.innerHTML = "";
+        if (!data || !data.blocks) {
+          container.innerHTML = `<p class="empty-state">暂无报告数据</p>`;
+          return;
+        }
+
+        const disclaimer = document.createElement("p");
+        disclaimer.className = "report-disclaimer";
+        disclaimer.textContent = data.disclaimer ?? "";
+        container.append(disclaimer);
+
+        for (const block of data.blocks ?? []) {
+          const section = document.createElement("section");
+          section.className = "report-block";
+
+          const title = document.createElement("h2");
+          title.className = "report-block-title";
+          title.textContent = block.title;
+
+          const body = document.createElement("p");
+          body.className = "report-block-body";
+          body.textContent = block.body;
+
+          section.append(title, body);
+          container.append(section);
+        }
+      }
+    </script>
+  </body>
+</html>

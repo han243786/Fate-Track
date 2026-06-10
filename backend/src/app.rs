@@ -574,6 +574,52 @@ mod tests {
         );
     }
 
+    #[test]
+    fn glossary_returns_entries() {
+        let response = parse_and_handle(
+            &project_data_app(),
+            b"GET /api/glossary HTTP/1.1\r\n\r\n",
+        );
+        assert_eq!(response.status.code(), 200);
+        assert!(response.body.contains("\"glossary\":["));
+        assert!(response.body.contains("\"count\":"));
+        // Should contain stem and branch entries
+        assert!(response.body.contains("\"甲\""));
+        assert!(response.body.contains("\"子\""));
+    }
+
+    #[test]
+    fn glossary_filters_by_term() {
+        let response = parse_and_handle(
+            &project_data_app(),
+            b"GET /api/glossary?term=%E6%AF%94%E8%82%A9 HTTP/1.1\r\n\r\n", // term=比肩
+        );
+        assert_eq!(response.status.code(), 200);
+        assert!(response.body.contains("比肩"));
+        // Should return fewer entries than unfiltered
+        let unfiltered = parse_and_handle(&project_data_app(), b"GET /api/glossary HTTP/1.1\r\n\r\n");
+        assert!(response.body.len() < unfiltered.body.len());
+    }
+
+    #[test]
+    fn case_export_requires_id() {
+        let response = parse_and_handle(
+            &project_data_app(),
+            b"GET /api/cases/export HTTP/1.1\r\n\r\n",
+        );
+        assert_eq!(response.status.code(), 400);
+        assert!(response.body.contains("bad_request"));
+    }
+
+    #[test]
+    fn case_export_returns_404_for_missing_id() {
+        let response = parse_and_handle(
+            &project_data_app(),
+            b"GET /api/cases/export?id=nonexistent HTTP/1.1\r\n\r\n",
+        );
+        assert_eq!(response.status.code(), 404);
+    }
+
     fn extract_json_string(body: &str, key: &str) -> String {
         let needle = format!("\"{key}\":\"");
         let start = body.find(&needle).expect("json string key should exist") + needle.len();

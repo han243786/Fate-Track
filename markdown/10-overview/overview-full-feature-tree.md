@@ -16,15 +16,18 @@ FT/
         chart_basis.rs
         chart_detail.rs
         charts.rs
+        derive.rs
         glossary_data.rs
         health.rs
         luck.rs
         lunar.rs
         mod.rs
+        report.rs
         settings.rs
         share.rs
       astronomy/
         calendar.rs
+        compare.rs
         mod.rs
         moon.rs
         sun.rs
@@ -40,6 +43,7 @@ FT/
         bazi.rs
         cases.rs
         glossary.rs
+        deep_analysis.rs
         luck.rs
         mod.rs
         settings.rs
@@ -56,6 +60,11 @@ FT/
       lib.rs
       main.rs
       server.rs
+    tests/
+      generate_artifacts.rs
+      generate_golden.rs
+      replay_tests.rs
+      run_comparison.rs
     Cargo.toml
   data/
     generated/
@@ -108,6 +117,12 @@ FT/
         source-snapshot-manifest.schema.json
     raw/
       lunar_data.yaml
+      golden-fixtures.json
+    out/
+      android-comparison-1901-2100.json
+      lunar-calendar-1901-2100.json
+      new-moons-1901-2100.json
+      solar-terms-1901-2100.json
     README.md
   docs/
     decisions/
@@ -127,8 +142,13 @@ FT/
       0014-share-token-privacy-boundary.md
       0015-m9-astronomy-parallel-strategy.md
       0016-m9-astronomy-source-stack.md
+      0017-m9-generated-data-implementation-path.md
+      0018-month-boundary-correction.md
+      0019-m11-astronomy-engine-architecture.md
+      0020-dg-005-luck-cycle-rules.md
     release/
       v1-release-candidate.md
+      v1-closeout.md
   frontend/
     src/
       api/

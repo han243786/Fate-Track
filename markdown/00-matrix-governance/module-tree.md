@@ -21,11 +21,12 @@
 | `backend.entrypoint` | `backend/src/main.rs`, `backend/src/lib.rs`, `backend/src/config.rs` | 后端启动、配置、模块导出 |
 | `backend.app` | `backend/src/app.rs`, `backend/src/server.rs`, `backend/src/error.rs` | 请求调度、TCP 服务、统一错误 |
 | `backend.http` | `backend/src/http/*` | HTTP 请求解析、响应、状态码、JSON 字符串工具 |
-| `backend.api` | `backend/src/api/*` | API 路由、健康检查、能力边界、农历元信息 |
+| `backend.api` | `backend/src/api/*` (16 files) | M1-M24 全部 API 路由：health, capabilities, lunar, calendar, chart_basis, charts, chart_detail, analysis, luck, cases, derive, share, settings, glossary_data, report |
 | `backend.calendar.civil` | `backend/src/calendar/civil.rs` | 纯公历日期校验、闰年、日期差、年内序号 |
 | `backend.calendar.ganzhi` | `backend/src/calendar/ganzhi.rs` | Android 万年历同源的年月日干支计算 |
 | `backend.calendar.lunar_data` | `backend/src/calendar/lunar_data.rs`, `data/raw/lunar_data.yaml` | 农历 raw data 读取、元信息解析、日期层查询 |
-| `backend.domain` | `backend/src/domain/*` | 八字、案例、设置、术语领域实体骨架 |
+| `backend.domain` | `backend/src/domain/*` (9 files) | 八字、案例、大运、深层分析、设置、共享、术语 |
+| `backend.astronomy` | `backend/src/astronomy/*` (7 files) | M11 天文引擎：时标、太阳、节气、月球、农历推导、对照 |
 | `frontend.shell` | `frontend/index.html`, `frontend/server.mjs`, `frontend/package.json` | 前端页面壳、本地静态服务、脚本入口 |
 | `frontend.api` | `frontend/src/api/client.js`, `frontend/src/config.js`, `frontend/tests/api-client.test.mjs` | Backend API client for date-layer, chart, analysis, local cases, restricted share preview, and capability tests |
 | `frontend.state` | `frontend/src/state.js`, `frontend/src/main.js` | 应用状态与启动编排 |
@@ -34,7 +35,7 @@
 | `data.lunar.raw` | `data/README.md`, `data/raw/lunar_data.yaml` | 农历基础数据真源 |
 | `governance.matrix` | `markdown/**`, `docs/decisions/*` | 治理文档和决策记录 |
 | `governance.research` | `markdown/reserch/*`, `markdown/reserch/zh-CN/*`, `markdown/reserch/00-research-intake.md`, `docs/decisions/0003-v1-research-governance-baseline.md`, `docs/decisions/0004-v1-calculation-ruleset-target.md`, `docs/decisions/0005-privacy-safe-interpretation-target.md` | 研究报告原文、中文译文、采纳状态、目标规则和隐私解释政策 |
-| `governance.roadmap` | `markdown/20-roadmap/*`, `docs/decisions/0006-roadmap-and-governance-lock.md`, `docs/decisions/0007-recursive-development-protocol.md` | 从 M0 到 M10 的开发里程碑、决策门、风险、防回退、能力晋级台账和递归游标 |
+| `governance.roadmap` | `markdown/20-roadmap/*`, `docs/decisions/0006-roadmap-and-governance-lock.md`, `docs/decisions/0007-recursive-development-protocol.md` | 从 M0 到 M22 的开发里程碑、决策门、风险、防回退、能力晋级台账和递归游标 |
 | `governance.release` | `docs/release/v1-release-candidate.md`, `markdown/20-roadmap/25-milestone-08-preflight.md`, `markdown/20-roadmap/26-milestone-08-closeout.md` | V1 release candidate、能力冻结、降级规则和 M8 收口证据 |
 | `governance.astronomy-preflight` | `docs/decisions/0015-m9-astronomy-parallel-strategy.md`, `docs/decisions/0016-m9-astronomy-source-stack.md`, `data/generated/astronomy/*`, `tools/check-astronomy-preflight.ps1`, `markdown/20-roadmap/27-milestone-09-preflight.md` | M9 星历并行策略、源栈决策、manifest schema、对照报告模板和预检门禁 |
 | `tools.governance` | `tools/*.ps1` | 项目检查、脚手架检查、目录盘点、release candidate 检查、astronomy preflight 检查 |
@@ -105,6 +106,13 @@
 | `GET /api/cases` | `api/cases.rs` | restricted |
 | `GET /api/settings` | `api/settings.rs` | restricted |
 | `GET /api/share/preview` | `api/share.rs` | restricted |
+| `GET /api/charts/detail` | `api/chart_detail.rs` | supported |
+| `GET /api/luck/cycles` | `api/luck.rs` | supported |
+| `GET /api/glossary` | `api/glossary_data.rs` | supported |
+| `GET /api/cases/export` | `api/cases.rs` | restricted |
+| `GET /api/data/derive` | `api/derive.rs` | restricted |
+| `data/generated/astronomy/out/*` | `astronomy/*` | supported (ADR 0021) |
+| `GET /api/charts/report` | `api/report.rs` | restricted |
 
 `GET /api/calendar/query` response metadata is limited to the current Android date-layer baseline: source, algorithm version, ruleset id, 1901-2100 range, date-only boundary policy, and limitations. It must not be treated as full chart, hour-pillar, timezone-history, true-solar-time, or astronomy-engine support.
 
@@ -129,9 +137,9 @@ Date-query error envelope is `{"error": "...", "message": "..."}`: missing/inval
 | `GET /api/luck/cycles` | `api/luck.rs` | supported |
 | `GET /api/glossary` | `api/glossary_data.rs` | supported |
 | `GET /api/cases/export` | `api/cases.rs` | restricted |
-| `GET /api/data/derive` | `api/mod.rs` (inline) | restricted |
+| `GET /api/data/derive` | `api/derive.rs` | restricted |
 
-M12 chart-detail returns immutable snapshot with algo_version, ruleset_id, birth profile, pillars, warnings, and ambiguity flags. M13 luck-cycles (ADR 0020, DG-005 closed) returns 大运 direction, starting-age, and 8 cycles. M14 glossary returns 42 structured terminology entries with term/category search. M14 case-export returns JSON export with optional private notes. M15 data-derivation returns aggregate stub.
+M12 chart-detail returns immutable snapshot with algo_version, ruleset_id, birth profile, pillars, warnings, and ambiguity flags. M13 luck-cycles (ADR 0020, DG-005 closed) returns 大运 direction, starting-age, and 8 cycles. M14 glossary returns 55 structured terminology entries with term/category search. M14 case-export returns JSON export with optional private notes and analysis report. M15 data-derivation returns real aggregated statistics (day_masters, elements, ten_gods, hours) with >=5 threshold privacy protection. M24 chart-report returns colloquial Chinese chart report with 9 text blocks, disclaimer, and forbidden-output audit; restricted capability, pure hard-coded templates, no AI/LLM.
 
 **Forbidden lateral links**: 不得直接读取前端文件；不得把 planned 能力返回为 supported。
 
@@ -192,15 +200,16 @@ M12 chart-detail returns immutable snapshot with algo_version, ruleset_id, birth
 **Current entities**:
 | File | Entities | Status |
 | --- | --- | --- |
-| `bazi.rs` | `RulesetId`, `CalculationMetadata`, `BirthProfile`, `ChartRequest`, `ChartBasis`, `ChartResult`, `BaziChart`, `Pillar`, future analysis/luck entities | M3 chart core + future skeleton |
+| `bazi.rs` | `RulesetId`, `CalculationMetadata`, `BirthProfile`, `ChartRequest`, `ChartBasis`, `ChartResult`, `ChartDetail`, `BaziChart`, `Pillar` | M3 chart core + M12 immutable snapshot |
 | `analysis.rs` | `AnalysisSnapshot`, `WeightedMetric`, `AnalysisCard`, forbidden-output audit | M4 structured analysis |
 | `cases.rs` | `CaseRecord`, `CaseRepository`, immutable chart/analysis snapshot refs, `SharePreset` | M5 local volatile case storage |
 | `settings.rs` | `UserPreference` | M5 local volatile preferences |
 | `share.rs` | `ShareRecord`, `ShareRepository`, `RedactedShareSnapshot` | M6 local volatile share preview |
 | `glossary.rs` | `GlossaryEntry` | M14 glossary skeleton |
 | `luck.rs` | `LuckCycle`, `compute_luck_cycles` | M13 luck cycles (ADR 0020, DG-005 closed) |
+| `deep_analysis.rs` | `StrengthAssessment`, `PatternInfo`, `UsefulGodHint` | M21 deep analysis (三命通会/子平法蒸馏) |
 
-**Rule**: All 16 capabilities are now supported or restricted. No planned capabilities remain.
+**Rule**: All 17 capabilities are now supported or restricted. No planned or target capabilities remain. `astronomy-engine` promoted from target to supported per M23 (ADR 0021).
 
 ## 3.1 Implemented: Astronomy Engine
 
@@ -213,6 +222,7 @@ M12 chart-detail returns immutable snapshot with algo_version, ruleset_id, birth
 | `terms.rs` | Solar term crossing finder: 24 terms/year via bisection on apparent longitude |
 | `moon.rs` | Simplified lunar theory (Meeus Ch.47, ~60 terms): longitude, new moon finder |
 | `calendar.rs` | Lunar calendar derivation: month table from terms + new moons, GB/T leap rules |
+| `compare.rs` | M19 Android-vs-astronomy day-pillar comparison: 1598 samples, 0 differences |
 
 **Source**: ADR 0019 (M11 engine architecture).
 

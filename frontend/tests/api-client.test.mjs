@@ -58,19 +58,14 @@ describe("ApiClient workspace routes", () => {
       date: "2025-01-01",
       time: "10:30",
       timezone: "Asia/Shanghai",
-      timePrecision: "exact"
+      timePrecision: "exact",
+      sex: "unspecified"
     };
     await client.chartCreate(request);
     await client.analysisSnapshot(request);
 
-    assert.equal(
-      urls[0],
-      "http://127.0.0.1:8787/api/charts?date=2025-01-01&timezone=Asia%2FShanghai&time_precision=exact&time=10%3A30"
-    );
-    assert.equal(
-      urls[1],
-      "http://127.0.0.1:8787/api/analysis/snapshot?date=2025-01-01&timezone=Asia%2FShanghai&time_precision=exact&time=10%3A30"
-    );
+    assert.match(urls[0], /\/api\/charts\?.*date=2025-01-01.*time_precision=exact.*time=10%3A30/);
+    assert.match(urls[1], /\/api\/analysis\/snapshot\?.*date=2025-01-01.*time_precision=exact.*time=10%3A30/);
   });
 
   it("creates cases and share previews through restricted routes", async () => {

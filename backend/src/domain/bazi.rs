@@ -335,6 +335,39 @@ pub struct ChartResult {
     pub unsupported_outputs: Vec<&'static str>,
 }
 
+/// M12-WP1: Immutable chart detail snapshot.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct ChartDetail {
+    pub snapshot_id: String,
+    pub algo_version: &'static str,
+    pub ruleset_id: &'static str,
+    pub birth_profile: BirthProfile,
+    pub pillars: BaziChart,
+    pub metadata: CalculationMetadata,
+    pub warnings: Vec<&'static str>,
+    pub ambiguity_flags: Vec<&'static str>,
+    pub created_at_unix: u64,
+}
+
+impl ChartDetail {
+    pub fn from_result(result: &ChartResult) -> Self {
+        Self {
+            snapshot_id: format!("chart:{}", result.chart.day.ganzhi()),
+            algo_version: result.metadata.algo_version,
+            ruleset_id: result.metadata.ruleset_id,
+            birth_profile: result.basis.request.birth_profile.clone(),
+            pillars: result.chart.clone(),
+            metadata: result.metadata.clone(),
+            warnings: result.warnings.clone(),
+            ambiguity_flags: result.ambiguity_flags.clone(),
+            created_at_unix: std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap_or_default()
+                .as_secs(),
+        }
+    }
+}
+
 impl ChartResult {
     pub fn build(basis: ChartBasis, date_layer: DateLayerPillars) -> Result<Self, AppError> {
         let year = Pillar::from_ganzhi(&date_layer.year)?;
@@ -534,5 +567,26 @@ mod tests {
         assert!(result.chart.hour.is_none());
         assert_eq!(result.chart.hour_candidates.len(), 12);
         assert!(result.ambiguity_flags.contains(&"unknown_hour"));
+    }
+
+    #[test]
+    fn chart_detail_snapshot_is_deterministic() {
+        // Same input → same snapshot_id and immutable fields
+        let basis = ChartBasis::build(request()).unwrap();
+        let r1 = ChartResult::build(basis.clone(), DateLayerPillars {
+            year: "甲辰".into(), month: "丙子".into(), day: "庚午".into(),
+        }).unwrap();
+        let r2 = ChartResult::build(basis, DateLayerPillars {
+            year: "甲辰".into(), month: "丙子".into(), day: "庚午".into(),
+        }).unwrap();
+        let d1 = ChartDetail::from_result(&r1);
+        let d2 = ChartDetail::from_result(&r2);
+        // Same day pillar → same snapshot_id
+        assert_eq!(d1.snapshot_id, d2.snapshot_id);
+        assert_eq!(d1.algo_version, d2.algo_version);
+        assert_eq!(d1.ruleset_id, d2.ruleset_id);
+        assert_eq!(d1.pillars.year, d2.pillars.year);
+        assert_eq!(d1.pillars.month, d2.pillars.month);
+        assert_eq!(d1.pillars.day, d2.pillars.day);
     }
 }

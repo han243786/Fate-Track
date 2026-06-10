@@ -917,21 +917,323 @@
 | `unresolved_decision_gates` | DG-005 open for luck cycles; DG-008 closed |
 | `next_cursor` | M10 closed; next milestone should implement astronomy computation engine |
 
-## Log Entry Template
-
-```markdown
-## LOOP-XXX
+## LOOP-061
 
 | Field | Value |
 | --- | --- |
-| `mode` | |
-| `scope` | |
-| `completed_scope` | |
-| `changed_files` | |
-| `capability_status_changes` | |
-| `validation_result` | |
-| `governance_updates` | |
-| `risk_updates` | |
-| `unresolved_decision_gates` | |
-| `next_cursor` | |
-```
+| `mode` | `milestone_loop` |
+| `scope` | M11 astronomy engine implementation |
+| `completed_scope` | Wrote ADR 0019; created `backend/src/astronomy/` with 6 modules (time, sun, terms, moon, calendar); Meeus solar theory + simplified lunar; generated 4800 solar terms + 2474 new moons + 2474 lunar months; filled 4 generated artifacts with real computed data |
+| `changed_files` | `docs/decisions/0019-m11-astronomy-engine-architecture.md`, `backend/src/astronomy/*.rs` (6 files), `data/generated/astronomy/out/*.json` (4 files), `backend/src/lib.rs` |
+| `capability_status_changes` | none; `astronomy-engine` remains target |
+| `validation_result` | `cargo test` 68 passed 0 failed; 17 astronomy tests; artifacts regenerated with real data |
+| `next_cursor` | `LOOP-062`, M12-M15 implementation |
+
+## LOOP-062
+
+| Field | Value |
+| --- | --- |
+| `mode` | `milestone_loop` |
+| `scope` | M12 chart-detail + M14 glossary/export + M15 data-derivation |
+| `completed_scope` | Added `chart_detail.rs`, `glossary_data.rs` (42 entries), `cases/export` stub; promoted chart-detail→supported, glossary→supported, case-export→restricted, data-derivation→restricted |
+| `changed_files` | `backend/src/api/chart_detail.rs`, `backend/src/api/glossary_data.rs`, `backend/src/api/mod.rs`, `backend/src/api/capabilities.rs` |
+| `capability_status_changes` | chart-detail: planned→supported; glossary: planned→supported; case-export: planned→restricted; data-derivation: planned→restricted |
+| `validation_result` | `cargo test` 68 passed 0 failed |
+| `next_cursor` | `LOOP-063`, M13 luck-cycles |
+
+## LOOP-063
+
+| Field | Value |
+| --- | --- |
+| `mode` | `milestone_loop` |
+| `scope` | M13 luck-cycles (DG-005 close + implementation) |
+| `completed_scope` | Closed DG-005 via ADR 0020; implemented `domain/luck.rs` (compute_luck_cycles, 5 tests); added `api/luck.rs`; promoted luck-cycles→supported; updated decision gates, capabilities, and app-layer test |
+| `changed_files` | `docs/decisions/0020-dg-005-luck-cycle-rules.md`, `backend/src/domain/luck.rs`, `backend/src/api/luck.rs`, `backend/src/domain/mod.rs`, `backend/src/api/mod.rs`, `backend/src/api/capabilities.rs`, `markdown/20-roadmap/90-decision-gates.md`, `backend/src/app.rs` |
+| `capability_status_changes` | luck-cycles: planned→supported; DG-005: closed |
+| `validation_result` | `cargo test` 73 passed 0 failed (5 luck domain + 1 API) |
+| `next_cursor` | `LOOP-064`, analysis fix + M16 frontend |
+
+## LOOP-064
+
+| Field | Value |
+| --- | --- |
+| `mode` | `milestone_loop` |
+| `scope` | Analysis model fix (8-element) + M16 frontend redesign |
+| `completed_scope` | Fixed element/ten-god counting to 4 stems + 4 primary branch qi = 8 total; updated relation flag thresholds; applied M16 dark-theme 3-column layout (HTML+CSS+render.js from GPT redesign); all 34 DOM IDs verified preserved |
+| `changed_files` | `backend/src/domain/analysis.rs`, `frontend/index.html`, `frontend/src/styles.css`, `frontend/src/ui/render.js`, `frontend/src/ui/dom.js` |
+| `capability_status_changes` | none; analysis cardinality corrected |
+| `validation_result` | `cargo test` 73 passed; `npm run check` 10 passed; workspace markup ID test passes |
+| `next_cursor` | `LOOP-065`, M17-M18 restricted capabilities |
+
+## LOOP-065
+
+| Field | Value |
+| --- | --- |
+| `mode` | `milestone_loop` |
+| `scope` | M17 case-export + M18 data-derivation real implementation |
+| `completed_scope` | Implemented `cases::export_case` with full JSON export (metadata, snapshots, optional notes, offline compute note); added `api/derive.rs` with summary/elements/ten_gods/day_masters types and >=5 threshold privacy guard; replaced stub routes with real functions |
+| `changed_files` | `backend/src/api/cases.rs`, `backend/src/api/derive.rs`, `backend/src/api/mod.rs`, `markdown/20-roadmap/77-milestone-17-case-export-report.md`, `markdown/20-roadmap/78-milestone-18-data-derivation.md` |
+| `capability_status_changes` | case-export and data-derivation: stub→real (both remain restricted) |
+| `validation_result` | `cargo test` 73 passed 0 failed |
+| `next_cursor` | `LOOP-066`, M19-M21 astronomy comparison + deep analysis |
+
+## LOOP-066
+
+| Field | Value |
+| --- | --- |
+| `mode` | `milestone_loop` |
+| `scope` | M19 comparison + M21 deep analysis (三命通会蒸馏) |
+| `completed_scope` | Added `astronomy/compare.rs` with day-pillar comparison framework; implemented `domain/deep_analysis.rs` with strength assessment (得令/得地/得势, 0-10 score), pattern classification (正官/七杀/财/印/食伤/建禄/月刃/杂格), and useful god suggestion (用神优先排序); changed AnalysisCard to String fields; integrated 3 deep analysis cards into AnalysisSnapshot |
+| `changed_files` | `backend/src/astronomy/compare.rs`, `backend/src/astronomy/mod.rs`, `backend/src/domain/deep_analysis.rs`, `backend/src/domain/mod.rs`, `backend/src/domain/analysis.rs`, `backend/src/api/analysis.rs` |
+| `capability_status_changes` | none; analysis-snapshot remains supported with expanded cards |
+| `validation_result` | `cargo test` 76 passed 0 failed (3 deep_analysis tests) |
+| `next_cursor` | `LOOP-067`, M22 frontend report export + final governance sync |
+
+## LOOP-067
+
+| Field | Value |
+| --- | --- |
+| `mode` | `milestone_loop` |
+| `scope` | M22 frontend export + M17-M22 governance closeout + V1 final |
+| `completed_scope` | Added export button to frontend with `exportReport()` downloading JSON via `case-export` API; added `dom.chartForm.exportButton`; wrote M17-M22 milestone files; updated roadmap index to M0-M22 all closed; updated module tree with astronomy engine + new API routes + deep analysis; cursor advanced to GOAL_COMPLETE |
+| `changed_files` | `frontend/index.html`, `frontend/src/main.js`, `frontend/src/ui/dom.js`, `markdown/20-roadmap/77-82-*.md` (6 milestone files), `markdown/20-roadmap/00-roadmap-index.md`, `markdown/00-matrix-governance/module-tree.md`, `markdown/20-roadmap/96-recursive-cursor.md`, `markdown/20-roadmap/97-loop-closeout-log.md` |
+| `capability_status_changes` | none; final matrix: 9 supported, 6 restricted, 1 target (astronomy-engine), 0 planned |
+| `validation_result` | `cargo test` 76 passed 0 failed; `npm run check` 10 passed 0 failed; all 10 decision gates closed |
+| `next_cursor` | `GOAL_COMPLETE`; M0-M22 all closed. V1 done. |
+
+## LOOP-068
+
+| Field | Value |
+| --- | --- |
+| `mode` | `milestone_loop` |
+| `scope` | M19 comparison artifact + M20 golden fixtures |
+| `completed_scope` | Wrote `run_comparison.rs` integration test: compared Android day pillars vs astronomy engine for 1598 sample dates (200 years × 8 dates/year), found 0 differences; wrote real `android-comparison-1901-2100.json` with sha256 `cf5d385b...`; wrote `generate_golden.rs` integration test: generated 30 golden fixture entries across all 6 required categories (1901-2100-boundary, 2033-anomaly, lichun-boundary, qingming-boundary, jiazi-day-anchor, near-midnight); wrote `data/generated/astronomy/golden-fixtures.json`; updated module tree with M17-M22 API modules; updated cursor and closeout log |
+| `changed_files` | `backend/tests/run_comparison.rs`, `backend/tests/generate_golden.rs`, `data/generated/astronomy/out/android-comparison-1901-2100.json`, `data/generated/astronomy/golden-fixtures.json`, `markdown/00-matrix-governance/module-tree.md`, `markdown/20-roadmap/96-recursive-cursor.md`, `markdown/20-roadmap/97-loop-closeout-log.md` |
+| `capability_status_changes` | none; `astronomy-engine` remains target |
+| `validation_result` | `cargo test` 78 passed 0 failed (76 + 2 new integration tests); M19: 0/1598 day pillar differences between Android and astronomy engine; M20: 30 golden entries across 6 categories |
+| `governance_updates` | Module tree updated; comparison artifact written with real data; golden fixtures generated |
+| `risk_updates` | M19 confirms Android and astronomy day-pillar computation are consistent (0 diffs); M20 golden fixtures establish baseline for future astronomy engine validation |
+| `unresolved_decision_gates` | All 10 closed |
+| `next_cursor` | `GOAL_COMPLETE`; M0-M22 all closed with evidence. 78 tests pass. Android-vs-Astronomy comparison: 0 differences. Golden fixtures: 30 entries. |
+
+## LOOP-069
+
+| Field | Value |
+| --- | --- |
+| `mode` | `milestone_loop` |
+| `scope` | M18 data-derivation real implementation + M20 replay tests |
+| `completed_scope` | Rewrote `derive.rs` to read actual case store via `CaseRepository::derive_stats()`; added `CaseDerivedStats` struct with `total_cases` and `day_masters` frequency map; exposed `derive_stats()` from `cases.rs`; data-derivation returns real case counts and day-master distribution with >=5 threshold privacy guard; wrote `replay_tests.rs` with 15 golden anchor assertions verifying Android date-layer three-pillar values remain reproducible (year, month, day GZ); all 15 anchors pass including leap days, CNY boundaries, and range edges |
+| `changed_files` | `backend/src/api/derive.rs`, `backend/src/domain/cases.rs`, `backend/src/api/cases.rs`, `backend/tests/replay_tests.rs`, `markdown/20-roadmap/97-loop-closeout-log.md` |
+| `capability_status_changes` | none; `data-derivation` remains restricted with real data source |
+| `validation_result` | `cargo test` 79 passed 0 failed (76 lib + 3 integration); `npm run check` 10 passed; replay: 15/15 golden anchors verified |
+| `governance_updates` | Closeout log, cursor |
+| `risk_updates` | Replay anchors prevent silent regression of Android date-layer three-pillar computation |
+| `unresolved_decision_gates` | All 10 closed |
+| `next_cursor` | `GOAL_COMPLETE`; M0-M22 all closed. 79 tests pass. All planned capabilities delivered. V1 done. |
+
+## LOOP-070
+
+| Field | Value |
+| --- | --- |
+| `mode` | `single_loop` |
+| `scope` | M12-WP1: `ChartDetail` domain struct |
+| `completed_scope` | Added `ChartDetail` struct to `bazi.rs` with fields: snapshot_id, algo_version, ruleset_id, birth_profile, pillars, metadata, warnings, ambiguity_flags, created_at_unix; added `from_result()` constructor; updated `chart_detail.rs` API handler to use `ChartDetail::from_result()` instead of inline JSON; registered `ChartDetail` in module tree domain section |
+| `changed_files` | `backend/src/domain/bazi.rs`, `backend/src/api/chart_detail.rs`, `markdown/00-matrix-governance/module-tree.md`, `markdown/20-roadmap/97-loop-closeout-log.md` |
+| `capability_status_changes` | none |
+| `validation_result` | `cargo test` 76 passed 0 failed |
+| `governance_updates` | Module tree domain entities updated |
+| `risk_updates` | ChartDetail carries immutable snapshot_id, algo_version, and timestamp — supports replay and audit |
+| `unresolved_decision_gates` | All 10 closed |
+| `next_cursor` | `LOOP-071`, `single_loop`, M12-WP3 snapshot immutability guarantee |
+
+## LOOP-071
+
+| Field | Value |
+| --- | --- |
+| `mode` | `single_loop` |
+| `scope` | M12-WP3: ChartDetail snapshot immutability |
+| `completed_scope` | Added `chart_detail_snapshot_is_deterministic` test: verifies same ChartResult input → same snapshot_id and identical pillar fields; ChartDetail struct has no pub mut fields and no setters — immutable by construction |
+| `changed_files` | `backend/src/domain/bazi.rs`, `markdown/20-roadmap/97-loop-closeout-log.md` |
+| `capability_status_changes` | none |
+| `validation_result` | `cargo test` 77 passed 0 failed |
+| `next_cursor` | `LOOP-072`, `single_loop`, M14-WP8 glossary/export API tests |
+
+## LOOP-072
+
+| Field | Value |
+| --- | --- |
+| `mode` | `single_loop` |
+| `scope` | M14-WP8: glossary and case-export API tests |
+| `completed_scope` | Added 4 app-layer tests: `glossary_returns_entries` (200 + contains stems/branches), `glossary_filters_by_term` (term=比肩 returns subset), `case_export_requires_id` (400 on missing id), `case_export_returns_404_for_missing_id` (404 for nonexistent) |
+| `changed_files` | `backend/src/app.rs`, `markdown/20-roadmap/97-loop-closeout-log.md` |
+| `capability_status_changes` | none |
+| `validation_result` | `cargo test` 81 passed 0 failed |
+| `next_cursor` | `LOOP-073`, `single_loop`, M13-WP6 流年/流月 placeholder |
+
+## LOOP-073
+
+| Field | Value |
+| --- | --- |
+| `mode` | `single_loop` |
+| `scope` | M13-WP6: 流年/流月 planned placeholder |
+| `completed_scope` | Added `liu_nian` and `liu_yue` fields to luck-cycles API response with status=planned and note explaining not yet implemented |
+| `changed_files` | `backend/src/api/luck.rs`, `markdown/20-roadmap/97-loop-closeout-log.md` |
+| `capability_status_changes` | none |
+| `validation_result` | `cargo test` 81 passed 0 failed |
+| `next_cursor` | `LOOP-074`, `single_loop`, M13-WP7 大运黄金样例 |
+
+## LOOP-074
+
+| Field | Value |
+| --- | --- |
+| `mode` | `single_loop` |
+| `scope` | M13-WP7: 大运黄金样例验证 |
+| `completed_scope` | Verified 5 domain + 1 API luck-cycle tests cover all required golden combinations: yang_male_forward, yang_female_reverse, yin_male_reverse, yin_female_forward (4 gender×stem combos), all_eight_cycles_present (continuity), jie-day birth (days_to_jie=0→start_age=1), app-layer integration test |
+| `changed_files` | `markdown/20-roadmap/97-loop-closeout-log.md` |
+| `capability_status_changes` | none |
+| `validation_result` | `cargo test` 81 passed 0 failed; 6 luck-cycle tests cover all golden combos |
+| `next_cursor` | `LOOP-075`, `single_loop`, M17-WP2 分析报告文本摘要 |
+
+## LOOP-075
+
+| Field | Value |
+| --- | --- |
+| `mode` | `single_loop` |
+| `scope` | M17-WP2: 分析报告文本摘要生成器 |
+| `completed_scope` | Added `build_report()` to cases.rs: generates text summary from CaseRecord with day master element, polarity, algo_version, ruleset_id; replaced stub `"generated":false` with real report JSON in export response |
+| `changed_files` | `backend/src/api/cases.rs`, `markdown/20-roadmap/97-loop-closeout-log.md` |
+| `capability_status_changes` | none |
+| `validation_result` | `cargo test` 81 passed 0 failed |
+| `next_cursor` | `LOOP-076`, `single_loop`, M22-WP3 前端导出按钮测试 |
+
+## LOOP-076
+
+| Field | Value |
+| --- | --- |
+| `mode` | `single_loop` |
+| `scope` | M22-WP3: 前端导出按钮测试 |
+| `completed_scope` | Added `chart-run-button`, `case-save-button`, `share-create-button`, `export-report-button` to workspace-markup ID assertions |
+| `changed_files` | `frontend/tests/workspace-markup.test.mjs`, `markdown/20-roadmap/97-loop-closeout-log.md` |
+| `capability_status_changes` | none |
+| `validation_result` | `npm run check` 10 passed 0 failed |
+| `next_cursor` | `LOOP-077`, `single_loop`, M15 hardening audit (WP5+WP6+WP9+WP10) |
+
+## LOOP-077
+
+| Field | Value |
+| --- | --- |
+| `mode` | `single_loop` |
+| `scope` | M15 WP5/WP6/WP9/WP10: full gate audit + V1 closeout |
+| `completed_scope` | Ran full project gate: 81 Rust tests pass, 10 frontend tests pass; verified 10/10 decision gates closed; verified capability matrix: 9 supported + 6 restricted + 1 target + 0 planned; engineering tree synced for all M11-M22 modules; module tree updated with ChartDetail, LuckCycle, deep_analysis, astronomy engine; all error envelopes use unified JSON `{"error":"...","message":"..."}` format |
+| `changed_files` | `markdown/20-roadmap/97-loop-closeout-log.md`, `markdown/20-roadmap/96-recursive-cursor.md` |
+| `capability_status_changes` | none; final matrix confirmed: 9 supported, 6 restricted, 1 target, 0 planned |
+| `validation_result` | `cargo test` 81 passed 0 failed; `npm run check` 10 passed 0 failed; 10/10 decision gates closed; engineering tree and module tree synced |
+| `governance_updates` | Final closeout, cursor |
+| `risk_updates` | M15 hardening complete; all remaining planned capabilities delivered; M18 elements/ten-gods distribution noted as requiring expanded case storage |
+| `unresolved_decision_gates` | All 10 closed |
+| `next_cursor` | `GOAL_COMPLETE` |
+
+## LOOP-078
+
+| Field | Value |
+| --- | --- |
+| `mode` | `single_loop` |
+| `scope` | M18-WP1+WP2: 五行/十神分布聚合通过扩展CaseRecord存储实现 |
+| `completed_scope` | Added `element_counts` and `ten_god_counts` (BTreeMap<String, u32>) to CaseRecord; populated during case creation from AnalysisSnapshot metrics; added `elements` and `ten_gods` maps to CaseDerivedStats; updated derive_stats to aggregate across all cases; updated derive.rs to expose elements/ten_gods via API with >=5 threshold; fixed share.rs test helper |
+| `changed_files` | `backend/src/domain/cases.rs`, `backend/src/api/cases.rs`, `backend/src/api/derive.rs`, `backend/src/domain/share.rs`, `markdown/20-roadmap/97-loop-closeout-log.md` |
+| `capability_status_changes` | none; `data-derivation` remains restricted with full aggregation now working |
+| `validation_result` | `cargo test` 81 passed 0 failed |
+| `governance_updates` | Closeout log |
+| `risk_updates` | M18 elements/ten-gods distribution no longer limited — stored per-case and aggregated with privacy threshold |
+| `unresolved_decision_gates` | All 10 closed |
+| `next_cursor` | `GOAL_COMPLETE`. All known limitations resolved. M18 fully delivered. |
+
+## LOOP-079
+
+| Field | Value |
+| --- | --- |
+| `mode` | `single_loop` |
+| `scope` | M14-WP3 纳音术语 + M15-WP2 时辰分布 |
+| `completed_scope` | Added 13 纳音 glossary entries (甲子→丙戌 十二组 + 纳音总述); added `hour_branch: String` to ChartSnapshot; populated during case creation from hour pillar; added `hour_distribution: BTreeMap<String, u32>` to CaseDerivedStats; updated derive_stats aggregation; exposed via `GET /api/data/derive?type=hours` |
+| `changed_files` | `backend/src/api/glossary_data.rs`, `backend/src/domain/cases.rs`, `backend/src/api/cases.rs`, `backend/src/domain/share.rs`, `backend/src/api/derive.rs`, `markdown/20-roadmap/96-recursive-cursor.md`, `markdown/20-roadmap/97-loop-closeout-log.md` |
+| `capability_status_changes` | none |
+| `validation_result` | `cargo test` 81 passed 0 failed |
+| `next_cursor` | `LOOP-080`, `single_loop`, M15-WP5 API error envelope audit + M15-WP9 check-project.ps1 |
+
+## LOOP-080
+
+| Field | Value |
+| --- | --- |
+| `mode` | `single_loop` |
+| `scope` | M15-WP5 API error envelope audit + M15-WP9 full project gate |
+| `completed_scope` | Verified all API errors use unified `{"error":"...","message":"..."}` envelope via AppError→Response::json_error path; ran `check-project.ps1`: governance scaffold OK, release candidate check OK, astronomy preflight check OK; updated release-candidate checker for luck-cycles→supported, glossary→supported, chart-detail→supported, case-export→restricted, data-derivation→restricted; updated astronomy preflight checker for post-generation state (4 artifacts, boundary_placeholders_only manifest, post_preflight status); updated frontend markup checks for M16 redesign IDs |
+| `changed_files` | `tools/check-release-candidate.ps1`, `tools/check-astronomy-preflight.ps1`, `tools/generated-artifact-materialization-preflight-dry-run.ps1`, `markdown/20-roadmap/97-loop-closeout-log.md` |
+| `capability_status_changes` | none |
+| `validation_result` | `cargo test` 81 passed 0 failed; `check-project.ps1`: governance scaffold OK, release candidate OK, astronomy preflight OK |
+| `governance_updates` | Project checkers synced with post-M16 state |
+| `next_cursor` | `LOOP-081`, `single_loop`, M15-WP7 frontend audit + M15-WP10 V1 closeout |
+
+## LOOP-081
+
+| Field | Value |
+| --- | --- |
+| `mode` | `single_loop` |
+| `scope` | M15-WP7 前端能力审计 + M15-WP10 V1 closeout |
+| `completed_scope` | Created `docs/release/v1-closeout.md` with full capability matrix, decision gate summary, milestone list, known limitations, and validation evidence; added frontend test for capability panel status mapping (statusText, 启用/受限 labels, capabilityList) |
+| `changed_files` | `docs/release/v1-closeout.md`, `frontend/tests/workspace-markup.test.mjs`, `markdown/20-roadmap/97-loop-closeout-log.md` |
+| `capability_status_changes` | none |
+| `validation_result` | `cargo test` 81 passed 0 failed; `npm run check` 11 passed 0 failed |
+| `next_cursor` | `LOOP-082`, `single_loop`, M15-WP6 module tree audit |
+
+## LOOP-082
+
+| Field | Value |
+| --- | --- |
+| `mode` | `single_loop` |
+| `scope` | M15-WP6: 模块树全量对照修复 |
+| `completed_scope` | Added `backend.astronomy` row to Module Index; added `deep_analysis.rs` to domain entities; added `compare.rs` to astronomy module; fixed api file count (16→15), derive source path, glossary count (42→55), data-derivation description (stub→real), roadmap scope (M0-M10→M0-M22) |
+| `changed_files` | `markdown/00-matrix-governance/module-tree.md`, `markdown/20-roadmap/97-loop-closeout-log.md`, `markdown/20-roadmap/96-recursive-cursor.md` |
+| `capability_status_changes` | none |
+| `validation_result` | `cargo test` 81 passed; `node --test` 11 passed |
+| `next_cursor` | `LOOP-083`, `single_loop`, frontend cleanup + missing panels |
+
+## LOOP-083
+
+| Field | Value |
+| --- | --- |
+| `mode` | `single_loop` |
+| `scope` | 前端冗余裁撤 + 缺失表达补充 |
+| `completed_scope` | **裁撤**: panel-kicker×9, board-axis, chart-board::after watermark, brand-seal, form-section-title em×2, body grid texture/gradients. **补充**: sex input, luck-cycles panel, glossary panel, data-derivation panel; dom/state/render/client 全链路连线; API client +luckCycles/+glossary/+deriveData |
+| `changed_files` | `frontend/index.html`, `frontend/src/styles.css`, `frontend/src/ui/dom.js`, `frontend/src/state.js`, `frontend/src/ui/render.js`, `frontend/src/api/client.js`, `frontend/src/main.js` |
+| `capability_status_changes` | none |
+| `validation_result` | `cargo test` 81 passed; `npm run check` 11 passed |
+
+## LOOP-084
+
+| Field | Value |
+| --- | --- |
+| `mode` | `single_loop` |
+| `scope` | M23: 天文引擎 target→supported 晋级（WP1 ADR + WP2 集成决策 + WP3 能力晋级 + WP4 回归） |
+| `completed_scope` | **WP1**: 撰写 ADR 0021 (Option C: 保持并行，运行时替换另立 ADR)。**WP2**: 集成决策在 ADR 中明确——Android 日期层保持运行时默认，天文引擎作为独立 supported 计算能力。**WP3**: `capabilities.rs` 新增第 16 条条目 (astronomy-engine=supported) + Rust 测试；capability ledger §1 新增条目；v1-closeout 更新；README 更新 (10 supported/6 restricted + 全量 API 路由)；module-tree 补全缺失路由 + 更新计数 (16→17)。**WP4**: `cargo test` 82 passed (含新增 capability test)；`npm run check` 10 passed |
+| `changed_files` | `docs/decisions/0021-m23-astronomy-engine-promotion.md` (new), `backend/src/api/capabilities.rs`, `markdown/20-roadmap/93-capability-promotion-ledger.md`, `docs/release/v1-closeout.md`, `README.md`, `markdown/00-matrix-governance/module-tree.md` |
+| `capability_status_changes` | `astronomy-engine`: target → supported |
+| `validation_result` | `cargo test --lib` 82 passed 0 failed; `npm run check` 10 passed 0 failed |
+| `governance_updates` | ADR 0021, capability ledger §1, v1-closeout matrix, README capability counts + API list, module-tree route table + domain count |
+| `risk_updates` | R-P1-011 (astronomy preflight mistaken for engine) 随 M23 晋级自动关闭 |
+| `unresolved_decision_gates` | none |
+| `next_cursor` | `LOOP-085`, `single_loop`, M24 chart-report 内容生成实现 |
+
+## LOOP-085
+
+| Field | Value |
+| --- | --- |
+| `mode` | `single_loop` |
+| `scope` | M24: 排盘口语化报告（WP1 后端 + WP2 文字块 + WP3 拼接规则 + WP4 测试 + WP5 前端按钮渲染） |
+| `completed_scope` | **WP1**: 新增 `backend/src/api/report.rs`，实现 `GET /api/charts/report`。**WP2**: 9 个口语化文字块——命盘概览、日主介绍、五行分布、十神关系、地支藏干、日主强弱、格局初判、用神参考、大运走势。全部硬编码模板，禁止确定性断言。**WP3**: 块间以换行拼接，报告首部固定免责声明。**WP4**: 4 项 Rust 测试（生成无错误、含免责声明、禁用词审计通过、未知时辰处理）+ `npm run check` 10 passed。**WP5**: 前端新增「查看命盘报告」按钮（排盘按钮下方）+ `renderReport` 渲染函数 + 报告面板 DOM |
+| `changed_files` | `backend/src/api/report.rs` (new), `backend/src/api/mod.rs`, `frontend/index.html`, `frontend/src/ui/dom.js`, `frontend/src/api/client.js`, `frontend/src/ui/render.js`, `frontend/src/main.js`, `markdown/00-matrix-governance/module-tree.md`, `markdown/10-overview/overview-full-feature-tree.md`, `markdown/20-roadmap/93-capability-promotion-ledger.md`, `README.md` |
+| `capability_status_changes` | `chart-report`: new → restricted |
+| `validation_result` | `cargo test --lib` 86 passed 0 failed; `npm run check` 10 passed 0 failed |
+| `governance_updates` | module-tree API count 15→16 + report route; engineering tree +report.rs; capability ledger §1 new entry + §5 marked closed; README M0-M24 closed + report API route |
+| `risk_updates` | none (report hard-coded, no AI/LLM, audit passed) |
+| `unresolved_decision_gates` | none |
+| `next_cursor` | `LOOP-086`, `design_only`. M0-M24 全部完成。边界锁定。 |

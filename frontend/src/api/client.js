@@ -19,11 +19,12 @@ export class ApiClient {
     return this.#getJson(`/api/calendar/query?date=${encodeURIComponent(date)}`);
   }
 
-  chartCreate({ date, time, timezone, timePrecision }) {
+  chartCreate({ date, time, timezone, timePrecision, sex }) {
     const params = new URLSearchParams({
       date,
       timezone,
-      time_precision: timePrecision
+      time_precision: timePrecision,
+      sex: sex || "unspecified"
     });
     if (timePrecision === "exact" && time) {
       params.set("time", time);
@@ -31,11 +32,12 @@ export class ApiClient {
     return this.#getJson(`/api/charts?${params.toString()}`);
   }
 
-  analysisSnapshot({ date, time, timezone, timePrecision }) {
+  analysisSnapshot({ date, time, timezone, timePrecision, sex }) {
     const params = new URLSearchParams({
       date,
       timezone,
-      time_precision: timePrecision
+      time_precision: timePrecision,
+      sex: sex || "unspecified"
     });
     if (timePrecision === "exact" && time) {
       params.set("time", time);
@@ -43,14 +45,15 @@ export class ApiClient {
     return this.#getJson(`/api/analysis/snapshot?${params.toString()}`);
   }
 
-  createCase({ id, title, tags, note, date, time, timezone, timePrecision }) {
+  createCase({ id, title, tags, note, date, time, timezone, timePrecision, sex }) {
     const params = new URLSearchParams({
       action: "create",
       id,
       title,
       date,
       timezone,
-      time_precision: timePrecision
+      time_precision: timePrecision,
+      sex: sex || "unspecified"
     });
     if (tags) params.set("tags", tags);
     if (note) params.set("note", note);
@@ -69,6 +72,26 @@ export class ApiClient {
       ttl_seconds: "3600"
     });
     return this.#getJson(`/api/share/preview?${params.toString()}`);
+  }
+
+  luckCycles({ date, timezone, sex }) {
+    const params = new URLSearchParams({ date, timezone, sex });
+    return this.#getJson(`/api/luck/cycles?${params.toString()}`);
+  }
+
+  glossary(term) {
+    const params = term ? `?term=${encodeURIComponent(term)}` : "";
+    return this.#getJson(`/api/glossary${params}`);
+  }
+
+  deriveData(type) {
+    return this.#getJson(`/api/data/derive?type=${encodeURIComponent(type)}`);
+  }
+
+  chartReport({ date, time, timezone, timePrecision, sex }) {
+    const params = new URLSearchParams({ date, timezone, time_precision: timePrecision, sex: sex || "unspecified" });
+    if (timePrecision === "exact" && time) params.set("time", time);
+    return this.#getJson(`/api/charts/report?${params.toString()}`);
   }
 
   async #getJson(path) {

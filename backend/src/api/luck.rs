@@ -108,7 +108,9 @@ pub fn cycles(config: &AppConfig, request: &Request) -> Result<Response, AppErro
             r#""year_gan":"{}","#,
             r#""days_to_jie":{},"#,
             r#""starting_age":{},"#,
-            r#""cycles":[{}]"#,
+            r#""cycles":[{}],"#,
+            r#""liu_nian":{{"status":"planned","note":"流年分析尚未实现，仅大运排盘可用"}},"#,
+            r#""liu_yue":{{"status":"planned","note":"流月分析尚未实现"}}"#,
             r#"}}"#
         ),
         if is_forward(&year_gan, &profile.sex) {

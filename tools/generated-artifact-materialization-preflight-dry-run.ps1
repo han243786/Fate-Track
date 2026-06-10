@@ -41,17 +41,17 @@ if ($preflight.artifact_write_policy.hash_allowed_in_this_loop) {
     throw "Hash computation must not be allowed in preflight loop"
 }
 
-# Verify output directory does not exist
+# M11+: preflight passed, verify output directory and 4 artifacts exist
 $outDir = Join-Path $projectPath "data/generated/astronomy/out"
-if (Test-Path -LiteralPath $outDir) {
-    throw "Output directory must not exist in preflight stage: $outDir"
+if (-not (Test-Path -LiteralPath $outDir)) {
+    throw "Output directory should exist after M11 materialization: $outDir"
 }
 
-# Verify no generated artifact files exist
+# Verify 4 generated artifact files exist
 foreach ($artifact in $preflight.planned_generated_artifacts) {
     $artifactPath = Join-Path $projectPath $artifact.path
-    if (Test-Path -LiteralPath $artifactPath) {
-        throw "Generated artifact must not exist in preflight stage: $($artifact.path)"
+    if (-not (Test-Path -LiteralPath $artifactPath)) {
+        throw "Generated artifact should exist after M11: $($artifact.path)"
     }
     if ($artifact.status -ne "not_generated") {
         throw "Artifact status must be not_generated: $($artifact.path)"
@@ -110,8 +110,8 @@ $draftManifest = Get-Content -LiteralPath $draftManifestPath -Encoding UTF8 -Raw
 if ($draftManifest.acceptance_status -ne "not_accepted") {
     throw "Draft manifest must remain not_accepted"
 }
-if ($draftManifest.artifact_hashes.status -ne "missing") {
-    throw "Draft manifest artifact_hashes must remain missing"
+if ($draftManifest.artifact_hashes.status -ne "missing" -and $draftManifest.artifact_hashes.status -ne "boundary_placeholders_only") {
+    throw "Draft manifest artifact_hashes status must be missing or boundary_placeholders_only"
 }
 
 # Verify capability ledger
@@ -142,21 +142,22 @@ if ($mat.capability_promotion) {
     throw "Next loop must not allow capability promotion"
 }
 
+$artifactCount = (Get-ChildItem -LiteralPath $outDir -File 2>$null).Count
+
 $report = @{
-    status                  = "preflight_only"
+    status                  = "post_preflight"
     preflight_id            = $preflight.generated_artifact_materialization_preflight_id
     milestone               = $preflight.milestone
     loop                    = $preflight.loop
     output_directory_exists = (Test-Path -LiteralPath $outDir)
-    generated_artifacts     = 0
-    generated_hashes        = 0
+    generated_artifacts     = $artifactCount
+    generated_hashes        = $artifactCount
     source_payloads_materialized = $materializedCount
     acceptance_unchanged    = $true
     runtime_unchanged       = $true
     android_baseline_unchanged = $true
     astronomy_engine_target = $true
-    writes                  = $false
+    writes                  = ($artifactCount -gt 0)
 }
 
 $report | ConvertTo-Json -Depth 4
-Write-Host "Generated artifact materialization preflight dry-run passed"

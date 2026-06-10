@@ -67,10 +67,10 @@ fn cards_to_json(cards: &[AnalysisCard]) -> String {
         .map(|card| {
             format!(
                 "{{\"id\":{},\"title\":{},\"severity\":{},\"body\":{}}}",
-                json::string(card.id),
-                json::string(card.title),
-                json::string(card.severity),
-                json::string(card.body),
+                json::string(&card.id),
+                json::string(&card.title),
+                json::string(&card.severity),
+                json::string(&card.body),
             )
         })
         .collect::<Vec<_>>()

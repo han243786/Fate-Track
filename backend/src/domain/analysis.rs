@@ -27,10 +27,10 @@ pub struct WeightedMetric {
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct AnalysisCard {
-    pub id: &'static str,
-    pub title: &'static str,
-    pub severity: &'static str,
-    pub body: &'static str,
+    pub id: String,
+    pub title: String,
+    pub severity: String,
+    pub body: String,
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -125,18 +125,46 @@ impl AnalysisSnapshot {
             sensitivity_flags.push("chart_has_ambiguity_flags");
         }
 
-        let cards = vec![
+        // Deep analysis: 三命通会/子平法 distillation
+        use crate::domain::deep_analysis::{assess_strength, classify_pattern, suggest_useful_god};
+        let strength = assess_strength(chart);
+        let pattern = classify_pattern(chart, &strength);
+        let useful_gods = suggest_useful_god(&strength, &pattern);
+
+        let useful_god_body = {
+            let hints: Vec<String> = useful_gods.iter()
+                .map(|h| format!("{}. {}", h.element, h.reason))
+                .collect();
+            hints.join("；")
+        };
+
+        let mut cards = vec![
             AnalysisCard {
-                id: "structure-summary",
-                title: "Structure Summary",
-                severity: "info",
-                body: "This card summarizes deterministic chart metrics under the selected ruleset.",
+                id: "day-master-strength".into(),
+                title: "日主强弱".into(),
+                severity: "info".into(),
+                body: format!(
+                    "日主「{}」属{}{}，得令{}，得地{}支，得势{}干。综合评分{}/10，判定为「{}」。",
+                    day_master, stem_element(&day_master),
+                    if ["甲","丙","戊","庚","壬"].contains(&day_master.as_str()) { "阳" } else { "阴" },
+                    if strength.deling { "✓" } else { "✗" },
+                    strength.dedi, strength.deshi, strength.score, strength.level
+                ),
             },
             AnalysisCard {
-                id: "safety-boundary",
-                title: "Safety Boundary",
-                severity: "notice",
-                body: "This analysis is traditional and interpretive, not professional advice.",
+                id: "pattern-classification".into(),
+                title: "格局初判".into(),
+                severity: "info".into(),
+                body: format!(
+                    "月令透干推演，格局为「{}」。",
+                    pattern.pattern_name
+                ),
+            },
+            AnalysisCard {
+                id: "useful-god-hint".into(),
+                title: "用神参考".into(),
+                severity: "info".into(),
+                body: useful_god_body,
             },
         ];
         let forbidden_output_audit = audit_cards(&cards);

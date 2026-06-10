@@ -29,7 +29,7 @@ Research-derived targets are recorded in:
 
 End-to-end development milestones are under `markdown/20-roadmap/`.
 
-M1-M15 are all closed. V1 capability matrix: 8 supported, 6 restricted, 1 planned (luck-cycles pending DG-005).
+M0-M24 closed. V1 capability matrix: 10 supported, 7 restricted, 0 target, 0 planned. 边界已锁定，不再受理功能性新增需求。
 
 Start with:
 
@@ -62,21 +62,27 @@ node server.mjs
 
 Open `http://127.0.0.1:5173`.
 
-The frontend now opens as an M7 restricted workspace. It can run chart creation, structured analysis, local volatile case save/list, redacted share preview creation, date-layer query, data metadata, and capability boundary display. It does not implement backend algorithms locally and does not claim luck cycles, durable sharing, accounts, cloud sync, true solar time, timezone history, glossary, wider date range, or astronomy replacement.
+The frontend runs as a restricted workspace with chart creation, structured analysis (incl. deep-analysis cards), luck cycles, local volatile case save/list, redacted share preview, date-layer query, glossary, data derivation, capability boundary display, and JSON case export. It does not implement backend algorithms locally and does not claim durable sharing, accounts, cloud sync, true solar time, timezone history, wider date range, or astronomy replacement.
 
 ## Supported API
 
 ```text
-GET /api/health
-GET /api/capabilities
-GET /api/lunar-data/meta
-GET /api/calendar/query?date=YYYY-MM-DD
-GET /api/charts/basis/preview?date=YYYY-MM-DD&timezone=Area%2FCity
-GET /api/charts?date=YYYY-MM-DD&timezone=Area%2FCity&time_precision=exact&time=HH%3AMM
-GET /api/analysis/snapshot?date=YYYY-MM-DD&timezone=Area%2FCity&time_precision=exact&time=HH%3AMM
-GET /api/cases?action=list|create|detail|update_metadata|archive|delete
-GET /api/settings?action=get|update
-GET /api/share/preview?action=create|public|revoke
+GET /api/health                                    — supported
+GET /api/capabilities                              — supported
+GET /api/lunar-data/meta                           — supported
+GET /api/calendar/query?date=YYYY-MM-DD             — supported (Android date-layer, 1901-2100)
+GET /api/charts/basis/preview?date=&timezone=       — restricted
+GET /api/charts?date=&timezone=&time_precision=     — supported (4 pillars)
+GET /api/charts/detail?date=&timezone=              — supported (immutable snapshot)
+GET /api/analysis/snapshot?date=&timezone=          — supported (structured metrics + deep analysis)
+GET /api/luck/cycles?date=&timezone=&sex=           — supported (ADR 0020)
+GET /api/glossary?term=&category=                   — supported (55 entries)
+GET /api/cases?action=list|create|detail|update_metadata|archive|delete  — restricted
+GET /api/cases/export?id=                           — restricted
+GET /api/settings?action=get|update                 — restricted
+GET /api/share/preview?action=create|public|revoke  — restricted
+GET /api/data/derive?type=                          — restricted (>=5 threshold)
+GET /api/charts/report?date=&timezone=               — restricted (colloquial CN report, 9 blocks)
 ```
 
 The first date-layer implementation is ported from the Android perpetual-calendar source under `D:\myproject\Perpetual calendar`, with golden cases covering leap days, leap months, CNY boundaries, cross-year continuity, and solar-term dates.

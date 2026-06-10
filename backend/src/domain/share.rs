@@ -139,12 +139,15 @@ mod tests {
                 chart_algo_version: "chart-engine-android-date-layer-v1".to_string(),
                 ruleset_id: "ft-v1-default".to_string(),
                 day_master: "\u{5e9a}".to_string(),
+                hour_branch: "\u{5df3}".to_string(),
             },
             analysis_snapshot: AnalysisSnapshotRef {
                 snapshot_id: "case-private:analysis:v1".to_string(),
                 analysis_algo_version: "structured-analysis-v1".to_string(),
                 disclaimer_id: "traditional-interpretation-not-professional-advice-v1".to_string(),
             },
+            element_counts: BTreeMap::new(),
+            ten_god_counts: BTreeMap::new(),
             created_at_unix: 1,
             updated_at_unix: 1,
         }

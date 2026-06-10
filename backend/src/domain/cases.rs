@@ -1,5 +1,14 @@
 use std::collections::BTreeMap;
 
+#[derive(Clone, Debug)]
+pub struct CaseDerivedStats {
+    pub total_cases: u32,
+    pub day_masters: BTreeMap<String, u32>,
+    pub elements: BTreeMap<String, u32>,
+    pub ten_gods: BTreeMap<String, u32>,
+    pub hour_distribution: BTreeMap<String, u32>,
+}
+
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub enum CaseStatus {
     Active,
@@ -23,6 +32,7 @@ pub struct ChartSnapshot {
     pub chart_algo_version: String,
     pub ruleset_id: String,
     pub day_master: String,
+    pub hour_branch: String,
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -41,6 +51,8 @@ pub struct CaseRecord {
     pub status: CaseStatus,
     pub chart_snapshot: ChartSnapshot,
     pub analysis_snapshot: AnalysisSnapshotRef,
+    pub element_counts: BTreeMap<String, u32>,
+    pub ten_god_counts: BTreeMap<String, u32>,
     pub created_at_unix: u64,
     pub updated_at_unix: u64,
 }
@@ -105,6 +117,28 @@ impl CaseRepository {
             .filter(|case| case.status != CaseStatus::Deleted)
             .map(CaseRecord::summary)
             .collect()
+    }
+
+    pub fn derive_stats(&self) -> CaseDerivedStats {
+        let active: Vec<_> = self.cases.values()
+            .filter(|c| c.status != CaseStatus::Deleted)
+            .collect();
+        let total = active.len() as u32;
+        let mut day_masters = BTreeMap::new();
+        let mut elements = BTreeMap::new();
+        let mut ten_gods = BTreeMap::new();
+        let mut hour_distribution = BTreeMap::new();
+        for c in &active {
+            *day_masters.entry(c.chart_snapshot.day_master.clone()).or_default() += 1u32;
+            *hour_distribution.entry(c.chart_snapshot.hour_branch.clone()).or_default() += 1u32;
+            for (el, count) in &c.element_counts {
+                *elements.entry(el.clone()).or_default() += *count;
+            }
+            for (tg, count) in &c.ten_god_counts {
+                *ten_gods.entry(tg.clone()).or_default() += *count;
+            }
+        }
+        CaseDerivedStats { total_cases: total, day_masters, elements, ten_gods, hour_distribution }
     }
 
     pub fn update_metadata(
@@ -172,12 +206,15 @@ mod tests {
                 chart_algo_version: "chart-engine-android-date-layer-v1".to_string(),
                 ruleset_id: "ft-v1-default".to_string(),
                 day_master: "\u{5e9a}".to_string(),
+                hour_branch: "\u{5df3}".to_string(),
             },
             analysis_snapshot: AnalysisSnapshotRef {
                 snapshot_id: format!("{id}:analysis:v1"),
                 analysis_algo_version: "structured-analysis-v1".to_string(),
                 disclaimer_id: "traditional-interpretation-not-professional-advice-v1".to_string(),
             },
+            element_counts: BTreeMap::new(),
+            ten_god_counts: BTreeMap::new(),
             created_at_unix: 1,
             updated_at_unix: 1,
         }

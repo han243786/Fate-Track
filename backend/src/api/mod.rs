@@ -5,10 +5,12 @@ mod cases;
 mod chart_basis;
 mod chart_detail;
 mod charts;
+mod derive;
 mod glossary_data;
 mod health;
 mod luck;
 mod lunar;
+mod report;
 mod settings;
 mod share;
 
@@ -34,16 +36,15 @@ pub fn route(config: &AppConfig, request: &Request) -> Result<Response, AppError
         "/api/analysis/snapshot" => analysis::snapshot(config, request),
         "/api/luck/cycles" => luck::cycles(config, request),
         "/api/cases" => cases::cases(config, request),
-        "/api/cases/export" => Ok(Response::json(r#"{"status":"restricted","capability":"case-export","export_format":"json-v1"}"#.to_string())),
+        "/api/cases/export" => cases::export_case(config, request),
         "/api/share/preview" => share::preview(request),
         "/api/settings" => settings::settings(request),
         "/api/glossary" => Ok(glossary_data::glossary(
             request.query_value("term").as_deref(),
             request.query_value("category").as_deref(),
         )),
-        "/api/data/derive" => Ok(Response::json(
-            "{\"status\":\"restricted\",\"capability\":\"data-derivation\",\"derived_data\":[],\"note\":\"Aggregate derivation available after case population.\"}".to_string()
-        )),
+        "/api/data/derive" => derive::derive(request),
+        "/api/charts/report" => report::generate(config, request),
         _ => Err(AppError::NotFound(request.path.clone())),
     }
 }
