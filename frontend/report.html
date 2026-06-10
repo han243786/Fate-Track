@@ -6,14 +6,15 @@
     <title>命盘报告 — 命轨</title>
     <link rel="stylesheet" href="./src/styles.css" />
   </head>
+
   <body class="report-body">
-    <header class="report-header">
+    <header class="report-header" aria-label="命盘报告导航">
       <a class="report-back" href="/">← 返回排盘</a>
-      <div class="report-brand">
+      <div class="report-brand" aria-label="命轨报告">
         <strong>命盘报告</strong>
         <span>Fate Track Archive</span>
       </div>
-      <div class="report-progress-label">只读报告</div>
+      <div class="report-progress-label" id="report-progress-label">只读报告 · 00%</div>
       <i class="report-progress" id="report-progress" aria-hidden="true"></i>
     </header>
 
@@ -38,122 +39,287 @@
         sex: params.get("sex") || "unspecified"
       };
 
-      try {
-        const data = await client.chartReport(request);
-        renderReport(data);
-      } catch (error) {
-        container.innerHTML = `<p class="empty-state">报告生成失败：${error.message}</p>`;
+      void boot();
+
+      async function boot() {
+        try {
+          const data = await client.chartReport(request);
+          renderReport(data);
+        } catch (error) {
+          renderError(`报告生成失败：${error instanceof Error ? error.message : String(error)}`);
+        }
       }
 
       function renderReport(data) {
         container.innerHTML = "";
-        if (!data || !data.blocks) {
-          container.innerHTML = `<p class="empty-state">暂无报告数据</p>`;
+        if (!data || !Array.isArray(data.blocks)) {
+          renderError("暂无报告数据");
           return;
         }
         const blocks = data.blocks ?? [];
-
-        // Hero cover
-        const hero = document.createElement("section");
-        hero.className = "report-hero";
-        hero.innerHTML = `
-          <div class="report-hero-inner report-reveal is-visible">
-            <div class="report-kicker">Fate Track Celestial Archive</div>
-            <h1>命盘报告</h1>
-            <p>只读排盘工作台 · 边界锁定 · 结构化命理卷宗</p>
-            <div class="report-meta">
-              <span>日期：${request.date}</span>
-              <span>时间：${request.time || "未知"}</span>
-              <span>性别：${sexLabel(request.sex)}</span>
-              <span>时区：${request.timezone}</span>
-            </div>
-          </div>
-        `;
-
-        // Layout: index + chapters
-        const layout = document.createElement("section");
-        layout.className = "report-layout";
-
-        const index = document.createElement("nav");
-        index.className = "report-index";
-        index.innerHTML = `<div class="report-index-title">报告目录</div>`;
-
-        const chapters = document.createElement("div");
-        chapters.className = "report-chapters";
-
-        const disclaimer = document.createElement("p");
-        disclaimer.className = "report-disclaimer report-reveal";
-        disclaimer.textContent = data.disclaimer ?? "";
-        chapters.append(disclaimer);
-
-        blocks.forEach((block, i) => {
-          const id = `report-section-${i + 1}`;
-
-          const link = document.createElement("a");
-          link.href = `#${id}`;
-          link.textContent = `${String(i + 1).padStart(2, "0")} ${block.title}`;
-          index.append(link);
-
-          const section = document.createElement("section");
-          section.className = "report-block report-reveal";
-          section.id = id;
-
-          const title = document.createElement("h2");
-          title.className = "report-block-title";
-          title.textContent = block.title;
-
-          const body = document.createElement("p");
-          body.className = "report-block-body";
-          body.textContent = block.body;
-
-          section.append(title, body);
-          chapters.append(section);
-        });
-
-        layout.append(index, chapters);
-        container.append(hero, layout);
+        const fragment = document.createDocumentFragment();
+        fragment.append(createHero(blocks));
+        fragment.append(createReportLayout(data, blocks));
+        container.append(fragment);
         mountReportEffects();
       }
 
-      function sexLabel(s) {
-        if (s === "male") return "男";
-        if (s === "female") return "女";
-        return "未指定";
+      function createHero(blocks) {
+        const hero = createEl("section", "report-hero report-reveal is-visible");
+        hero.id = "report-cover";
+        hero.dataset.sectionIndex = "0";
+        hero.setAttribute("aria-label", "命盘报告封面");
+
+        const luopan = createEl("div", "report-hero-luopan");
+        luopan.setAttribute("aria-hidden", "true");
+        for (let i = 1; i <= 5; i += 1) luopan.append(createEl("i", `report-hero-ring ring-${i}`));
+        luopan.append(createEl("span", "report-hero-axis axis-v"));
+        luopan.append(createEl("span", "report-hero-axis axis-h"));
+        luopan.append(createEl("span", "report-hero-star"));
+
+        const inner = createEl("div", "report-hero-inner");
+        const kicker = createEl("div", "report-kicker", "Fate Track Celestial Archive");
+        const title = createEl("h1", "report-hero-title", "命盘报告");
+        const rule = createEl("i", "report-hero-rule");
+        rule.setAttribute("aria-hidden", "true");
+        const intro = createEl("p", "report-hero-lead", "只读排盘工作台 · 边界锁定 · 结构化命理卷宗");
+
+        const meta = createEl("div", "report-meta");
+        [
+          ["日期", request.date], ["时间", request.time || "未知"],
+          ["性别", sexLabel(request.sex)], ["时区", request.timezone],
+          ["章节", `${blocks.length} 节`]
+        ].forEach(([label, value], index) => {
+          const chip = createEl("span", "report-meta-chip", `${label}：${value}`);
+          chip.style.setProperty("--chip-delay", `${index * 90}ms`);
+          meta.append(chip);
+        });
+
+        const enter = createEl("a", "report-enter", blocks.length > 0 ? "向下启封" : "等待归档");
+        enter.href = blocks.length > 0 ? "#report-section-1" : "#report-cover";
+        enter.setAttribute("aria-label", "开始阅读命盘报告");
+
+        inner.append(kicker, title, rule, intro, meta, enter);
+        hero.append(luopan, inner);
+        return hero;
+      }
+
+      function createReportLayout(data, blocks) {
+        const layout = createEl("section", "report-layout");
+        const index = createEl("nav", "report-index");
+        index.setAttribute("aria-label", "报告目录");
+
+        const indexHead = createEl("div", "report-index-head");
+        indexHead.append(
+          createEl("div", "report-index-title", "报告目录"),
+          createEl("div", "report-index-subtitle", "Archive Index")
+        );
+
+        const indexList = createEl("div", "report-index-list");
+        indexList.append(createIndexLink("00", "封面", "#report-cover"));
+
+        const chapters = createEl("div", "report-chapters");
+        if (data.disclaimer) chapters.append(createDisclaimer(data.disclaimer));
+
+        blocks.forEach((block, indexNumber) => {
+          const num = String(indexNumber + 1).padStart(2, "0");
+          const id = `report-section-${indexNumber + 1}`;
+          indexList.append(createIndexLink(num, safeText(block.title, "未命名章节"), `#${id}`));
+          chapters.append(createReportBlock(block, indexNumber));
+        });
+
+        chapters.append(createArchiveFooter(blocks.length));
+        index.append(indexHead, indexList);
+        layout.append(index, chapters);
+        return layout;
+      }
+
+      function createIndexLink(number, title, href) {
+        const link = document.createElement("a");
+        link.href = href;
+        link.className = href === "#report-cover" ? "is-active" : "";
+        link.append(createEl("span", "report-index-no", number));
+        link.append(createEl("span", "report-index-text", title));
+        return link;
+      }
+
+      function createDisclaimer(text) {
+        const d = createEl("section", "report-disclaimer report-reveal");
+        d.dataset.sectionIndex = "disclaimer";
+        d.append(createEl("div", "report-disclaimer-title", "边界声明"));
+        d.append(createEl("p", "", safeText(text, "本报告仅作结构化排盘展示，不构成现实决策建议。")));
+        return d;
+      }
+
+      function createReportBlock(block, indexNumber) {
+        const num = String(indexNumber + 1).padStart(2, "0");
+        const section = createEl("section", "report-block report-reveal");
+        section.id = `report-section-${indexNumber + 1}`;
+        section.dataset.sectionIndex = String(indexNumber + 1);
+        section.dataset.sectionNumber = num;
+        section.style.setProperty("--block-delay", `${Math.min(indexNumber * 80, 480)}ms`);
+
+        const frame = createEl("span", "report-block-frame");
+        frame.setAttribute("aria-hidden", "true");
+        const aura = createEl("span", "report-block-aura");
+        aura.setAttribute("aria-hidden", "true");
+        const scan = createEl("span", "report-block-scan");
+        scan.setAttribute("aria-hidden", "true");
+
+        const kicker = createEl("div", "report-block-kicker", `Archive Section ${num}`);
+        const title = createEl("h2", "report-block-title", safeText(block.title, "未命名章节"));
+        const rule = createEl("i", "report-block-rule");
+        rule.setAttribute("aria-hidden", "true");
+        const body = createEl("p", "report-block-body", safeText(block.body, "暂无正文内容。"));
+
+        const footer = createEl("footer", "report-block-footer");
+        footer.append(
+          createEl("span", "", "deterministic snapshot"),
+          createEl("span", "", "只读边界"),
+          createEl("span", "", "Fate Track")
+        );
+
+        section.append(frame, aura, scan, kicker, title, rule, body, footer);
+        return section;
+      }
+
+      function createArchiveFooter(blockCount) {
+        const footer = createEl("section", "report-archive-footer report-reveal");
+        footer.id = "report-archive-end";
+        footer.dataset.sectionIndex = "end";
+        footer.append(
+          createEl("div", "archive-seal", "归"),
+          createEl("h2", "", "报告已归档"),
+          createEl("p", "", `本次命盘报告共 ${blockCount} 个章节。前端仅展示后端返回的只读结构化内容，不在报告页追加推断。`)
+        );
+        return footer;
       }
 
       function mountReportEffects() {
+        const root = document.documentElement;
+        const body = document.body;
         const progress = document.getElementById("report-progress");
+        const progressLabel = document.getElementById("report-progress-label");
+        const hero = document.querySelector(".report-hero");
         const revealItems = document.querySelectorAll(".report-reveal");
         const indexLinks = document.querySelectorAll(".report-index a");
+        const activeTargets = document.querySelectorAll(".report-hero, .report-block");
         const sections = document.querySelectorAll(".report-block");
+        const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        if (reducedMotion) body.classList.add("is-reduced-motion");
 
-        function updateProgress() {
-          if (!progress) return;
-          const scrollTop = window.scrollY;
-          const max = document.documentElement.scrollHeight - window.innerHeight;
-          const ratio = max > 0 ? scrollTop / max : 0;
-          progress.style.transform = `scaleX(${ratio})`;
+        let ticking = false;
+        function updateScrollState() {
+          const scrollTop = window.scrollY || document.documentElement.scrollTop;
+          const max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+          const ratio = clamp(scrollTop / max, 0, 1);
+          const percent = Math.round(ratio * 100);
+          root.style.setProperty("--scroll-progress", ratio.toFixed(5));
+          root.style.setProperty("--scroll-x", `${ratio * 46}px`);
+          root.style.setProperty("--scroll-y", `${ratio * -128}px`);
+          root.style.setProperty("--ambient-rotate", `${-8 + ratio * 6}deg`);
+          if (progress) progress.style.transform = `scaleX(${ratio})`;
+          if (progressLabel) progressLabel.textContent = `只读报告 · ${String(percent).padStart(2, "0")}%`;
+
+          if (hero) {
+            const rect = hero.getBoundingClientRect();
+            const hh = Math.max(1, hero.offsetHeight);
+            const hp = clamp(-rect.top / hh, 0, 1);
+            hero.style.setProperty("--hero-y", `${hp * -54}px`);
+            hero.style.setProperty("--hero-scale", `${1 - hp * 0.045}`);
+            hero.style.setProperty("--hero-opacity", `${1 - hp * 0.72}`);
+            hero.style.setProperty("--hero-luopan-scale", `${1 + hp * 0.12}`);
+            hero.style.setProperty("--hero-luopan-opacity", `${0.32 - hp * 0.22}`);
+          }
+
+          const current = document.querySelector(".report-block.is-current");
+          if (current) {
+            const r = current.getBoundingClientRect();
+            const start = window.innerHeight * 0.78;
+            const end = -r.height * 0.18;
+            const sp = clamp((start - r.top) / Math.max(1, start - end), 0, 1);
+            current.style.setProperty("--section-progress", sp.toFixed(4));
+            current.style.setProperty("--section-glow", `${0.22 + sp * 0.32}`);
+            current.style.setProperty("--section-scan-y", `${sp * 100}%`);
+          }
+          ticking = false;
         }
-        window.addEventListener("scroll", updateProgress, { passive: true });
-        updateProgress();
+
+        function requestTick() {
+          if (ticking) return;
+          ticking = true;
+          requestAnimationFrame(updateScrollState);
+        }
+
+        window.addEventListener("scroll", requestTick, { passive: true });
+        window.addEventListener("resize", requestTick);
+        updateScrollState();
 
         const revealObserver = new IntersectionObserver((entries) => {
           entries.forEach((entry) => {
-            entry.target.classList.toggle("is-visible", entry.isIntersecting);
+            entry.target.classList.toggle("is-in-view", entry.isIntersecting);
+            if (entry.isIntersecting || entry.boundingClientRect.top < 0) {
+              entry.target.classList.add("is-visible");
+            }
           });
-        }, { threshold: 0.18, rootMargin: "0px 0px -8% 0px" });
+        }, { threshold: [0, 0.12, 0.24, 0.38], rootMargin: "0px 0px -10% 0px" });
         revealItems.forEach((item) => revealObserver.observe(item));
 
-        const sectionObserver = new IntersectionObserver((entries) => {
+        const activeRatios = new Map();
+        const activeObserver = new IntersectionObserver((entries) => {
           entries.forEach((entry) => {
-            if (!entry.isIntersecting) return;
-            const activeId = entry.target.id;
-            indexLinks.forEach((link) => {
-              link.classList.toggle("is-active", link.getAttribute("href") === `#${activeId}`);
-            });
+            if (entry.isIntersecting) activeRatios.set(entry.target.id, entry.intersectionRatio);
+            else activeRatios.delete(entry.target.id);
           });
-        }, { threshold: 0.42 });
-        sections.forEach((section) => sectionObserver.observe(section));
+          let bestId = "report-cover";
+          let bestRatio = 0;
+          activeRatios.forEach((ratio, id) => { if (ratio > bestRatio) { bestRatio = ratio; bestId = id; } });
+          setActiveTarget(bestId);
+          requestTick();
+        }, { threshold: buildThresholdList(10), rootMargin: "-22% 0px -42% 0px" });
+        activeTargets.forEach((target) => activeObserver.observe(target));
+
+        indexLinks.forEach((link) => {
+          link.addEventListener("click", (event) => {
+            const href = link.getAttribute("href");
+            if (!href || !href.startsWith("#")) return;
+            const target = document.querySelector(href);
+            if (!target) return;
+            event.preventDefault();
+            target.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" });
+          });
+        });
+
+        function setActiveTarget(activeId) {
+          const activeTarget = document.getElementById(activeId);
+          indexLinks.forEach((link) => {
+            link.classList.toggle("is-active", link.getAttribute("href") === `#${activeId}`);
+          });
+          sections.forEach((section) => {
+            section.classList.toggle("is-current", section.id === activeId);
+          });
+          if (activeTarget?.dataset.sectionIndex) {
+            root.style.setProperty("--active-section", activeTarget.dataset.sectionIndex);
+          }
+        }
+      }
+
+      function buildThresholdList(steps) { return Array.from({ length: steps + 1 }, (_, i) => i / steps); }
+      function createEl(tag, className = "", text = "") {
+        const el = document.createElement(tag);
+        if (className) el.className = className;
+        if (text) el.textContent = text;
+        return el;
+      }
+      function safeText(value, fallback) {
+        if (typeof value !== "string") return fallback;
+        const trimmed = value.trim();
+        return trimmed.length > 0 ? trimmed : fallback;
+      }
+      function sexLabel(s) { if (s === "male") return "男"; if (s === "female") return "女"; return "未指定"; }
+      function clamp(value, min, max) { return Math.min(max, Math.max(min, value)); }
+      function renderError(message) {
+        container.replaceChildren(createEl("p", "empty-state report-error-state", message));
       }
     </script>
   </body>
