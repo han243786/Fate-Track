@@ -27,7 +27,7 @@ pub fn cases(config: &AppConfig, request: &Request) -> Result<Response, AppError
     }
 }
 
-pub fn export_case(config: &AppConfig, request: &Request) -> Result<Response, AppError> {
+pub fn export_case(_config: &AppConfig, request: &Request) -> Result<Response, AppError> {
     let id = request
         .query_value("id")
         .ok_or_else(|| AppError::BadRequest("missing query parameter: id".to_string()))?;

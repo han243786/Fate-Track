@@ -100,7 +100,7 @@ impl AnalysisSnapshot {
                 add_metric(&mut ten_god_metrics, ten_god(&day_master, primary), 1);
             }
             // All hidden stems recorded in hidden_stem_metrics for transparency
-            for stem in all_stems {
+            for _stem in all_stems {
                 add_metric(&mut hidden_stem_metrics, hidden_metric, 1);
             }
         }
@@ -138,7 +138,7 @@ impl AnalysisSnapshot {
             hints.join("；")
         };
 
-        let mut cards = vec![
+        let cards = vec![
             AnalysisCard {
                 id: "day-master-strength".into(),
                 title: "日主强弱".into(),

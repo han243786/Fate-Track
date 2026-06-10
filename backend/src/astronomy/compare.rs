@@ -1,7 +1,6 @@
 // M19: Android vs Astronomy comparison engine.
-use crate::astronomy::calendar::{generate_all_lunar_calendar, LunarMonthEntry};
-use crate::astronomy::moon::new_moons_for_year;
-use crate::astronomy::terms::{generate_all_solar_terms, SolarTermEntry};
+use crate::astronomy::calendar::generate_all_lunar_calendar;
+use crate::astronomy::terms::generate_all_solar_terms;
 use crate::calendar::civil::CivilDate;
 use crate::calendar::ganzhi;
 use crate::calendar::lunar_data::{LunarDataSource, LunarTable};
@@ -21,7 +20,7 @@ pub struct ComparisonRow {
 /// Run full Android-vs-Astronomy comparison for 1901-2100.
 pub fn compare_all() -> Vec<ComparisonRow> {
     let table = load_android_table();
-    let terms = generate_all_solar_terms();
+    let _terms = generate_all_solar_terms();
     let calendar = generate_all_lunar_calendar();
     let mut rows = Vec::new();
 
@@ -62,7 +61,7 @@ pub fn compare_all() -> Vec<ComparisonRow> {
                         .find(|m| m.year == year && m.first_day_gregorian_utc.starts_with(&format!("{}", year)))
                     {
                         // Simplified comparison: check zhi only
-                        let android_zhi = android_month.chars().nth(1).unwrap_or('?');
+                        let _android_zhi = android_month.chars().nth(1).unwrap_or('?');
                         if !astro_cal_month.month_name.contains(&format!("{}月", month)) {
                             // Different month assignment
                         }
@@ -75,7 +74,7 @@ pub fn compare_all() -> Vec<ComparisonRow> {
     // Summary
     let total = rows.len();
     let android_diff = rows.iter().filter(|r| r.category == "android_table_difference").count();
-    let ruleset_diff = rows.iter().filter(|r| r.category == "ruleset_difference").count();
+    let _ruleset_diff = rows.iter().filter(|r| r.category == "ruleset_difference").count();
 
     rows.push(ComparisonRow {
         year: 0, month: 0, day: 0,

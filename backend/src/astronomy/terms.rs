@@ -92,7 +92,7 @@ fn find_longitude_crossing(target_deg: f64, jd_lo: f64, jd_hi: f64) -> Option<f6
         }
         if flo * fmid < 0.0 {
             hi = mid;
-            fhi = fmid;
+            let _ = fmid; // hi side value, symmetry with fhi init
         } else {
             lo = mid;
             flo = fmid;

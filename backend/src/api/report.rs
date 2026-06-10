@@ -4,7 +4,7 @@
 use crate::api::charts::build_chart_result;
 use crate::config::AppConfig;
 use crate::domain::analysis::{AnalysisSnapshot, audit_text, DISCLAIMER_ID};
-use crate::domain::bazi::{Sex, Pillar, ChartBasis};
+use crate::domain::bazi::{Pillar, ChartBasis};
 use crate::domain::deep_analysis::{assess_strength, classify_pattern, suggest_useful_god};
 use crate::domain::luck::compute_luck_cycles;
 use crate::error::AppError;

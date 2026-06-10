@@ -1,12 +1,12 @@
 // M13: Luck cycles API route.
-use crate::api::chart_basis::{chart_request_from_query, string_array_to_json};
+use crate::api::chart_basis::chart_request_from_query;
 use crate::astronomy::terms::solar_terms_for_year;
 use crate::calendar::lunar_data::LunarDataSource;
 use crate::config::AppConfig;
-use crate::domain::bazi::{ChartBasis, Pillar, Sex, TimePrecision};
+use crate::domain::bazi::{ChartBasis, Pillar, Sex};
 use crate::domain::luck::compute_luck_cycles;
 use crate::error::AppError;
-use crate::http::{Request, Response, json};
+use crate::http::{Request, Response};
 
 pub fn cycles(config: &AppConfig, request: &Request) -> Result<Response, AppError> {
     let chart_request = chart_request_from_query(request)?;

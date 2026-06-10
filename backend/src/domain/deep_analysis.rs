@@ -1,6 +1,6 @@
 // M21: Deep analysis based on 三命通会/子平法 distillation.
 // All rules are hard-coded from classical principles. No AI/LLM.
-use crate::domain::bazi::{ChartResult, Pillar};
+use crate::domain::bazi::ChartResult;
 
 #[derive(Clone, Debug)]
 pub struct StrengthAssessment {
@@ -25,8 +25,9 @@ pub struct UsefulGodHint {
     pub reason: String,
 }
 
-/// STEMS in order, for index lookup
+#[allow(dead_code)]
 const STEMS: [&str; 10] = ["甲","乙","丙","丁","戊","己","庚","辛","壬","癸"];
+#[allow(dead_code)]
 const BRANCHES: [&str; 12] = ["子","丑","寅","卯","辰","巳","午","未","申","酉","戌","亥"];
 
 /// Element of a stem
@@ -120,7 +121,7 @@ pub fn assess_strength(chart: &ChartResult) -> StrengthAssessment {
 }
 
 /// Classify 格局 per 子平法.
-pub fn classify_pattern(chart: &ChartResult, strength: &StrengthAssessment) -> PatternInfo {
+pub fn classify_pattern(chart: &ChartResult, _strength: &StrengthAssessment) -> PatternInfo {
     let month_stem = &chart.chart.month.stem;
     let day_stem = &chart.chart.day.stem;
     let day_el = stem_element(day_stem);
