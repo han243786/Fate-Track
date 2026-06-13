@@ -47,6 +47,7 @@ $capabilities = Read-Text "backend/src/api/capabilities.rs"
 $ledger = Read-Text "markdown/20-roadmap/93-capability-promotion-ledger.md"
 $readme = Read-Text "README.md"
 $release = Read-Text "docs/release/v1-release-candidate.md"
+$releaseCloseout = Read-Text "docs/release/v1-closeout.md"
 $desktopPackaging = Read-Text "docs/release/desktop-packaging.md"
 $desktopWorkflow = Read-Text ".github/workflows/release-desktop.yml"
 $desktopPackageScript = Read-Text "tools/package-desktop-windows.ps1"
@@ -105,17 +106,22 @@ foreach ($needle in @(
 Assert-Contains $ledger "| ``release-candidate`` | supported" "Release candidate is not promoted in capability ledger"
 
 foreach ($needle in @(
+    "Fate Track"
+)) {
+    Assert-Contains $readme $needle "README missing user-facing product identity: $needle"
+}
+
+foreach ($needle in @(
     "GET /api/charts?date=",
     "GET /api/analysis/snapshot",
-    "GET /api/cases?action=",
-    "GET /api/share/preview?action=",
+    "GET /api/cases",
+    "GET /api/share/preview",
     "GET /api/charts/report",
     "GET /api/glossary",
     "GET /api/luck/cycles",
-    "GET /api/cases/export",
-    "Fate Track"
+    "GET /api/cases/export"
 )) {
-    Assert-Contains $readme $needle "README missing release boundary: $needle"
+    Assert-Contains $releaseCloseout $needle "Release closeout missing API boundary: $needle"
 }
 
 foreach ($needle in @(
