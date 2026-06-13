@@ -47,6 +47,9 @@ $capabilities = Read-Text "backend/src/api/capabilities.rs"
 $ledger = Read-Text "markdown/20-roadmap/93-capability-promotion-ledger.md"
 $readme = Read-Text "README.md"
 $release = Read-Text "docs/release/v1-release-candidate.md"
+$desktopPackaging = Read-Text "docs/release/desktop-packaging.md"
+$desktopWorkflow = Read-Text ".github/workflows/release-desktop.yml"
+$desktopPackageScript = Read-Text "tools/package-desktop-windows.ps1"
 $appTests = Read-Text "backend/src/app.rs"
 $frontendHtml = Read-Text "frontend/index.html"
 $frontendTests = Read-Text "frontend/tests/workspace-markup.test.mjs"
@@ -143,6 +146,39 @@ foreach ($needle in @(
 Assert-NotContains $release "full durable sharing supported" "Release document overclaims durable sharing"
 Assert-NotContains $release "accounts supported" "Release document overclaims accounts"
 Assert-NotContains $release "cloud sync supported" "Release document overclaims cloud sync"
+
+foreach ($needle in @(
+    "cargo clippy --all-targets -- -D warnings",
+    "cargo test",
+    "docs/release/v1-release-candidate.md",
+    "Fate-Track-Windows-x64.zip",
+    "SHA256SUMS.txt"
+)) {
+    Assert-Contains $desktopPackaging $needle "Desktop packaging document missing: $needle"
+}
+
+foreach ($needle in @(
+    "Run strict Rust lint",
+    "cargo clippy --all-targets -- -D warnings",
+    "Run governance release gate",
+    "docs/release/v1-release-candidate.md",
+    "Fate-Track-Desktop-All-Platforms.zip"
+)) {
+    Assert-Contains $desktopWorkflow $needle "Desktop release workflow missing: $needle"
+}
+
+foreach ($needle in @(
+    "cargo",
+    "clippy",
+    "npm.cmd",
+    "tools\check-project.ps1",
+    "cargo",
+    "build",
+    "Fate-Track-Windows-x64.zip",
+    "SHA256SUMS.txt"
+)) {
+    Assert-Contains $desktopPackageScript $needle "Windows desktop packaging script missing: $needle"
+}
 
 Write-Host "Release candidate check OK: $projectPath"
 exit 0

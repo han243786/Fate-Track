@@ -14,8 +14,10 @@ jobs:
         uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
           toolchain: stable
-      - name: Run backend tests
-        run: cargo test --lib
+      - name: Run strict Rust lint
+        run: cargo clippy --all-targets -- -D warnings
+      - name: Run Rust tests
+        run: cargo test
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
@@ -25,6 +27,9 @@ jobs:
           cd frontend
           npm install
           npm run check
+      - name: Run governance release gate
+        shell: pwsh
+        run: ./tools/check-project.ps1
 
   build-linux:
     name: Build Linux binary
@@ -46,10 +51,11 @@ jobs:
         run: cargo build -p minggui-desktop --release --locked
       - name: Create Linux archive
         run: |
-          mkdir -p dist
-          cp target/release/minggui-desktop dist/
-          cd dist
-          tar czf ../Fate-Track-Linux-x64.tar.gz minggui-desktop
+          mkdir -p dist/Fate-Track-Linux-x64/docs/release
+          cp target/release/minggui-desktop dist/Fate-Track-Linux-x64/
+          cp README.md dist/Fate-Track-Linux-x64/
+          cp docs/release/desktop-packaging.md docs/release/v1-release-candidate.md docs/release/v1-closeout.md dist/Fate-Track-Linux-x64/docs/release/
+          tar czf Fate-Track-Linux-x64.tar.gz -C dist Fate-Track-Linux-x64
       - name: Upload Linux artifact
         uses: actions/upload-artifact@v4
         with:
@@ -75,9 +81,11 @@ jobs:
       - name: Create Windows zip
         run: |
           $ErrorActionPreference = 'Stop'
-          New-Item -ItemType Directory -Path dist -Force | Out-Null
-          Copy-Item target/release/minggui-desktop.exe dist/
-          Compress-Archive -Path dist/minggui-desktop.exe -DestinationPath Fate-Track-Windows-x64.zip
+          New-Item -ItemType Directory -Path dist/Fate-Track-Windows-x64/docs/release -Force | Out-Null
+          Copy-Item target/release/minggui-desktop.exe dist/Fate-Track-Windows-x64/
+          Copy-Item README.md dist/Fate-Track-Windows-x64/
+          Copy-Item docs/release/desktop-packaging.md, docs/release/v1-release-candidate.md, docs/release/v1-closeout.md dist/Fate-Track-Windows-x64/docs/release/
+          Compress-Archive -Path dist/Fate-Track-Windows-x64 -DestinationPath Fate-Track-Windows-x64.zip
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v4
         with:
@@ -99,10 +107,12 @@ jobs:
         run: cargo build -p minggui-desktop --release --locked
       - name: Create macOS zip
         run: |
-          mkdir -p dist
-          cp target/release/minggui-desktop dist/
+          mkdir -p dist/Fate-Track-macOS-arm64/docs/release
+          cp target/release/minggui-desktop dist/Fate-Track-macOS-arm64/
+          cp README.md dist/Fate-Track-macOS-arm64/
+          cp docs/release/desktop-packaging.md docs/release/v1-release-candidate.md docs/release/v1-closeout.md dist/Fate-Track-macOS-arm64/docs/release/
           cd dist
-          zip -r ../Fate-Track-macOS-arm64.zip minggui-desktop
+          zip -r ../Fate-Track-macOS-arm64.zip Fate-Track-macOS-arm64
       - name: Upload macOS artifact
         uses: actions/upload-artifact@v4
         with:

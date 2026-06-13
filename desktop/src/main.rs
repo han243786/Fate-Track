@@ -60,7 +60,7 @@ fn run_webview(url: &str) -> Result<()> {
     let event_loop = EventLoop::new();
 
     let window = WindowBuilder::new()
-        .with_title("命轨 · Fate Track")
+        .with_title("命轨 - Fate Track")
         .with_inner_size(LogicalSize::new(1480.0, 920.0))
         .with_min_inner_size(LogicalSize::new(1180.0, 720.0))
         .with_resizable(true)
