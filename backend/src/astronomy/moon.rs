@@ -178,17 +178,18 @@ pub fn new_moons_for_year(year: i32) -> Vec<(f64, String)> {
     for n in (n_approx - 2)..=(n_approx + 15) {
         let approx_jd = epoch_nm + n as f64 * synodic;
         // Search ±2 days around the approximate time
-        if let Some(jd) = find_conjunction(approx_jd - 2.0, approx_jd + 2.0) {
-            if jd >= jan1_jd && jd < jan1_jd + 366.0 {
-                let (y, m, d, h) = jd_to_gregorian(JulianDate::from_jd(jd));
-                if y == year {
-                    let hh = h as u8;
-                    let mm = ((h - hh as f64) * 60.0) as u8;
-                    results.push((
-                        jd,
-                        format!("{:04}-{:02}-{:02}T{:02}:{:02}:00Z", y, m, d, hh, mm),
-                    ));
-                }
+        if let Some(jd) = find_conjunction(approx_jd - 2.0, approx_jd + 2.0)
+            && jd >= jan1_jd
+            && jd < jan1_jd + 366.0
+        {
+            let (y, m, d, h) = jd_to_gregorian(JulianDate::from_jd(jd));
+            if y == year {
+                let hh = h as u8;
+                let mm = ((h - hh as f64) * 60.0) as u8;
+                results.push((
+                    jd,
+                    format!("{:04}-{:02}-{:02}T{:02}:{:02}:00Z", y, m, d, hh, mm),
+                ));
             }
         }
     }

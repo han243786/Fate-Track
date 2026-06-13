@@ -27,7 +27,6 @@ impl JulianDate {
 /// days_from_civil(1900,1,1) = ? Let's use civil::days_since to compute it.
 /// civil::days_from_civil uses the Hinnant algorithm: returns days since 0000-03-01.
 /// We add a constant to get JD.
-
 pub fn gregorian_to_jd(year: i32, month: u8, day: u8, hour: f64) -> JulianDate {
     // Use the project's existing days_from_civil function
     let days = civil_days(year, month, day);
@@ -135,8 +134,8 @@ pub fn day_of_year(year: i32, month: u8, day: u8) -> u16 {
     let dims = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
     let leap = (year % 4 == 0 && year % 100 != 0) || year % 400 == 0;
     let mut doy = day as u16;
-    for m in 0..(month as usize - 1) {
-        doy += dims[m] as u16;
+    for (m, dim) in dims.iter().enumerate().take(month as usize - 1) {
+        doy += *dim as u16;
         if m == 1 && leap {
             doy += 1;
         }

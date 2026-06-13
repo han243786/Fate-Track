@@ -32,18 +32,18 @@ fn generate_comparison_artifact() {
             (10, 1),
             (10, 15),
         ] {
-            if let Some(date) = CivilDate::parse_iso(&format!("{}-{:02}-{:02}", year, m, d)) {
-                if let Some(lunar) = table.lookup(date) {
-                    let android_day = lunar.gan_zhi_day;
-                    let astro_day = ganzhi::day_ganzhi(date);
-                    checked += 1;
-                    if android_day != astro_day {
-                        day_diffs += 1;
-                        rows.push(format!(
-                            r#"{{"year":{},"month":{},"day":{},"field":"day_pillar","android":"{}","astro":"{}","category":"android_table_difference"}}"#,
-                            year, m, d, android_day, astro_day
-                        ));
-                    }
+            if let Some(date) = CivilDate::parse_iso(&format!("{}-{:02}-{:02}", year, m, d))
+                && let Some(lunar) = table.lookup(date)
+            {
+                let android_day = lunar.gan_zhi_day;
+                let astro_day = ganzhi::day_ganzhi(date);
+                checked += 1;
+                if android_day != astro_day {
+                    day_diffs += 1;
+                    rows.push(format!(
+                        r#"{{"year":{},"month":{},"day":{},"field":"day_pillar","android":"{}","astro":"{}","category":"android_table_difference"}}"#,
+                        year, m, d, android_day, astro_day
+                    ));
                 }
             }
         }

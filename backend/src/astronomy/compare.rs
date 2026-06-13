@@ -29,22 +29,21 @@ pub fn compare_all() -> Vec<ComparisonRow> {
         for month in [1u8, 4, 7, 10] {
             for day in [1u8, 15] {
                 let date = CivilDate::parse_iso(&format!("{}-{:02}-{:02}", year, month, day));
-                if let Some(date) = date {
-                    // Android day pillar
-                    if let Some(lunar) = table.lookup(date) {
-                        let android_day = lunar.gan_zhi_day.clone();
-                        let astro_day = ganzhi::day_ganzhi(date);
-                        if android_day != astro_day {
-                            rows.push(ComparisonRow {
-                                year,
-                                month,
-                                day,
-                                field: "day_pillar".into(),
-                                android_value: android_day,
-                                astronomy_value: astro_day,
-                                category: "android_table_difference".into(),
-                            });
-                        }
+                if let Some(date) = date
+                    && let Some(lunar) = table.lookup(date)
+                {
+                    let android_day = lunar.gan_zhi_day.clone();
+                    let astro_day = ganzhi::day_ganzhi(date);
+                    if android_day != astro_day {
+                        rows.push(ComparisonRow {
+                            year,
+                            month,
+                            day,
+                            field: "day_pillar".into(),
+                            android_value: android_day,
+                            astronomy_value: astro_day,
+                            category: "android_table_difference".into(),
+                        });
                     }
                 }
             }
@@ -55,19 +54,18 @@ pub fn compare_all() -> Vec<ComparisonRow> {
     for year in 1901..=2100 {
         for month in [2u8, 5, 8, 11] {
             let date = CivilDate::parse_iso(&format!("{}-{:02}-15", year, month));
-            if let Some(date) = date {
-                if let Some(lunar) = table.lookup(date) {
-                    let android_month = lunar.gan_zhi_month.clone();
-                    // Astronomy month: derived from our engine
-                    if let Some(astro_cal_month) = calendar.iter().find(|m| {
-                        m.year == year
-                            && m.first_day_gregorian_utc.starts_with(&format!("{}", year))
-                    }) {
-                        // Simplified comparison: check zhi only
-                        let _android_zhi = android_month.chars().nth(1).unwrap_or('?');
-                        if !astro_cal_month.month_name.contains(&format!("{}月", month)) {
-                            // Different month assignment
-                        }
+            if let Some(date) = date
+                && let Some(lunar) = table.lookup(date)
+            {
+                let android_month = lunar.gan_zhi_month.clone();
+                // Astronomy month: derived from our engine
+                if let Some(astro_cal_month) = calendar.iter().find(|m| {
+                    m.year == year && m.first_day_gregorian_utc.starts_with(&format!("{}", year))
+                }) {
+                    // Simplified comparison: check zhi only
+                    let _android_zhi = android_month.chars().nth(1).unwrap_or('?');
+                    if !astro_cal_month.month_name.contains(&format!("{}月", month)) {
+                        // Different month assignment
                     }
                 }
             }

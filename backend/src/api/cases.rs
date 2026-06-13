@@ -46,7 +46,7 @@ pub fn export_case(_config: &AppConfig, request: &Request) -> Result<Response, A
         "null".to_string()
     };
 
-    let report = build_report(&record);
+    let report = build_report(record);
 
     let body = format!(
         concat!(

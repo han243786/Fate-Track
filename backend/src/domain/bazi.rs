@@ -442,7 +442,7 @@ fn hour_branch_index(hour: u8) -> usize {
     if hour == 23 || hour == 0 {
         0
     } else {
-        ((hour + 1) / 2) as usize
+        hour.div_ceil(2) as usize
     }
 }
 

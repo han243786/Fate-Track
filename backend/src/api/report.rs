@@ -57,16 +57,16 @@ pub fn generate(config: &AppConfig, request: &Request) -> Result<Response, AppEr
     let pattern = classify_pattern(&chart, &strength);
     let useful_gods = suggest_useful_god(&strength, &pattern);
 
-    let blocks = build_blocks(
-        &chart,
-        &snapshot,
-        &luck_context,
-        &luck_reading,
-        &annual_trigger_reading,
-        &strength,
-        &pattern,
-        &useful_gods,
-    );
+    let blocks = build_blocks(MainReportContext {
+        chart: &chart,
+        snapshot: &snapshot,
+        luck_context: &luck_context,
+        luck_reading: &luck_reading,
+        annual_trigger_reading: &annual_trigger_reading,
+        strength: &strength,
+        pattern: &pattern,
+        useful_gods: &useful_gods,
+    });
 
     let assembled = blocks
         .iter()
@@ -333,17 +333,19 @@ fn build_disclaimer() -> String {
     "本报告基于命轨当前排盘与结构分析结果自动生成，仅供传统文化参考。您可以把它当作一份关于性格倾向、做事节奏、关系模式和阶段主题的阅读材料，而不是现实结论。\n\n报告中的「强」「弱」「格局」「用神」「大运」等词，都是传统命理里的分析语言，不代表好坏、高低、成败，也不构成医学、法律、财务、婚恋或人生决策建议。现实中的重要选择，仍应结合实际状况、个人判断和专业意见。".into()
 }
 
-fn build_blocks(
-    chart: &crate::domain::bazi::ChartResult,
-    snapshot: &AnalysisSnapshot,
-    luck_context: &LuckCycleContext,
-    luck_reading: &LuckReadingReport,
-    annual_trigger_reading: &AnnualTriggerReadingReport,
-    strength: &crate::domain::deep_analysis::StrengthAssessment,
-    pattern: &crate::domain::deep_analysis::PatternInfo,
-    useful_gods: &[crate::domain::deep_analysis::UsefulGodHint],
-) -> Vec<ReportBlock> {
-    let day_stem = &chart.chart.day.stem;
+struct MainReportContext<'a> {
+    chart: &'a crate::domain::bazi::ChartResult,
+    snapshot: &'a AnalysisSnapshot,
+    luck_context: &'a LuckCycleContext,
+    luck_reading: &'a LuckReadingReport,
+    annual_trigger_reading: &'a AnnualTriggerReadingReport,
+    strength: &'a crate::domain::deep_analysis::StrengthAssessment,
+    pattern: &'a crate::domain::deep_analysis::PatternInfo,
+    useful_gods: &'a [crate::domain::deep_analysis::UsefulGodHint],
+}
+
+fn build_blocks(context: MainReportContext<'_>) -> Vec<ReportBlock> {
+    let day_stem = &context.chart.chart.day.stem;
     let day_el = stem_element_cn(day_stem);
     let yin_yang = if ["甲", "丙", "戊", "庚", "壬"].contains(&day_stem.as_str()) {
         "阳"
@@ -352,16 +354,21 @@ fn build_blocks(
     };
 
     vec![
-        block_overview(chart),
+        block_overview(context.chart),
         block_day_master(day_stem, day_el, yin_yang),
-        block_elements(&snapshot.element_metrics),
-        block_ten_gods(&snapshot.ten_god_metrics, day_stem),
-        block_hidden_stems(chart),
-        block_strength(day_stem, day_el, &chart.chart.month.branch, strength),
-        block_pattern(pattern),
-        block_useful_god(useful_gods),
-        block_luck(luck_context, luck_reading),
-        block_annual_trigger(annual_trigger_reading),
+        block_elements(&context.snapshot.element_metrics),
+        block_ten_gods(&context.snapshot.ten_god_metrics, day_stem),
+        block_hidden_stems(context.chart),
+        block_strength(
+            day_stem,
+            day_el,
+            &context.chart.chart.month.branch,
+            context.strength,
+        ),
+        block_pattern(context.pattern),
+        block_useful_god(context.useful_gods),
+        block_luck(context.luck_context, context.luck_reading),
+        block_annual_trigger(context.annual_trigger_reading),
     ]
 }
 

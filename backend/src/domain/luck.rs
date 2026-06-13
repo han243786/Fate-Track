@@ -114,7 +114,7 @@ pub fn compute_luck_cycles(
 
 fn compute_days_to_jie(year_gan: &str, sex: &Sex, birth_date: CivilDate) -> u16 {
     let terms = solar_terms_for_year(birth_date.year);
-    let doy = birth_date.day_of_year() as u16;
+    let doy = birth_date.day_of_year();
     let jie_indices = [0usize, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22];
 
     if is_forward(year_gan, sex) {

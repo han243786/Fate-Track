@@ -424,12 +424,9 @@ pub fn build_relationship_report(
             age_context,
         ),
         relationship_plain_block(
-            chart,
             snapshot,
             &warnings,
-            &spouse_summary,
-            &expression_summary,
-            &support_summary,
+            &chart.chart.day.branch,
             &palace_relations,
             timeline_overlay.as_ref(),
             age_context,
@@ -596,19 +593,30 @@ pub fn build_wealth_report(
 
     let mut warnings = wealth_warnings(chart);
     warnings.extend(apply_topic_timeline_overlay(
-        topic,
-        chart,
-        luck_cycles,
-        &annual,
-        year,
-        &mut signals,
-        &mut trace,
-        &mut blocks,
+        TopicTimelineOverlayApplication {
+            topic,
+            chart,
+            luck_cycles,
+            annual: &annual,
+            year,
+            signals: &mut signals,
+            trace: &mut trace,
+            blocks: &mut blocks,
+        },
     ));
 
-    finish_topic_report(
-        topic, chart, strength, pattern, year, annual, signals, trace, blocks, warnings,
-    )
+    finish_topic_report(TopicReportParts {
+        topic,
+        chart,
+        strength,
+        pattern,
+        year,
+        annual,
+        signals,
+        trace,
+        blocks,
+        warnings,
+    })
 }
 
 pub fn build_family_report(
@@ -718,19 +726,30 @@ pub fn build_family_report(
 
     let mut warnings = family_warnings(chart);
     warnings.extend(apply_topic_timeline_overlay(
-        topic,
-        chart,
-        luck_cycles,
-        &annual,
-        year,
-        &mut signals,
-        &mut trace,
-        &mut blocks,
+        TopicTimelineOverlayApplication {
+            topic,
+            chart,
+            luck_cycles,
+            annual: &annual,
+            year,
+            signals: &mut signals,
+            trace: &mut trace,
+            blocks: &mut blocks,
+        },
     ));
 
-    finish_topic_report(
-        topic, chart, strength, pattern, year, annual, signals, trace, blocks, warnings,
-    )
+    finish_topic_report(TopicReportParts {
+        topic,
+        chart,
+        strength,
+        pattern,
+        year,
+        annual,
+        signals,
+        trace,
+        blocks,
+        warnings,
+    })
 }
 
 pub fn build_career_report(
@@ -870,91 +889,112 @@ pub fn build_career_report(
 
     let mut warnings = career_warnings(chart);
     warnings.extend(apply_topic_timeline_overlay(
-        topic,
-        chart,
-        luck_cycles,
-        &annual,
-        year,
-        &mut signals,
-        &mut trace,
-        &mut blocks,
+        TopicTimelineOverlayApplication {
+            topic,
+            chart,
+            luck_cycles,
+            annual: &annual,
+            year,
+            signals: &mut signals,
+            trace: &mut trace,
+            blocks: &mut blocks,
+        },
     ));
 
-    finish_topic_report(
-        topic, chart, strength, pattern, year, annual, signals, trace, blocks, warnings,
-    )
+    finish_topic_report(TopicReportParts {
+        topic,
+        chart,
+        strength,
+        pattern,
+        year,
+        annual,
+        signals,
+        trace,
+        blocks,
+        warnings,
+    })
 }
 
-fn finish_topic_report(
+struct TopicReportParts<'a> {
     topic: TopicReportTopic,
-    chart: &ChartResult,
-    strength: &StrengthAssessment,
-    pattern: &PatternInfo,
+    chart: &'a ChartResult,
+    strength: &'a StrengthAssessment,
+    pattern: &'a PatternInfo,
     year: i32,
     annual: Pillar,
     signals: Vec<TopicSignal>,
     trace: Vec<TopicTrace>,
     blocks: Vec<TopicReportBlock>,
     warnings: Vec<&'static str>,
-) -> TopicReport {
-    let disclaimer = topic_disclaimer(topic);
-    let assembled_report = assemble_report(&disclaimer, &blocks);
+}
+
+fn finish_topic_report(parts: TopicReportParts<'_>) -> TopicReport {
+    let disclaimer = topic_disclaimer(parts.topic);
+    let assembled_report = assemble_report(&disclaimer, &parts.blocks);
     let audit = audit_topic_text(&assembled_report);
 
     TopicReport {
         status: "restricted",
-        capability: topic.capability_id(),
-        topic,
+        capability: parts.topic.capability_id(),
+        topic: parts.topic,
         algo_version: TOPIC_REPORT_ALGO_VERSION,
         ruleset_id: RULESET_ID,
-        year,
+        year: parts.year,
         year_source: "explicit",
         disclaimer_id: TOPIC_REPORT_DISCLAIMER_ID,
         disclaimer,
-        birth_profile: chart.basis.request.birth_profile.clone(),
+        birth_profile: parts.chart.basis.request.birth_profile.clone(),
         basis: TopicReportBasis {
-            day_master: chart.chart.day.stem.clone(),
-            day_pillar: chart.chart.day.ganzhi(),
-            relationship_palace: chart.chart.day.branch.clone(),
-            sex: chart.basis.request.birth_profile.sex.as_str(),
-            time_precision: chart.basis.request.birth_profile.time_precision.as_str(),
-            annual_pillar: annual.ganzhi(),
-            strength_level: strength.level.to_string(),
-            pattern_name: pattern.pattern_name.clone(),
+            day_master: parts.chart.chart.day.stem.clone(),
+            day_pillar: parts.chart.chart.day.ganzhi(),
+            relationship_palace: parts.chart.chart.day.branch.clone(),
+            sex: parts.chart.basis.request.birth_profile.sex.as_str(),
+            time_precision: parts
+                .chart
+                .basis
+                .request
+                .birth_profile
+                .time_precision
+                .as_str(),
+            annual_pillar: parts.annual.ganzhi(),
+            strength_level: parts.strength.level.to_string(),
+            pattern_name: parts.pattern.pattern_name.clone(),
         },
-        signals,
-        trace,
-        blocks,
-        warnings,
+        signals: parts.signals,
+        trace: parts.trace,
+        blocks: parts.blocks,
+        warnings: parts.warnings,
         forbidden_output_audit: audit,
     }
 }
 
-fn apply_topic_timeline_overlay(
+struct TopicTimelineOverlayApplication<'a, 'b> {
     topic: TopicReportTopic,
-    chart: &ChartResult,
-    luck_cycles: &[LuckCycle],
-    annual: &Pillar,
+    chart: &'a ChartResult,
+    luck_cycles: &'a [LuckCycle],
+    annual: &'a Pillar,
     year: i32,
-    signals: &mut Vec<TopicSignal>,
-    trace: &mut Vec<TopicTrace>,
-    blocks: &mut Vec<TopicReportBlock>,
-) -> Vec<&'static str> {
+    signals: &'b mut Vec<TopicSignal>,
+    trace: &'b mut Vec<TopicTrace>,
+    blocks: &'b mut Vec<TopicReportBlock>,
+}
+
+fn apply_topic_timeline_overlay(app: TopicTimelineOverlayApplication<'_, '_>) -> Vec<&'static str> {
     let (overlay, warnings) = apply_topic_timeline_overlay_to_evidence(
-        topic,
-        chart,
-        luck_cycles,
-        annual,
-        year,
-        signals,
-        trace,
+        app.topic,
+        app.chart,
+        app.luck_cycles,
+        app.annual,
+        app.year,
+        app.signals,
+        app.trace,
     );
     if let Some(overlay) = overlay {
         let block = topic_timeline_overlay_block(&overlay);
-        if let Some(index) = blocks.iter().position(|item| item.title == "结论") {
-            blocks.insert(index, block);
+        if let Some(index) = app.blocks.iter().position(|item| item.title == "结论") {
+            app.blocks.insert(index, block);
         } else {
-            blocks.push(block);
+            app.blocks.push(block);
         }
     }
     warnings
@@ -1095,10 +1135,10 @@ fn topic_timeline_overlay_from_draft(
     }
 }
 
-fn select_topic_timeline_signals<'a>(
+fn select_topic_timeline_signals(
     topic: TopicReportTopic,
-    signals: &'a [TimelineSignal],
-) -> Vec<&'a TimelineSignal> {
+    signals: &[TimelineSignal],
+) -> Vec<&TimelineSignal> {
     let mut selected = signals
         .iter()
         .filter(|signal| {
@@ -1699,12 +1739,9 @@ fn relationship_trigger_block(
 }
 
 fn relationship_plain_block(
-    chart: &ChartResult,
     snapshot: &AnalysisSnapshot,
     warnings: &[&'static str],
-    _spouse_summary: &StarSummary,
-    _expression_summary: &StarSummary,
-    _support_summary: &StarSummary,
+    relationship_palace: &str,
     relations: &[RelationHit],
     overlay: Option<&TopicTimelineOverlay>,
     age_context: TopicAgeContext,
@@ -1732,7 +1769,7 @@ fn relationship_plain_block(
         title: "结论",
         body: format!(
             "综合来看，您的情感关键词是：慢热、强牵动、重边界、要稳定。夫妻宫「{}」提示亲密关系的相处位置，{}配偶星把吸引、承担和可靠感带进来；表达与安全感则提醒您，越在意的关系，越需要把话说早、说稳。\n\n{}\n\n{}。\n\n{}",
-            chart.chart.day.branch, relation_text, overlay_text, reading_condition, closing
+            relationship_palace, relation_text, overlay_text, reading_condition, closing
         ),
     }
 }
@@ -2431,7 +2468,7 @@ fn branch_relations_for_anchors(
             if let Some(relation) = branch_relation(&anchor_branch, target_branch) {
                 hits.push(RelationHit {
                     relation,
-                    target: *target_name,
+                    target: target_name,
                     target_branch: target_branch.clone(),
                     evidence: format!("{anchor_name}「{anchor_branch}」与{target_name}「{target_branch}」形成\"{relation}\""),
                 });
@@ -2934,10 +2971,10 @@ fn visible_and_primary_hidden_stems(chart: &ChartResult) -> Vec<String> {
             stems.push((*primary).to_string());
         }
     }
-    if let Some(hour) = &chart.chart.hour {
-        if let Some(primary) = hidden_stems(&hour.branch).first() {
-            stems.push((*primary).to_string());
-        }
+    if let Some(hour) = &chart.chart.hour
+        && let Some(primary) = hidden_stems(&hour.branch).first()
+    {
+        stems.push((*primary).to_string());
     }
     stems
 }

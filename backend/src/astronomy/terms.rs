@@ -22,7 +22,7 @@ pub fn solar_terms_for_year(year: i32) -> Vec<SolarTermEntry> {
     let mut entries = Vec::with_capacity(24);
     let jd_year_start = gregorian_to_jd(year, 1, 1, 0.0).whole();
 
-    for term_index in 0..24 {
+    for (term_index, term_name) in TERM_NAMES.iter().enumerate() {
         let target_lon = (term_index as f64 * 15.0 + 285.0) % 360.0;
 
         // Approximate crossing: Jan 5 + term_index * 15.22 days
@@ -37,7 +37,7 @@ pub fn solar_terms_for_year(year: i32) -> Vec<SolarTermEntry> {
             entries.push(SolarTermEntry {
                 year: y,
                 term_index: term_index as u8,
-                term_name: TERM_NAMES[term_index].to_string(),
+                term_name: (*term_name).to_string(),
                 gregorian_utc: greg,
                 jd_tt: jd,
             });

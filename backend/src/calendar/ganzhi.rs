@@ -23,8 +23,7 @@ pub fn day_ganzhi(date: CivilDate) -> String {
 }
 
 pub fn month_ganzhi(date: CivilDate, current_year_terms: &[u16], solar_year_gan: usize) -> String {
-    let solar_term_month =
-        solar_term_month_from_terms(date.day_of_year() as u16, current_year_terms);
+    let solar_term_month = solar_term_month_from_terms(date.day_of_year(), current_year_terms);
     let month_gan = (solar_year_gan * 2 + 2 + solar_term_month) % 10;
     let month_zhi = MONTH_ZHI[solar_term_month];
     format!("{}{}", GAN[month_gan], ZHI[month_zhi])
@@ -94,7 +93,7 @@ pub fn solar_year_gan_index(
     current_year_gan: Option<usize>,
     previous_year_gan: Option<usize>,
 ) -> usize {
-    if current_year_terms.len() >= 3 && date.day_of_year() as u16 >= current_year_terms[2] {
+    if current_year_terms.len() >= 3 && date.day_of_year() >= current_year_terms[2] {
         current_year_gan.unwrap_or(0)
     } else {
         previous_year_gan.unwrap_or_else(|| current_year_gan.unwrap_or(0))

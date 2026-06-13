@@ -128,12 +128,13 @@ pub fn parse_lunar_data_stats(content: &str) -> LunarDataStats {
             term_count = value.matches('\'').count() / 2;
         } else if trimmed == "years:" {
             in_years = true;
-        } else if in_years && line.starts_with("  \"") {
-            if let Ok(year) = trimmed.trim_matches(':').trim_matches('"').parse::<u16>() {
-                year_count += 1;
-                min_year = Some(min_year.map_or(year, |current: u16| current.min(year)));
-                max_year = Some(max_year.map_or(year, |current: u16| current.max(year)));
-            }
+        } else if in_years
+            && line.starts_with("  \"")
+            && let Ok(year) = trimmed.trim_matches(':').trim_matches('"').parse::<u16>()
+        {
+            year_count += 1;
+            min_year = Some(min_year.map_or(year, |current: u16| current.min(year)));
+            max_year = Some(max_year.map_or(year, |current: u16| current.max(year)));
         }
     }
 

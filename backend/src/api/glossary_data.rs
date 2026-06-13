@@ -14,10 +14,10 @@ pub fn glossary(request: Option<&str>, category: Option<&str>) -> Response {
     let filtered: Vec<&GlossaryEntry> = all
         .iter()
         .filter(|e| {
-            let term_match = request.map_or(true, |t| {
+            let term_match = request.is_none_or(|t| {
                 e.term_zh.contains(t) || e.term_en.to_lowercase().contains(&t.to_lowercase())
             });
-            let cat_match = category.map_or(true, |c| e.category == c);
+            let cat_match = category.is_none_or(|c| e.category == c);
             term_match && cat_match
         })
         .collect();

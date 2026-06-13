@@ -53,7 +53,7 @@ impl Response {
             self.status.code(),
             self.status.reason(),
             self.content_type,
-            self.body.as_bytes().len(),
+            self.body.len(),
             self.body
         )
     }

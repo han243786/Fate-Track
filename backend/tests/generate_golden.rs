@@ -16,14 +16,14 @@ fn generate_golden_fixtures() {
         ("boundary-leap-2000", "2000-02-29"),
         ("boundary-leap-2024", "2024-02-29"),
     ] {
-        if let Some(d) = CivilDate::parse_iso(iso) {
-            if let Some(r) = table.lookup(d) {
-                golden.push(format!(
-                    r#"{{"category":"1901-2100-boundary","label":"{}","date":"{}","year_gz":"{}","month_gz":"{}","day_gz":"{}","lunar":"{}{}月{}{}"}}"#,
-                    label, iso, r.gan_zhi_year, r.gan_zhi_month, r.gan_zhi_day,
-                    r.lunar_year, if r.is_leap_month {"闰"} else {""}, r.lunar_month, r.day_name()
-                ));
-            }
+        if let Some(d) = CivilDate::parse_iso(iso)
+            && let Some(r) = table.lookup(d)
+        {
+            golden.push(format!(
+                r#"{{"category":"1901-2100-boundary","label":"{}","date":"{}","year_gz":"{}","month_gz":"{}","day_gz":"{}","lunar":"{}{}月{}{}"}}"#,
+                label, iso, r.gan_zhi_year, r.gan_zhi_month, r.gan_zhi_day,
+                r.lunar_year, if r.is_leap_month {"闰"} else {""}, r.lunar_month, r.day_name()
+            ));
         }
     }
 
@@ -36,14 +36,14 @@ fn generate_golden_fixtures() {
         "2033-11-01",
         "2033-12-31",
     ] {
-        if let Some(d) = CivilDate::parse_iso(iso) {
-            if let Some(r) = table.lookup(d) {
-                golden.push(format!(
-                    r#"{{"category":"2033-anomaly","date":"{}","year_gz":"{}","month_gz":"{}","day_gz":"{}","lunar":"{}{}月"}}"#,
-                    iso, r.gan_zhi_year, r.gan_zhi_month, r.gan_zhi_day,
-                    r.lunar_year, r.month_name()
-                ));
-            }
+        if let Some(d) = CivilDate::parse_iso(iso)
+            && let Some(r) = table.lookup(d)
+        {
+            golden.push(format!(
+                r#"{{"category":"2033-anomaly","date":"{}","year_gz":"{}","month_gz":"{}","day_gz":"{}","lunar":"{}{}月"}}"#,
+                iso, r.gan_zhi_year, r.gan_zhi_month, r.gan_zhi_day,
+                r.lunar_year, r.month_name()
+            ));
         }
     }
 
@@ -56,37 +56,37 @@ fn generate_golden_fixtures() {
         "2024-02-04",
         "2024-02-05",
     ] {
-        if let Some(d) = CivilDate::parse_iso(iso) {
-            if let Some(r) = table.lookup(d) {
-                golden.push(format!(
-                    r#"{{"category":"lichun-boundary","date":"{}","year_gz":"{}","month_gz":"{}","day_gz":"{}"}}"#,
-                    iso, r.gan_zhi_year, r.gan_zhi_month, r.gan_zhi_day
-                ));
-            }
+        if let Some(d) = CivilDate::parse_iso(iso)
+            && let Some(r) = table.lookup(d)
+        {
+            golden.push(format!(
+                r#"{{"category":"lichun-boundary","date":"{}","year_gz":"{}","month_gz":"{}","day_gz":"{}"}}"#,
+                iso, r.gan_zhi_year, r.gan_zhi_month, r.gan_zhi_day
+            ));
         }
     }
 
     // Category 4: qingming-boundary (4 cases)
     for iso in &["2020-04-04", "2020-04-05", "2024-04-04", "2024-04-05"] {
-        if let Some(d) = CivilDate::parse_iso(iso) {
-            if let Some(r) = table.lookup(d) {
-                golden.push(format!(
-                    r#"{{"category":"qingming-boundary","date":"{}","year_gz":"{}","month_gz":"{}","day_gz":"{}"}}"#,
-                    iso, r.gan_zhi_year, r.gan_zhi_month, r.gan_zhi_day
-                ));
-            }
+        if let Some(d) = CivilDate::parse_iso(iso)
+            && let Some(r) = table.lookup(d)
+        {
+            golden.push(format!(
+                r#"{{"category":"qingming-boundary","date":"{}","year_gz":"{}","month_gz":"{}","day_gz":"{}"}}"#,
+                iso, r.gan_zhi_year, r.gan_zhi_month, r.gan_zhi_day
+            ));
         }
     }
 
     // Category 5: jiazi-day-anchor (4 cases)
     for iso in &["1984-02-02", "2000-01-01", "2025-01-01", "2044-02-10"] {
-        if let Some(d) = CivilDate::parse_iso(iso) {
-            if let Some(r) = table.lookup(d) {
-                golden.push(format!(
-                    r#"{{"category":"jiazi-day-anchor","date":"{}","day_gz":"{}"}}"#,
-                    iso, r.gan_zhi_day
-                ));
-            }
+        if let Some(d) = CivilDate::parse_iso(iso)
+            && let Some(r) = table.lookup(d)
+        {
+            golden.push(format!(
+                r#"{{"category":"jiazi-day-anchor","date":"{}","day_gz":"{}"}}"#,
+                iso, r.gan_zhi_day
+            ));
         }
     }
 
@@ -99,14 +99,14 @@ fn generate_golden_fixtures() {
         "2099-12-31",
         "2100-01-01",
     ] {
-        if let Some(d) = CivilDate::parse_iso(iso) {
-            if let Some(r) = table.lookup(d) {
-                golden.push(format!(
-                    r#"{{"category":"near-midnight-solar-lunar-event","date":"{}","year_gz":"{}","month_gz":"{}","day_gz":"{}","lunar":"{}{}月{}"}}"#,
-                    iso, r.gan_zhi_year, r.gan_zhi_month, r.gan_zhi_day,
-                    r.lunar_year, if r.is_leap_month {"闰"} else {""}, r.lunar_month
-                ));
-            }
+        if let Some(d) = CivilDate::parse_iso(iso)
+            && let Some(r) = table.lookup(d)
+        {
+            golden.push(format!(
+                r#"{{"category":"near-midnight-solar-lunar-event","date":"{}","year_gz":"{}","month_gz":"{}","day_gz":"{}","lunar":"{}{}月{}"}}"#,
+                iso, r.gan_zhi_year, r.gan_zhi_month, r.gan_zhi_day,
+                r.lunar_year, if r.is_leap_month {"闰"} else {""}, r.lunar_month
+            ));
         }
     }
 
