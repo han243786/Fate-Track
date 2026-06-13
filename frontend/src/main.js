@@ -23,12 +23,11 @@ const TOPIC_LABELS = {
   career: "事业"
 };
 const WUXING_THEMES = [
-  { id: "mystic", mark: "玄", label: "玄" },
-  { id: "wood", mark: "木", label: "木" },
-  { id: "fire", mark: "火", label: "火" },
-  { id: "earth", mark: "土", label: "土" },
   { id: "metal", mark: "金", label: "金" },
-  { id: "water", mark: "水", label: "水" }
+  { id: "wood", mark: "木", label: "木" },
+  { id: "water", mark: "水", label: "水" },
+  { id: "fire", mark: "火", label: "火" },
+  { id: "earth", mark: "土", label: "土" }
 ];
 
 const dom = getDom();

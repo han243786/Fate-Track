@@ -67,13 +67,16 @@ describe("workspace markup", () => {
 
   it("adds a frontend-only wuxing color switch without expanding capabilities", () => {
     assert.match(html, /id="wuxing-theme-button"/);
-    assert.match(html, /当前：玄/);
+    assert.match(html, /当前：水/);
     assert.match(mainSource, /WUXING_THEMES/);
+    assert.match(mainSource, /id: "metal"[\s\S]*id: "wood"[\s\S]*id: "water"[\s\S]*id: "fire"[\s\S]*id: "earth"/);
+    assert.doesNotMatch(mainSource, /mystic|mark: "玄"|label: "玄"/);
     assert.match(mainSource, /dataset\.wuxingTheme/);
     assert.match(mainSource, /ft-wuxing-theme/);
     for (const theme of ["wood", "fire", "earth", "metal", "water"]) {
       assert.match(stylesSource, new RegExp(`data-wuxing-theme="${theme}"`));
     }
+    assert.doesNotMatch(stylesSource, /data-wuxing-theme="mystic"/);
     assert.doesNotMatch(mainSource, /wuxing.*ApiClient|ApiClient.*wuxing/i);
   });
 
@@ -122,9 +125,18 @@ describe("workspace markup", () => {
     assert.match(topicReportHtml, /data-report-theme="relationship"/);
     assert.match(reportHtml, /src\/report-themes\.css/);
     assert.match(topicReportHtml, /src\/report-themes\.css/);
+    assert.match(reportHtml, /ft-wuxing-theme/);
+    assert.match(topicReportHtml, /ft-wuxing-theme/);
+    assert.match(reportThemesSource, /\.report-root\[data-wuxing-theme\]/);
     for (const theme of ["main", "relationship", "wealth", "family", "career"]) {
       assert.match(reportThemesSource, new RegExp(`data-report-theme="${theme}"`));
     }
+    for (const theme of ["metal", "wood", "water", "fire", "earth"]) {
+      assert.match(stylesSource, new RegExp(`data-wuxing-theme="${theme}"`));
+      assert.match(reportThemesSource, new RegExp(`data-wuxing-theme="${theme}"`));
+    }
+    assert.match(reportThemesSource, /--theme-accent-2/);
+    assert.match(reportThemesSource, /--theme-panel-2/);
     assert.doesNotMatch(reportThemesSource, /score_internal/);
   });
 

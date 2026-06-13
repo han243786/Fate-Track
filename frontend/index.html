@@ -4,6 +4,13 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>命轨工作台</title>
+  <script>
+    (() => {
+      const allowed = new Set(["metal", "wood", "water", "fire", "earth"]);
+      const saved = localStorage.getItem("ft-wuxing-theme");
+      document.documentElement.dataset.wuxingTheme = allowed.has(saved) ? saved : "water";
+    })();
+  </script>
   <link rel="stylesheet" href="./src/styles.css" />
 </head>
 <body>
@@ -102,9 +109,9 @@
             <em id="topic-selected-label">当前：情感</em>
           </button>
           <button id="wuxing-theme-button" class="wuxing-theme-action" type="button" aria-label="切换五行颜色风格">
-            <span aria-hidden="true" id="wuxing-theme-mark">玄</span>
+            <span aria-hidden="true" id="wuxing-theme-mark">水</span>
             <strong>五行色</strong>
-            <em id="wuxing-theme-label">当前：玄</em>
+            <em id="wuxing-theme-label">当前：水</em>
           </button>
         </section>
       </section>

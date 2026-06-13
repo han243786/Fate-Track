@@ -7,6 +7,6 @@ export function createAppState({ apiBase }) {
       sex: "unspecified"
     },
     selectedTopic: "relationship",
-    wuxingTheme: "mystic"
+    wuxingTheme: "water"
   };
 }
