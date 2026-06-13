@@ -8,6 +8,20 @@
 
 **方式一：桌面应用（推荐）**
 
+已封装的 Windows 预览版可直接下载：
+
+- [Fate-Track-Windows-x64.zip](https://github.com/han243786/Fate-Track/blob/main/release-artifacts/desktop-windows/63cb0cb/Fate-Track-Windows-x64.zip)
+- [SHA256SUMS.txt](https://github.com/han243786/Fate-Track/blob/main/release-artifacts/desktop-windows/63cb0cb/SHA256SUMS.txt)
+- [BUILD-MANIFEST.md](https://github.com/han243786/Fate-Track/blob/main/release-artifacts/desktop-windows/63cb0cb/BUILD-MANIFEST.md)
+
+SHA256：
+
+```text
+0027647628d3614a93f861ff1babc43ab9f3412f58cd86f8ba4d350e05a3a766  Fate-Track-Windows-x64.zip
+```
+
+本地开发运行：
+
 ```powershell
 cargo run -p minggui-desktop
 ```
@@ -26,6 +40,28 @@ node server.mjs
 ```
 
 浏览器打开 `http://127.0.0.1:5173`。
+
+---
+
+## 发布
+
+Windows 桌面预览版已随源码推送到 `release-artifacts/desktop-windows/63cb0cb/`。如果需要手动挂到 GitHub Release：
+
+1. 打开 [Releases](https://github.com/han243786/Fate-Track/releases)
+2. 选择或创建 `v1.0.0-preview`
+3. Release title 使用 `Fate Track v1.0.0 Preview`
+4. 上传 `dist/desktop-windows/Fate-Track-Windows-x64.zip`
+5. 上传 `dist/desktop-windows/SHA256SUMS.txt`
+6. 勾选 `Set as a pre-release`
+7. 发布后入口为 [v1.0.0-preview](https://github.com/han243786/Fate-Track/releases/tag/v1.0.0-preview)
+
+本地重新封装命令：
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File tools\package-desktop-windows.ps1
+```
+
+该脚本会先跑严格 Clippy、完整 Rust 测试、前端检查、治理门禁和 release build，再生成 Windows zip 与 SHA256。
 
 ---
 
@@ -91,8 +127,9 @@ GET /api/charts/topic-report?topic=relationship|wealth|family|career&year=  受�
 ## 验证
 
 ```powershell
-cargo test -- --nocapture          # 后端 117 项 + 集成验证
-npm.cmd run check --prefix frontend # 前端 19 项
+cargo clippy --all-targets -- -D warnings
+cargo test                         # 后端 118 项 + 集成验证
+npm.cmd run check --prefix frontend # 前端 20 项
 powershell -File tools/check-project.ps1   # 全项目门禁
 ```
 
@@ -109,6 +146,7 @@ FT/
   docs/decisions/    架构决策记录
   docs/release/      发布候选与交付边界
   markdown/          治理文档、产品树、里程碑路线图
+  release-artifacts/ 受控发布产物与构建清单
   tools/             项目检查脚本
 ```
 
