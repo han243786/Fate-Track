@@ -17,6 +17,11 @@ export function getDom() {
       fullReportButton: required("#topic-full-report-button"),
       selectedLabel: required("#topic-selected-label")
     },
+    theme: {
+      wuxingButton: required("#wuxing-theme-button"),
+      wuxingMark: required("#wuxing-theme-mark"),
+      wuxingLabel: required("#wuxing-theme-label")
+    },
     topicReport: {
       panel: required("#topic-report-panel"),
       title: required("#topic-report-title"),

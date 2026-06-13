@@ -9,6 +9,7 @@ const topicReportHtml = readFileSync(new URL("../topic-report.html", import.meta
 const topicReportSource = readFileSync(new URL("../src/topic-report-page.js", import.meta.url), "utf8");
 const renderSource = readFileSync(new URL("../src/ui/render.js", import.meta.url), "utf8");
 const stylesSource = readFileSync(new URL("../src/styles.css", import.meta.url), "utf8");
+const reportThemesSource = readFileSync(new URL("../src/report-themes.css", import.meta.url), "utf8");
 
 describe("workspace markup", () => {
   it("contains the product panels", () => {
@@ -32,6 +33,9 @@ describe("workspace markup", () => {
       "topic-career-button",
       "topic-full-report-button",
       "topic-selected-label",
+      "wuxing-theme-button",
+      "wuxing-theme-mark",
+      "wuxing-theme-label",
       "topic-report-panel",
       "topic-report-content",
       "lunar-display"
@@ -59,6 +63,18 @@ describe("workspace markup", () => {
     assert.match(renderSource, /topic-signal-section/);
     assert.doesNotMatch(renderSource, /report\.blocks/);
     assert.doesNotMatch(renderSource, /topic-trace-row/);
+  });
+
+  it("adds a frontend-only wuxing color switch without expanding capabilities", () => {
+    assert.match(html, /id="wuxing-theme-button"/);
+    assert.match(html, /当前：玄/);
+    assert.match(mainSource, /WUXING_THEMES/);
+    assert.match(mainSource, /dataset\.wuxingTheme/);
+    assert.match(mainSource, /ft-wuxing-theme/);
+    for (const theme of ["wood", "fire", "earth", "metal", "water"]) {
+      assert.match(stylesSource, new RegExp(`data-wuxing-theme="${theme}"`));
+    }
+    assert.doesNotMatch(mainSource, /wuxing.*ApiClient|ApiClient.*wuxing/i);
   });
 
   it("clears stale topic output when the chart is recalculated", () => {
@@ -99,6 +115,17 @@ describe("workspace markup", () => {
     assert.doesNotMatch(reportHtml, /score_internal/);
     assert.doesNotMatch(topicReportSource, /score_internal/);
     assert.doesNotMatch(stylesSource, /score_internal/);
+  });
+
+  it("uses the provided report visual theme layer without changing report data", () => {
+    assert.match(reportHtml, /data-report-theme="main"/);
+    assert.match(topicReportHtml, /data-report-theme="relationship"/);
+    assert.match(reportHtml, /src\/report-themes\.css/);
+    assert.match(topicReportHtml, /src\/report-themes\.css/);
+    for (const theme of ["main", "relationship", "wealth", "family", "career"]) {
+      assert.match(reportThemesSource, new RegExp(`data-report-theme="${theme}"`));
+    }
+    assert.doesNotMatch(reportThemesSource, /score_internal/);
   });
 
   it("keeps M40 timeline quality-gate boundaries in public UI sources", () => {

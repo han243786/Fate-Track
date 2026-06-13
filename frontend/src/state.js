@@ -6,6 +6,7 @@ export function createAppState({ apiBase }) {
       time: "10:30",
       sex: "unspecified"
     },
-    selectedTopic: "relationship"
+    selectedTopic: "relationship",
+    wuxingTheme: "mystic"
   };
 }

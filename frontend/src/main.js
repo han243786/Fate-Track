@@ -15,12 +15,21 @@ import {
 } from "./ui/render.js";
 
 const STORAGE_KEY = "ft-chart-form";
+const THEME_STORAGE_KEY = "ft-wuxing-theme";
 const TOPIC_LABELS = {
   relationship: "情感",
   wealth: "金钱",
   family: "家庭",
   career: "事业"
 };
+const WUXING_THEMES = [
+  { id: "mystic", mark: "玄", label: "玄" },
+  { id: "wood", mark: "木", label: "木" },
+  { id: "fire", mark: "火", label: "火" },
+  { id: "earth", mark: "土", label: "土" },
+  { id: "metal", mark: "金", label: "金" },
+  { id: "water", mark: "水", label: "水" }
+];
 
 const dom = getDom();
 const state = createAppState({ apiBase: loadApiBase() ?? defaultApiBase });
@@ -28,10 +37,13 @@ let topicRequestVersion = 0;
 let chartWorkspaceRuns = 0;
 
 restoreForm();
+restoreTheme();
 hydrateForm();
 bindSexButtons();
 bindTopicButtons();
+bindThemeButton();
 syncSelectedTopic();
+syncWuxingTheme();
 
 dom.chartForm.runButton.addEventListener("click", () => {
   readChartForm();
@@ -145,6 +157,16 @@ function bindTopicButtons() {
   });
 }
 
+function bindThemeButton() {
+  dom.theme.wuxingButton.addEventListener("click", () => {
+    const index = WUXING_THEMES.findIndex(theme => theme.id === state.wuxingTheme);
+    const next = WUXING_THEMES[(index + 1) % WUXING_THEMES.length] || WUXING_THEMES[0];
+    state.wuxingTheme = next.id;
+    persistTheme();
+    syncWuxingTheme();
+  });
+}
+
 function showLunar(lunar) {
   dom.lunarDisplay.textContent = lunar
     ? `${lunar.lunar?.year || ""}${lunar.lunar?.month_name || ""}${lunar.lunar?.day_name || ""}`
@@ -173,6 +195,21 @@ function restoreForm() {
   } catch { /* ignore corrupt data */ }
 }
 
+function restoreTheme() {
+  try {
+    const saved = localStorage.getItem(THEME_STORAGE_KEY);
+    if (WUXING_THEMES.some(theme => theme.id === saved)) {
+      state.wuxingTheme = saved;
+    }
+  } catch { /* storage unavailable */ }
+}
+
+function persistTheme() {
+  try {
+    localStorage.setItem(THEME_STORAGE_KEY, state.wuxingTheme);
+  } catch { /* storage unavailable */ }
+}
+
 function hydrateForm() {
   dom.chartForm.date.value = state.chartForm.date;
   dom.chartForm.time.value = state.chartForm.time;
@@ -194,6 +231,15 @@ function syncSelectedTopic() {
   });
   dom.topics.selectedLabel.textContent = `当前：${label}`;
   dom.topics.fullReportButton.setAttribute("aria-label", `查看${label}专项报告`);
+}
+
+function syncWuxingTheme() {
+  const theme = WUXING_THEMES.find(item => item.id === state.wuxingTheme) || WUXING_THEMES[0];
+  document.documentElement.dataset.wuxingTheme = theme.id;
+  dom.theme.wuxingMark.textContent = theme.mark;
+  dom.theme.wuxingLabel.textContent = `当前：${theme.label}`;
+  dom.theme.wuxingButton.dataset.theme = theme.id;
+  dom.theme.wuxingButton.setAttribute("aria-label", `切换五行颜色风格，当前为${theme.label}`);
 }
 
 function readChartForm() {
