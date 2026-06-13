@@ -83,16 +83,27 @@ pub fn export_case(_config: &AppConfig, request: &Request) -> Result<Response, A
 fn build_report(record: &CaseRecord) -> String {
     let dm = &record.chart_snapshot.day_master;
     let el = match dm.as_str() {
-        "甲"|"乙" => "木", "丙"|"丁" => "火", "戊"|"己" => "土",
-        "庚"|"辛" => "金", "壬"|"癸" => "水", _ => "?",
+        "甲" | "乙" => "木",
+        "丙" | "丁" => "火",
+        "戊" | "己" => "土",
+        "庚" | "辛" => "金",
+        "壬" | "癸" => "水",
+        _ => "?",
     };
-    let polarity = if ["甲","丙","戊","庚","壬"].contains(&dm.as_str()) { "阳" } else { "阴" };
+    let polarity = if ["甲", "丙", "戊", "庚", "壬"].contains(&dm.as_str()) {
+        "阳"
+    } else {
+        "阴"
+    };
     format!(
         r#"{{"summary":"日主{}属{}{}。排盘引擎:{}。规则档:{}。此为本地离线导出摘要。完整五行十神藏干分析请通过排盘API实时计算。","day_master_element":"{}","day_master_polarity":"{}"}}"#,
-        dm, el, polarity,
+        dm,
+        el,
+        polarity,
         record.chart_snapshot.chart_algo_version,
         record.chart_snapshot.ruleset_id,
-        el, polarity
+        el,
+        polarity
     )
 }
 
@@ -128,11 +139,15 @@ fn create_case(config: &AppConfig, request: &Request) -> Result<Response, AppErr
     let now = now_unix();
 
     // Extract element and ten-god counts for later derivation
-    let element_counts: BTreeMap<String, u32> = analysis.element_metrics.iter()
+    let element_counts: BTreeMap<String, u32> = analysis
+        .element_metrics
+        .iter()
         .filter(|m| m.weight_x2 > 0)
         .map(|m| (m.id.to_string(), m.weight_x2 as u32))
         .collect();
-    let ten_god_counts: BTreeMap<String, u32> = analysis.ten_god_metrics.iter()
+    let ten_god_counts: BTreeMap<String, u32> = analysis
+        .ten_god_metrics
+        .iter()
         .filter(|m| m.weight_x2 > 0)
         .map(|m| (m.id.to_string(), m.weight_x2 as u32))
         .collect();
@@ -148,7 +163,10 @@ fn create_case(config: &AppConfig, request: &Request) -> Result<Response, AppErr
             chart_algo_version: chart.metadata.algo_version.to_string(),
             ruleset_id: chart.metadata.ruleset_id.to_string(),
             day_master: chart.chart.day.stem.clone(),
-            hour_branch: chart.chart.hour.as_ref()
+            hour_branch: chart
+                .chart
+                .hour
+                .as_ref()
                 .map(|h| h.branch.clone())
                 .unwrap_or_else(|| "未知".to_string()),
         },

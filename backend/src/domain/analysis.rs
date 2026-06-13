@@ -132,7 +132,8 @@ impl AnalysisSnapshot {
         let useful_gods = suggest_useful_god(&strength, &pattern);
 
         let useful_god_body = {
-            let hints: Vec<String> = useful_gods.iter()
+            let hints: Vec<String> = useful_gods
+                .iter()
                 .map(|h| format!("{}. {}", h.element, h.reason))
                 .collect();
             hints.join("；")
@@ -145,20 +146,25 @@ impl AnalysisSnapshot {
                 severity: "info".into(),
                 body: format!(
                     "日主「{}」属{}{}，得令{}，得地{}支，得势{}干。综合评分{}/10，判定为「{}」。",
-                    day_master, stem_element(&day_master),
-                    if ["甲","丙","戊","庚","壬"].contains(&day_master.as_str()) { "阳" } else { "阴" },
+                    day_master,
+                    stem_element(&day_master),
+                    if ["甲", "丙", "戊", "庚", "壬"].contains(&day_master.as_str()) {
+                        "阳"
+                    } else {
+                        "阴"
+                    },
                     if strength.deling { "✓" } else { "✗" },
-                    strength.dedi, strength.deshi, strength.score, strength.level
+                    strength.dedi,
+                    strength.deshi,
+                    strength.score,
+                    strength.level
                 ),
             },
             AnalysisCard {
                 id: "pattern-classification".into(),
                 title: "格局初判".into(),
                 severity: "info".into(),
-                body: format!(
-                    "月令透干推演，格局为「{}」。",
-                    pattern.pattern_name
-                ),
+                body: format!("月令透干推演，格局为「{}」。", pattern.pattern_name),
             },
             AnalysisCard {
                 id: "useful-god-hint".into(),

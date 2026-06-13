@@ -68,6 +68,62 @@ describe("ApiClient workspace routes", () => {
     assert.match(urls[1], /\/api\/analysis\/snapshot\?.*date=2025-01-01.*time_precision=exact.*time=10%3A30/);
   });
 
+  it("queries topic reports with explicit topic and year", async () => {
+    let requestedUrl = "";
+    globalThis.fetch = async (url) => {
+      requestedUrl = url;
+      return {
+        ok: true,
+        json: async () => ({ topic: "relationship", year: 2026 })
+      };
+    };
+
+    const client = new ApiClient("http://127.0.0.1:8787/");
+    await client.topicReport({
+      topic: "relationship",
+      date: "2025-01-01",
+      time: "10:30",
+      timezone: "Asia/Shanghai",
+      timePrecision: "exact",
+      sex: "female",
+      year: 2026
+    });
+
+    assert.match(requestedUrl, /\/api\/charts\/topic-report\?/);
+    assert.match(requestedUrl, /topic=relationship/);
+    assert.match(requestedUrl, /year=2026/);
+    assert.match(requestedUrl, /time=10%3A30/);
+    assert.match(requestedUrl, /sex=female/);
+  });
+
+  it("queries chart report luck reading with explicit reading year", async () => {
+    let requestedUrl = "";
+    globalThis.fetch = async (url) => {
+      requestedUrl = url;
+      return {
+        ok: true,
+        json: async () => ({ capability: "chart-report" })
+      };
+    };
+
+    const client = new ApiClient("http://127.0.0.1:8787/");
+    await client.chartReport({
+      date: "2025-01-01",
+      time: "10:30",
+      timezone: "Asia/Shanghai",
+      timePrecision: "exact",
+      sex: "male",
+      readingYear: 2026,
+      year: 2026
+    });
+
+    assert.match(requestedUrl, /\/api\/charts\/report\?/);
+    assert.match(requestedUrl, /reading_year=2026/);
+    assert.match(requestedUrl, /year=2026/);
+    assert.match(requestedUrl, /time=10%3A30/);
+    assert.match(requestedUrl, /sex=male/);
+  });
+
   it("creates cases and share previews through restricted routes", async () => {
     const urls = [];
     globalThis.fetch = async (url) => {

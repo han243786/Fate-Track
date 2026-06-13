@@ -120,7 +120,9 @@ impl CaseRepository {
     }
 
     pub fn derive_stats(&self) -> CaseDerivedStats {
-        let active: Vec<_> = self.cases.values()
+        let active: Vec<_> = self
+            .cases
+            .values()
             .filter(|c| c.status != CaseStatus::Deleted)
             .collect();
         let total = active.len() as u32;
@@ -129,8 +131,12 @@ impl CaseRepository {
         let mut ten_gods = BTreeMap::new();
         let mut hour_distribution = BTreeMap::new();
         for c in &active {
-            *day_masters.entry(c.chart_snapshot.day_master.clone()).or_default() += 1u32;
-            *hour_distribution.entry(c.chart_snapshot.hour_branch.clone()).or_default() += 1u32;
+            *day_masters
+                .entry(c.chart_snapshot.day_master.clone())
+                .or_default() += 1u32;
+            *hour_distribution
+                .entry(c.chart_snapshot.hour_branch.clone())
+                .or_default() += 1u32;
             for (el, count) in &c.element_counts {
                 *elements.entry(el.clone()).or_default() += *count;
             }
@@ -138,7 +144,13 @@ impl CaseRepository {
                 *ten_gods.entry(tg.clone()).or_default() += *count;
             }
         }
-        CaseDerivedStats { total_cases: total, day_masters, elements, ten_gods, hour_distribution }
+        CaseDerivedStats {
+            total_cases: total,
+            day_masters,
+            elements,
+            ten_gods,
+            hour_distribution,
+        }
     }
 
     pub fn update_metadata(

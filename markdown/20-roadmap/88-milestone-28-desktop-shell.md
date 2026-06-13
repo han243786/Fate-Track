@@ -32,4 +32,4 @@
 
 ## 5. 能力状态
 
-无变化。所有能力保持 M27 closeout 状态。
+无变化。M28 只交付桌面封装；V1 preview 能力矩阵保持 10 supported、7 restricted、0 target、0 planned。M0-M28 关闭后锁定的是 `v1.0.0-preview` 发布边界；post-preview 新能力从 M29 另行登记。

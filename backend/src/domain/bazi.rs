@@ -573,12 +573,24 @@ mod tests {
     fn chart_detail_snapshot_is_deterministic() {
         // Same input → same snapshot_id and immutable fields
         let basis = ChartBasis::build(request()).unwrap();
-        let r1 = ChartResult::build(basis.clone(), DateLayerPillars {
-            year: "甲辰".into(), month: "丙子".into(), day: "庚午".into(),
-        }).unwrap();
-        let r2 = ChartResult::build(basis, DateLayerPillars {
-            year: "甲辰".into(), month: "丙子".into(), day: "庚午".into(),
-        }).unwrap();
+        let r1 = ChartResult::build(
+            basis.clone(),
+            DateLayerPillars {
+                year: "甲辰".into(),
+                month: "丙子".into(),
+                day: "庚午".into(),
+            },
+        )
+        .unwrap();
+        let r2 = ChartResult::build(
+            basis,
+            DateLayerPillars {
+                year: "甲辰".into(),
+                month: "丙子".into(),
+                day: "庚午".into(),
+            },
+        )
+        .unwrap();
         let d1 = ChartDetail::from_result(&r1);
         let d2 = ChartDetail::from_result(&r2);
         // Same day pillar → same snapshot_id

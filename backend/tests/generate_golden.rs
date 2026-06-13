@@ -28,7 +28,14 @@ fn generate_golden_fixtures() {
     }
 
     // Category 2: 2033-anomaly (6 cases around the special leap month year)
-    for iso in &["2033-01-01","2033-03-15","2033-07-01","2033-09-15","2033-11-01","2033-12-31"] {
+    for iso in &[
+        "2033-01-01",
+        "2033-03-15",
+        "2033-07-01",
+        "2033-09-15",
+        "2033-11-01",
+        "2033-12-31",
+    ] {
         if let Some(d) = CivilDate::parse_iso(iso) {
             if let Some(r) = table.lookup(d) {
                 golden.push(format!(
@@ -41,7 +48,14 @@ fn generate_golden_fixtures() {
     }
 
     // Category 3: lichun-boundary (6 cases around Start of Spring)
-    for iso in &["2020-02-03","2020-02-04","2020-02-05","2024-02-03","2024-02-04","2024-02-05"] {
+    for iso in &[
+        "2020-02-03",
+        "2020-02-04",
+        "2020-02-05",
+        "2024-02-03",
+        "2024-02-04",
+        "2024-02-05",
+    ] {
         if let Some(d) = CivilDate::parse_iso(iso) {
             if let Some(r) = table.lookup(d) {
                 golden.push(format!(
@@ -53,7 +67,7 @@ fn generate_golden_fixtures() {
     }
 
     // Category 4: qingming-boundary (4 cases)
-    for iso in &["2020-04-04","2020-04-05","2024-04-04","2024-04-05"] {
+    for iso in &["2020-04-04", "2020-04-05", "2024-04-04", "2024-04-05"] {
         if let Some(d) = CivilDate::parse_iso(iso) {
             if let Some(r) = table.lookup(d) {
                 golden.push(format!(
@@ -65,7 +79,7 @@ fn generate_golden_fixtures() {
     }
 
     // Category 5: jiazi-day-anchor (4 cases)
-    for iso in &["1984-02-02","2000-01-01","2025-01-01","2044-02-10"] {
+    for iso in &["1984-02-02", "2000-01-01", "2025-01-01", "2044-02-10"] {
         if let Some(d) = CivilDate::parse_iso(iso) {
             if let Some(r) = table.lookup(d) {
                 golden.push(format!(
@@ -77,7 +91,14 @@ fn generate_golden_fixtures() {
     }
 
     // Category 6: near-midnight (6 cases at day boundaries)
-    for iso in &["2024-12-31","2025-01-01","2025-06-30","2025-07-01","2099-12-31","2100-01-01"] {
+    for iso in &[
+        "2024-12-31",
+        "2025-01-01",
+        "2025-06-30",
+        "2025-07-01",
+        "2099-12-31",
+        "2100-01-01",
+    ] {
         if let Some(d) = CivilDate::parse_iso(iso) {
             if let Some(r) = table.lookup(d) {
                 golden.push(format!(
@@ -89,21 +110,39 @@ fn generate_golden_fixtures() {
         }
     }
 
-    let out = Path::new(env!("CARGO_MANIFEST_DIR")).parent().unwrap()
-        .join("data").join("generated").join("astronomy")
+    let out = Path::new(env!("CARGO_MANIFEST_DIR"))
+        .parent()
+        .unwrap()
+        .join("data")
+        .join("generated")
+        .join("astronomy")
         .join("golden-fixtures.json");
     let artifact = format!(
         r#"{{"artifact_id":"golden-fixtures-v1","kind":"golden-row-fixtures","generation_status":"computed","golden_plan_id":"astronomy-engine-v0-golden-cases-plan","categories":["1901-2100-boundary","2033-anomaly","lichun-boundary","qingming-boundary","jiazi-day-anchor","near-midnight-solar-lunar-event"],"entries":[{}],"entry_count":{},"created_at_utc":"2026-06-09T00:00:00Z"}}"#,
-        golden.join(","), golden.len()
+        golden.join(","),
+        golden.len()
     );
     fs::write(&out, &artifact).unwrap();
-    eprintln!("M20 golden fixtures: {} entries across 6 categories", golden.len());
-    assert!(golden.len() >= 30, "expected >=30 golden entries, got {}", golden.len());
+    eprintln!(
+        "M20 golden fixtures: {} entries across 6 categories",
+        golden.len()
+    );
+    assert!(
+        golden.len() >= 30,
+        "expected >=30 golden entries, got {}",
+        golden.len()
+    );
 }
 
 fn load_android() -> LunarTable {
     LunarDataSource::new(
-        Path::new(env!("CARGO_MANIFEST_DIR")).parent().unwrap()
-            .join("data").join("raw").join("lunar_data.yaml")
-    ).load_table().unwrap()
+        Path::new(env!("CARGO_MANIFEST_DIR"))
+            .parent()
+            .unwrap()
+            .join("data")
+            .join("raw")
+            .join("lunar_data.yaml"),
+    )
+    .load_table()
+    .unwrap()
 }

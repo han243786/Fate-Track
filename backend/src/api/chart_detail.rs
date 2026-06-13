@@ -30,7 +30,9 @@ fn chart_detail_to_json(d: &ChartDetail) -> String {
         json::string(&d.pillars.year.ganzhi()),
         json::string(&d.pillars.month.ganzhi()),
         json::string(&d.pillars.day.ganzhi()),
-        d.pillars.hour.as_ref()
+        d.pillars
+            .hour
+            .as_ref()
             .map(|h| json::string(&h.ganzhi()))
             .unwrap_or_else(|| "null".to_string()),
         string_array_to_json(&d.warnings),

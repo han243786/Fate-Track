@@ -22,7 +22,16 @@ fn generate_comparison_artifact() {
     let mut checked = 0u32;
 
     for year in 1901..=2100 {
-        for &(m, d) in &[(1,1),(1,15),(4,1),(4,15),(7,1),(7,15),(10,1),(10,15)] {
+        for &(m, d) in &[
+            (1, 1),
+            (1, 15),
+            (4, 1),
+            (4, 15),
+            (7, 1),
+            (7, 15),
+            (10, 1),
+            (10, 15),
+        ] {
             if let Some(date) = CivilDate::parse_iso(&format!("{}-{:02}-{:02}", year, m, d)) {
                 if let Some(lunar) = table.lookup(date) {
                     let android_day = lunar.gan_zhi_day;
@@ -43,20 +52,44 @@ fn generate_comparison_artifact() {
     let all_rows = rows.join(",");
     let artifact = format!(
         r#"{{"artifact_id":"android-comparison-1901-2100-v1","kind":"android-vs-astronomy-comparison","generation_status":"computed","range":{{"start_year":1901,"end_year":2100}},"comparison_baseline":{{"android_source":"android-date-layer-v1","astronomy_target":"astronomy-engine-v0"}},"checked":{},"day_pillar_differences":{},"total_differences":{},"difference_taxonomy":["android_table_difference","astronomy_source_difference","ruleset_difference","unresolved"],"entries":[{}],"entry_count":{},"created_at_utc":"2026-06-09T00:00:00Z"}}"#,
-        checked, day_diffs, rows.len(), all_rows, rows.len()
+        checked,
+        day_diffs,
+        rows.len(),
+        all_rows,
+        rows.len()
     );
 
-    let out = Path::new(env!("CARGO_MANIFEST_DIR")).parent().unwrap()
-        .join("data").join("generated").join("astronomy").join("out")
+    let out = Path::new(env!("CARGO_MANIFEST_DIR"))
+        .parent()
+        .unwrap()
+        .join("data")
+        .join("generated")
+        .join("astronomy")
+        .join("out")
         .join("android-comparison-1901-2100.json");
     fs::write(&out, &artifact).unwrap();
-    eprintln!("M19 comparison: {} checked, {} day diffs, {} rows", checked, day_diffs, rows.len());
-    assert!(checked >= 1590, "expected >=1590 checks (200yr*8samples), got {}", checked);
+    eprintln!(
+        "M19 comparison: {} checked, {} day diffs, {} rows",
+        checked,
+        day_diffs,
+        rows.len()
+    );
+    assert!(
+        checked >= 1590,
+        "expected >=1590 checks (200yr*8samples), got {}",
+        checked
+    );
 }
 
 fn load_android() -> LunarTable {
     LunarDataSource::new(
-        Path::new(env!("CARGO_MANIFEST_DIR")).parent().unwrap()
-            .join("data").join("raw").join("lunar_data.yaml")
-    ).load_table().unwrap()
+        Path::new(env!("CARGO_MANIFEST_DIR"))
+            .parent()
+            .unwrap()
+            .join("data")
+            .join("raw")
+            .join("lunar_data.yaml"),
+    )
+    .load_table()
+    .unwrap()
 }

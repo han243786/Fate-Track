@@ -1,9 +1,9 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 use anyhow::{Context, Result};
-use include_dir::{include_dir, Dir};
+use include_dir::{Dir, include_dir};
 use minggui_backend::{
-    app::{parse_and_handle, App},
+    app::{App, parse_and_handle},
     config::AppConfig,
 };
 use percent_encoding::percent_decode_str;
@@ -121,10 +121,7 @@ fn spawn_local_server() -> Result<LocalServer> {
         })
         .context("启动桌面本地服务失败")?;
 
-    Ok(LocalServer {
-        _addr: addr,
-        url,
-    })
+    Ok(LocalServer { _addr: addr, url })
 }
 
 fn materialize_lunar_data() -> Result<PathBuf> {

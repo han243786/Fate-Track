@@ -22,22 +22,22 @@
 | `desktop.shell` | `desktop/Cargo.toml`, `desktop/src/main.rs` | Tao 原生窗口 + Wry 系统 WebView，编译时嵌入 frontend/ 和 lunar_data.yaml，运行时启动内嵌 HTTP 服务 |
 | `backend.app` | `backend/src/app.rs`, `backend/src/server.rs`, `backend/src/error.rs` | 请求调度、TCP 服务、统一错误 |
 | `backend.http` | `backend/src/http/*` | HTTP 请求解析、响应、状态码、JSON 字符串工具 |
-| `backend.api` | `backend/src/api/*` (16 files) | M1-M24 全部 API 路由：health, capabilities, lunar, calendar, chart_basis, charts, chart_detail, analysis, luck, cases, derive, share, settings, glossary_data, report |
+| `backend.api` | `backend/src/api/*` (17 files) | M1-M40 API 路由：health, capabilities, lunar, calendar, chart_basis, charts, chart_detail, analysis, luck, cases, derive, share, settings, glossary_data, report, topic_report；M29-M33 四专项报告 restricted；M36-M38 大运、流年、专项 timeline reading 通过报告承载；M41-M61 只做文案质量与门禁，不新增路由或能力 |
 | `backend.calendar.civil` | `backend/src/calendar/civil.rs` | 纯公历日期校验、闰年、日期差、年内序号 |
 | `backend.calendar.ganzhi` | `backend/src/calendar/ganzhi.rs` | Android 万年历同源的年月日干支计算 |
 | `backend.calendar.lunar_data` | `backend/src/calendar/lunar_data.rs`, `data/raw/lunar_data.yaml` | 农历 raw data 读取、元信息解析、日期层查询 |
-| `backend.domain` | `backend/src/domain/*` (9 files) | 八字、案例、大运、深层分析、设置、共享、术语 |
+| `backend.domain` | `backend/src/domain/*` (11 files) | 八字、案例、大运、深层分析、设置、共享、术语、topic_report、timeline；四专项报告、主盘报告和 timeline reading 均为规则模板与证据合参，不接入 AI/LLM，不暴露 score_internal |
 | `backend.astronomy` | `backend/src/astronomy/*` (7 files) | M11 天文引擎：时标、太阳、节气、月球、农历推导、对照 |
-| `frontend.shell` | `frontend/index.html`, `frontend/server.mjs`, `frontend/package.json` | 前端页面壳、本地静态服务、脚本入口 |
-| `frontend.api` | `frontend/src/api/client.js`, `frontend/src/config.js`, `frontend/tests/api-client.test.mjs` | Backend API client for date-layer, chart, analysis, local cases, restricted share preview, and capability tests |
-| `frontend.state` | `frontend/src/state.js`, `frontend/src/main.js` | 应用状态与启动编排 |
-| `frontend.ui` | `frontend/src/ui/*`, `frontend/src/styles.css` | M25 GPT Pro 设计：3 栏布局，色编码四柱卡片，条形图五行，芯片十神，藏干矩阵，洞察卡，大运时间轴；完整暗色主题 |
+| `frontend.shell` | `frontend/index.html`, `frontend/report.html`, `frontend/topic-report.html`, `frontend/server.mjs`, `frontend/package.json` | 前端页面壳、本地静态服务、主盘报告入口、专项报告入口和脚本入口 |
+| `frontend.api` | `frontend/src/api/client.js`, `frontend/src/config.js`, `frontend/tests/api-client.test.mjs` | Backend API client for date-layer, chart, analysis, local cases, restricted share preview, chart report, topic report, explicit selected-year calls, and capability tests |
+| `frontend.state` | `frontend/src/state.js`, `frontend/src/main.js` | 应用状态与启动编排；新起盘必须清空旧专项输出，专项报告跳转必须携带当前 birth profile 与 selected year |
+| `frontend.ui` | `frontend/src/ui/*`, `frontend/src/topic-report-page.js`, `frontend/src/styles.css` | M25 GPT Pro 设计；M29-M33 左下 2 x 2 四专项入口；工作台只显示结构信号，完整专项报告由 topic-report.html 承载；M39-M61 只优化 timeline/report UI 与文案质量 |
 | `frontend.utils` | `frontend/src/utils/format.js`, `frontend/tests/format.test.mjs` | 纯格式化函数和测试 |
 | `data.lunar.raw` | `data/README.md`, `data/raw/lunar_data.yaml` | 农历基础数据真源 |
 | `governance.matrix` | `markdown/**`, `docs/decisions/*` | 治理文档和决策记录 |
-| `governance.research` | `markdown/reserch/*`, `markdown/reserch/zh-CN/*`, `markdown/reserch/00-research-intake.md`, `docs/decisions/0003-v1-research-governance-baseline.md`, `docs/decisions/0004-v1-calculation-ruleset-target.md`, `docs/decisions/0005-privacy-safe-interpretation-target.md` | 研究报告原文、中文译文、采纳状态、目标规则和隐私解释政策 |
-| `governance.roadmap` | `markdown/20-roadmap/*`, `docs/decisions/0006-roadmap-and-governance-lock.md`, `docs/decisions/0007-recursive-development-protocol.md` | 从 M0 到 M22 的开发里程碑、决策门、风险、防回退、能力晋级台账和递归游标 |
-| `governance.release` | `docs/release/v1-release-candidate.md`, `markdown/20-roadmap/25-milestone-08-preflight.md`, `markdown/20-roadmap/26-milestone-08-closeout.md` | V1 release candidate、能力冻结、降级规则和 M8 收口证据 |
+| `governance.research` | `markdown/reserch/*`, `markdown/reserch/zh-CN/*`, `markdown/reserch/00-research-intake.md`, `markdown/reserch/04-topic-report-engine-governance-intake.md`, `docs/decisions/0003-v1-research-governance-baseline.md`, `docs/decisions/0004-v1-calculation-ruleset-target.md`, `docs/decisions/0005-privacy-safe-interpretation-target.md` | 研究报告原文、中文译文、采纳状态、目标规则、四专项引擎治理纳入和隐私解释政策 |
+| `governance.roadmap` | `markdown/20-roadmap/*`, `docs/decisions/0006-roadmap-and-governance-lock.md`, `docs/decisions/0007-recursive-development-protocol.md` | 从 M0 到 M61 的开发里程碑、决策门、风险、防回退、能力晋级台账、递归游标、post-preview 四专项报告、timeline reading 和报告文案质量门禁 |
+| `governance.release` | `docs/release/v1-release-candidate.md`, `docs/release/v1-closeout.md`, `markdown/20-roadmap/25-milestone-08-preflight.md`, `markdown/20-roadmap/26-milestone-08-closeout.md`, `markdown/20-roadmap/89-post-preview-documentation-freeze.md` | V1 preview release、能力冻结事实、降级规则、post-preview 边界扩展和 closeout 证据 |
 | `governance.astronomy-preflight` | `docs/decisions/0015-m9-astronomy-parallel-strategy.md`, `docs/decisions/0016-m9-astronomy-source-stack.md`, `data/generated/astronomy/*`, `tools/check-astronomy-preflight.ps1`, `markdown/20-roadmap/27-milestone-09-preflight.md` | M9 星历并行策略、源栈决策、manifest schema、对照报告模板和预检门禁 |
 | `tools.governance` | `tools/*.ps1` | 项目检查、脚手架检查、目录盘点、release candidate 检查、astronomy preflight 检查 |
 
@@ -114,6 +114,7 @@
 | `GET /api/data/derive` | `api/derive.rs` | restricted |
 | `data/generated/astronomy/out/*` | `astronomy/*` | supported (ADR 0021) |
 | `GET /api/charts/report` | `api/report.rs` | restricted |
+| `GET /api/charts/topic-report` | `api/topic_report.rs` | restricted |
 
 `GET /api/calendar/query` response metadata is limited to the current Android date-layer baseline: source, algorithm version, ruleset id, 1901-2100 range, date-only boundary policy, and limitations. It must not be treated as full chart, hour-pillar, timezone-history, true-solar-time, or astronomy-engine support.
 
@@ -140,7 +141,7 @@ Date-query error envelope is `{"error": "...", "message": "..."}`: missing/inval
 | `GET /api/cases/export` | `api/cases.rs` | restricted |
 | `GET /api/data/derive` | `api/derive.rs` | restricted |
 
-M12 chart-detail returns immutable snapshot with algo_version, ruleset_id, birth profile, pillars, warnings, and ambiguity flags. M13 luck-cycles (ADR 0020, DG-005 closed) returns 大运 direction, starting-age, and 8 cycles. M14 glossary returns 55 structured terminology entries with term/category search. M14 case-export returns JSON export with optional private notes and analysis report. M15 data-derivation returns real aggregated statistics (day_masters, elements, ten_gods, hours) with >=5 threshold privacy protection. M24 chart-report returns colloquial Chinese chart report with 9 text blocks, disclaimer, and forbidden-output audit; restricted capability, pure hard-coded templates, no AI/LLM.
+M12 chart-detail returns immutable snapshot with algo_version, ruleset_id, birth profile, pillars, warnings, and ambiguity flags. M13 luck-cycles (ADR 0020, DG-005 closed) returns 大运 direction, starting-age, and 8 cycles. M13 remains raw supported calculation only; timeline interpretation must not pollute this route. M14 glossary returns 55 structured terminology entries with term/category search. M14 case-export returns JSON export with optional private notes and analysis report. M15 data-derivation returns real aggregated statistics (day_masters, ten_gods, elements, hours) with >=5 threshold privacy protection. M24 chart-report returns colloquial Chinese chart report with disclaimer and forbidden-output audit; restricted capability, pure hard-coded templates, no AI/LLM. M29-M33 add restricted relationship/wealth/family/career topic reports with explicit year and no public score_internal. M36-M38 add restricted luck-reading, annual-trigger-reading, and topic-timeline-reading inside report carriers. M41-M61 are quality-only report-copy loops and do not change public capability status.
 
 **Forbidden lateral links**: 不得直接读取前端文件；不得把 planned 能力返回为 supported。
 
@@ -209,8 +210,10 @@ M12 chart-detail returns immutable snapshot with algo_version, ruleset_id, birth
 | `glossary.rs` | `GlossaryEntry` | M14 glossary skeleton |
 | `luck.rs` | `LuckCycle`, `compute_luck_cycles` | M13 luck cycles (ADR 0020, DG-005 closed) |
 | `deep_analysis.rs` | `StrengthAssessment`, `PatternInfo`, `UsefulGodHint` | M21 deep analysis (三命通会/子平法蒸馏) |
+| `timeline.rs` | `TimelineReading`, annual/current-luck/topic overlay helpers | M35-M38 restricted timeline reading foundation |
+| `topic_report.rs` | `TopicReport`, four-topic narrative builders, forbidden-output audit | M29-M33 restricted topic report and M41-M61 report-copy gates |
 
-**Rule**: All 17 capabilities are now supported or restricted. No planned or target capabilities remain. `astronomy-engine` promoted from target to supported per M23 (ADR 0021).
+**Rule**: V1 preview has 17 runtime capabilities supported or restricted. Current post-preview runtime has 24 supported/restricted capabilities after M61: `relationship-report`, `wealth-report`, `family-report`, `career-report`, `luck-reading`, `annual-trigger-reading`, and `topic-timeline-reading` are restricted. M39-M61 add no new capability. Public topic or timeline responses must not expose `score_internal` or 0-100 fate scores.
 
 ## 3.1 Implemented: Astronomy Engine
 
@@ -445,7 +448,9 @@ Four source-boundary payloads materialized with sha256. Manifest updated with bo
 | `52-milestone-10-first-source-payload-decision.md` | implementation evidence | M10 first source payload decision 不得被当作 selected payload file、source hash、generated artifact、runtime integration 或 `astronomy-engine` promotion 证据 |
 | `53-milestone-10-selected-source-payload-preflight.md` | implementation evidence | M10 selected source payload preflight 不得被当作 selected payload file、source hash、generated artifact、runtime integration 或 `astronomy-engine` promotion 证据 |
 
-**Regression protection**: `tools/check-project.ps1`, closeout evidence review, capability ledger review, recursive cursor review.
+**Regression protection**: `tools/check-project.ps1`, `tools/check-governance-scaffold.ps1`, closeout evidence review, capability ledger review, recursive cursor review.
+
+**Post-preview lock through M61**: M29-M33 introduce four restricted topic reports; M34-DG-012 locks topic-report route shape, explicit selected year, and internal score policy; M35-M38 add the internal timeline engine and restricted report-carried readings; M39-M40 close UI/readability and quality gates. LOOP-105 through LOOP-129 are quality-only loops: stale topic output must clear on new chart calculation, workbench topic panels remain structure-signal only, full readings live in report pages, raw `GET /api/luck/cycles` stays calculation-only, and generated public copy must avoid internal English identifiers, backend/frontend wording, public score, count-table wording, rigid selected-year phrasing, M56 conclusion-template regressions such as `在这份金钱专项里` / `在这份家庭专项里` / `在这份事业专项里`, M57 timeline staged-prose regressions such as `年度本身先露出的` / `流年天干把十神主题推到台前`, M58 long-section regressions such as `读这一章时` / `这条线已经进入命盘视野` / `这条十神线索`, M59 middle-chapter textbook regressions such as `财星分正财和偏财` / `传统上会把` / `官杀代表责任` / `技能表达：` / `同辈边界：`, M60 topic-timeline scaffolding regressions such as `从「金钱」专项来看` / `从「家庭」专项来看` / `从「事业」专项来看` / `把2026年放进` / `十神与五行这一层` / `五行相处的方式提示` / `本段把它作为阶段背景参考`, and M61 early-stage age-context regressions such as `如果目前单身` / `若已有关系` / `工作场景` / `现实职位高低` / `长期经营` / `现实回报` / `团队边界`. Relationship report may include low-risk relationship-rhythm suggestions for adult samples, but early-stage samples must read emotional response, attachment safety, and boundary formation; no report may output deterministic romance events, partner identity claims, high-risk decisions, equality-count phrasing, repeated fixed openers, bare `被冲牵动` style relation wording, or system-like 标记/筛选/提取 wording.
 
 ### Module ID: `data.generated.astronomy.loop046`
 

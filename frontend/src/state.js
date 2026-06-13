@@ -5,6 +5,7 @@ export function createAppState({ apiBase }) {
       date: "2025-01-01",
       time: "10:30",
       sex: "unspecified"
-    }
+    },
+    selectedTopic: "relationship"
   };
 }

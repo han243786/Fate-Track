@@ -17,7 +17,7 @@ pub fn capabilities() -> Response {
     Response::json(format!("{{\"capabilities\":[{items}]}}"))
 }
 
-fn capability_catalog() -> [Capability; 17] {
+fn capability_catalog() -> [Capability; 24] {
     [
         Capability {
             id: "health",
@@ -120,6 +120,48 @@ fn capability_catalog() -> [Capability; 17] {
             status: "restricted",
             route: "/api/charts/report",
             source: "colloquial-report-v1",
+        },
+        Capability {
+            id: "luck-reading",
+            status: "restricted",
+            route: "/api/charts/report",
+            source: "timeline-reading-v1",
+        },
+        Capability {
+            id: "annual-trigger-reading",
+            status: "restricted",
+            route: "/api/charts/report?year=YYYY",
+            source: "timeline-reading-v1",
+        },
+        Capability {
+            id: "topic-timeline-reading",
+            status: "restricted",
+            route: "/api/charts/topic-report?topic=relationship|wealth|family|career&year=YYYY",
+            source: "timeline-reading-v1",
+        },
+        Capability {
+            id: "relationship-report",
+            status: "restricted",
+            route: "/api/charts/topic-report?topic=relationship",
+            source: "topic-report-v1",
+        },
+        Capability {
+            id: "wealth-report",
+            status: "restricted",
+            route: "/api/charts/topic-report?topic=wealth",
+            source: "topic-report-v1",
+        },
+        Capability {
+            id: "family-report",
+            status: "restricted",
+            route: "/api/charts/topic-report?topic=family",
+            source: "topic-report-v1",
+        },
+        Capability {
+            id: "career-report",
+            status: "restricted",
+            route: "/api/charts/topic-report?topic=career",
+            source: "topic-report-v1",
         },
     ]
 }
@@ -252,5 +294,86 @@ mod tests {
         let body = capabilities().body;
         assert!(body.contains("\"id\":\"chart-report\""));
         assert!(body.contains("\"status\":\"restricted\""));
+    }
+
+    #[test]
+    fn exposes_luck_reading_as_restricted_after_m36() {
+        let catalog = capability_catalog();
+        let capability = catalog
+            .iter()
+            .find(|capability| capability.id == "luck-reading")
+            .expect("luck-reading capability should be declared");
+
+        assert_eq!(capability.status, "restricted");
+        assert_eq!(capability.route, "/api/charts/report");
+        assert_eq!(capability.source, "timeline-reading-v1");
+
+        let body = capabilities().body;
+        assert!(body.contains("\"id\":\"luck-reading\""));
+        assert!(body.contains("\"status\":\"restricted\""));
+    }
+
+    #[test]
+    fn exposes_annual_trigger_reading_as_restricted_after_m37() {
+        let catalog = capability_catalog();
+        let capability = catalog
+            .iter()
+            .find(|capability| capability.id == "annual-trigger-reading")
+            .expect("annual trigger reading capability should be declared");
+
+        assert_eq!(capability.status, "restricted");
+        assert_eq!(capability.route, "/api/charts/report?year=YYYY");
+        assert_eq!(capability.source, "timeline-reading-v1");
+
+        let body = capabilities().body;
+        assert!(body.contains("\"id\":\"annual-trigger-reading\""));
+        assert!(body.contains("\"route\":\"/api/charts/report?year=YYYY\""));
+        assert!(body.contains("\"status\":\"restricted\""));
+    }
+
+    #[test]
+    fn exposes_topic_timeline_reading_as_restricted_after_m38() {
+        let catalog = capability_catalog();
+        let capability = catalog
+            .iter()
+            .find(|capability| capability.id == "topic-timeline-reading")
+            .expect("topic timeline reading capability should be declared");
+
+        assert_eq!(capability.status, "restricted");
+        assert_eq!(
+            capability.route,
+            "/api/charts/topic-report?topic=relationship|wealth|family|career&year=YYYY"
+        );
+        assert_eq!(capability.source, "timeline-reading-v1");
+
+        let body = capabilities().body;
+        assert!(body.contains("\"id\":\"topic-timeline-reading\""));
+        assert!(body.contains("\"status\":\"restricted\""));
+    }
+
+    #[test]
+    fn exposes_all_topic_reports_as_restricted_after_m33() {
+        let catalog = capability_catalog();
+        let body = capabilities().body;
+
+        for (id, topic) in [
+            ("relationship-report", "relationship"),
+            ("wealth-report", "wealth"),
+            ("family-report", "family"),
+            ("career-report", "career"),
+        ] {
+            let capability = catalog
+                .iter()
+                .find(|capability| capability.id == id)
+                .expect("topic report capability should be declared");
+
+            assert_eq!(capability.status, "restricted");
+            assert_eq!(
+                capability.route,
+                format!("/api/charts/topic-report?topic={topic}")
+            );
+            assert_eq!(capability.source, "topic-report-v1");
+            assert!(body.contains(&format!("\"id\":\"{id}\"")));
+        }
     }
 }

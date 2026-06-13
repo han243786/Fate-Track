@@ -1,4 +1,4 @@
-# 命轨全量工程树
+﻿# 命轨全量工程树
 
 > 本文是工程目录地图，产品功能地图保留在 `markdown/命轨全量树.md`。后续研究报告进入项目后，必须同步更新本文和 `markdown/00-matrix-governance/module-tree.md`。
 
@@ -25,6 +25,8 @@ FT/
         report.rs
         settings.rs
         share.rs
+        timeline.rs
+        topic_report.rs
       astronomy/
         calendar.rs
         compare.rs
@@ -48,6 +50,7 @@ FT/
         mod.rs
         settings.rs
         share.rs
+        topic_report.rs
       http/
         json.rs
         mod.rs
@@ -328,7 +331,7 @@ FT/
 | `frontend/tests/**/*.mjs` | test | 前端纯函数和状态逻辑测试。 |
 | `frontend/server.mjs` | source/tool | 本地静态服务，不得暴露项目根以外文件。 |
 | `data/raw/lunar_data.yaml` | raw data | 禁止应用代码直接改写；衍生产物必须登记生成命令。 |
-| `data/generated/astronomy/*` | preflight data governance | 当前仅含 schema/template；不得作为已生成星历表使用。 |
+| `data/generated/astronomy/*` | generated astronomy governance/data | 包含历史 preflight 治理件、source-boundary payload、computed astronomy outputs 和 M23 supported 证据；Android 日期层运行时替换仍需单独 ADR。 |
 | `markdown/命轨全量树.md` | product map | 功能范围变化时同步更新。 |
 | `markdown/00-matrix-governance/*` | governance | 模块、规则、门禁或流程变化时同步更新。 |
 | `markdown/20-roadmap/*` | roadmap | 开发里程碑、决策门、风险、防回退锁、capability 晋级台账和递归游标。 |
@@ -392,9 +395,55 @@ The frontend Date Layer panel calls `ApiClient.calendarDate` and renders the sup
 
 `frontend/index.html` and `frontend/src/*` now provide an M7 restricted workspace. It consumes backend APIs for chart creation, structured analysis, local volatile cases, redacted share preview, date-layer query, data metadata, and capability boundaries. It does not implement chart or analysis algorithms locally and does not claim luck cycles, durable public sharing, account storage, cloud sync, true solar time, timezone history, glossary, wider date range, or astronomy replacement.
 
+## Current Restricted Topic Report Surface
+
+`GET /api/charts/topic-report` is the M29 shared topic-report route. It requires explicit `topic` and `year`, returns qualitative `signals`/`trace`, disclaimer, warnings, and forbidden-output audit, and excludes public `score_internal` or 0-100 fate scores. After M33, `topic=relationship`, `topic=wealth`, `topic=family`, and `topic=career` are implemented as restricted topic reports and exposed through the 2 x 2 frontend entry and `/api/capabilities`. LOOP-096 adds基础解释 anchors to the topic reports; LOOP-109 later changes `relationship-report` into a six-block narrative (`总断`、`伴侣议题`、`夫妻宫`、`表达、边界与安全感`、`年度情感引动`、`结论`) and folds topic timeline evidence into the annual emotional-trigger block. LOOP-110 adds a relationship-only real-output copy gate that rejects 标记/筛选/提取 wording, equality-count phrasing, and potential internal English leakage. LOOP-111 extends real-output copy gates to wealth/family/career assembled reports and keeps the M42 relationship baseline intact. LOOP-112 adds a relationship second-pass gate that prevents fixed opener repetition and requires relation terms such as `冲` / `六冲` to be quoted in explanatory report prose. LOOP-113 extends the final body gate to system/algorithm/score/count-table tone and readable major-luck labels. LOOP-114 extends the same gate to list/table/debug-like narration such as `盘中可用的时间线索`, `关键牵动是`, and `出现 4 处`. LOOP-115 raises relationship-report as the current golden sample by replacing spouse-star/expression/support count fields such as `不作主线` and `有一处落点` with relationship-quality prose. LOOP-116 extends that count-field baseline to wealth/family/career by replacing ten-god count fields and middle-layer bridges such as `参与这组结构` with topic-quality prose. LOOP-117 rewrites main annual-trigger and topic timeline sections from list evidence into reading-order narrative prose. LOOP-118 rewrites wealth/family/career openings, topic-entry chapters, annual guidance, and conclusions into advice-cohesion prose while gating `日常读法`, `日常看`, and `这些牵动提醒您` regressions. LOOP-119 rewrites the main chart report teaching bridges, ten-god count summary, and annual-trigger stale wording into direct reading prose while gating `这一章看的是`, `这一章先把`, `放到日常理解里`, `最适合当作`, and `可以先这样理解` regressions. LOOP-120 keeps report closeout continuous by placing wealth/family/career timeline overlays before `结论`, making topic conclusions the final visible chapter, and gating stale phrases such as `基本脉络如下`, `第一优先`, `不能只看流年`, `当前资料可以按完整四柱合参`, and `这一年`. LOOP-121 groups the main five-element explanation and makes wealth/family/career timeline guidance topic-specific through `落到2026年` prose, while gating `偏弱表示这类倾向`, `哪里需要放慢`, `哪里需要承接`, and `读2026年这一层`. LOOP-122 warms the main annual-trigger and wealth/family/career topic timeline details into annual-rhythm prose through `2026年靠近命盘时` and `把2026年放进...专项来看`, while gating `这一章会把`, `牵动会先落在这些位置`, `2026年的时间气候`, `先从这些层次落下去看`, `先看天干`, and `再看五行关系`. LOOP-123 makes topic reports use real luck-cycle context and selected-year current luck while gating `大运首段`, fixed `1至10岁` wording, and stale annual-detail phrases such as `天干处先露出`. LOOP-124 compresses relationship conclusion repetition and makes wealth/family/career closeouts topic-specific while gating `在这份...专项里` conclusion templates. LOOP-125 de-stages main annual-trigger and wealth/family/career topic timeline prose while gating `年度本身先露出的`, `推到台前`, and `不是罗列符号` regressions. LOOP-126 condenses main chart `十神关系`, `大运走势`, and `年度引动` visible prose while retaining restricted trace/evidence and gating `读这一章时`, `这条线已经进入命盘视野`, `这条十神线索`, and professional-label regressions. LOOP-097 keeps the workspace topic panel as a structure-signal summary only, and moves the full restricted reading flow to `topic-report.html?topic=...`. LOOP-108 gates final topic-report response bodies against stiff labels, generic-year wording, internal engineering copy, public scores, and machine-like phrasing.
+
+LOOP-127 extends the same topic-report quality line to wealth/family/career middle chapters: visible report prose now frames resources, support, responsibility, delivery, and collaboration as topic-specific reading rhythm instead of textbook definitions, with guards against `财星分正财和偏财`, `传统上会把`, `官杀代表责任`, `技能表达：`, and `同辈边界：` regressions. No route, DTO, capability status, public score, or raw `luck-cycles` behavior changed.
+
+LOOP-128 extends the same quality-only line to wealth/family/career `本专题的大运流年`: visible timeline prose now opens with direct 2026 topic rhythm instead of engine-layer scaffolding, with guards against `从「金钱」专项来看`, `从「家庭」专项来看`, `从「事业」专项来看`, `把2026年放进`, `十神与五行这一层`, and `本段把它作为阶段背景参考` regressions. No route, DTO, capability status, public score, or raw `luck-cycles` behavior changed.
+
+LOOP-129 extends the quality-only line to age-context report polish: the 2025/2026 early-stage sample now reads relationship as emotional response and attachment safety, wealth as resource sense and sharing boundaries, family as stable care and response, and career as learning tasks, rule sense, expression training, and support systems. Adult-context regressions such as `如果目前单身`, `若已有关系`, `工作场景`, `现实职位高低`, `长期经营`, `现实回报`, and `团队边界` are gated for that early-stage sample. No route, DTO, capability status, public score, or raw `luck-cycles` behavior changed.
+
+`frontend/index.html`, `frontend/report.html`, `frontend/topic-report.html`, `frontend/src/api/client.js`, `frontend/src/main.js`, `frontend/src/topic-report-page.js`, `frontend/src/ui/dom.js`, `frontend/src/ui/render.js`, and `frontend/src/styles.css` provide the post-preview 2 x 2 topic entry, left-bottom `查看专项报告` navigation, workspace structure-signal panel, and chart-report-style full topic report page. After M33, relationship, wealth, family, and career buttons are all enabled as restricted entries and all requests go through the explicit-year topic-report API. LOOP-103 adds M39 timeline report UI: main/topic report time guides, explicit year controls, expandable evidence, and short workbench summaries. LOOP-104 adds M40 frontend source gates for no public score, no overclaimed flow-month/day fortune, and explicit boundary wording. LOOP-105 clears stale topic output on chart recalculation and localizes visible internal English markers in the workbench and report pages. LOOP-106 removes engineering copy and hard professional/plain labels from public timeline evidence UI. LOOP-107 changes backend dictionary/readings only; frontend surfaces keep the same restricted payload shape. LOOP-108 keeps frontend copy aligned with daily-language wording while the backend app-layer gate checks the final public report bodies. LOOP-109 makes the relationship full report narrative-only, so `signals`/`trace` remain available for governance and time guide evidence but are not rendered as extra relationship body chapters.
+
+## Restricted Primary Luck Reading Surface
+
+LOOP-098 lays down M34-M40 for the next heavy engineering slice: primary chart luck reading, annual trigger reading, and topic timeline overlays. LOOP-099 closes DG-012 through ADR 0022 and implements the M35 internal `domain::timeline` foundation. LOOP-100 completes M36 by exposing only primary chart `luck-reading` as a restricted report-carried surface on `GET /api/charts/report?reading_year=YYYY`. LOOP-101 completes M37 by exposing `annual-trigger-reading` as a restricted report-carried surface on `GET /api/charts/report?year=YYYY`. LOOP-102 completes M38 by exposing `topic-timeline-reading` as a restricted topic-report-carried surface on `GET /api/charts/topic-report?topic=...&year=YYYY`. LOOP-103 completes M39 as UI/readability only, with no capability change. LOOP-104 completes M40 as quality-gate closeout only: public golden samples, forbidden/no-score/no-overclaim checks, bounded-output protection, browser samples, and governance sync. LOOP-105 is frontend quality-only: no capability change, stale topic panels clear after chart recalculation, and visible internal English markers are localized. LOOP-106 is lexicon-copy quality-only: generated timeline readings must use natural reader-facing Chinese and avoid stiff labels, generic year wording, backend/frontend copy, and internal engine ids. LOOP-107 is large-scale dictionary quality-only: `timeline-lexicon` expands to 28 compositional entries, generated readings use richer professional/plain guidance, and tests guard lexicon text, copy density, and internal-id leakage. LOOP-108 is report-level quality-only: final chart report and four topic report response bodies must pass visible-copy gates before closeout. LOOP-109 is relationship-report narrative quality-only, LOOP-110 is relationship-report real-output copy quality-only, LOOP-111 is remaining-report real-output copy quality-only, LOOP-112 is relationship-report copy second-pass quality-only, LOOP-113 is five-report system-tone cleanup quality-only, LOOP-114 is five-report narrative-list cleanup quality-only, LOOP-115 is relationship-report golden-sample quality-only, LOOP-116 is remaining-topic count-field narrative quality-only, LOOP-117 is annual timeline narrative quality-only, LOOP-118 is wealth/family/career advice-cohesion quality-only, LOOP-119 is main-report tone-cohesion quality-only, LOOP-120 is report closeout-continuity quality-only, LOOP-121 is report density/topic-specificity quality-only, LOOP-122 is timeline-detail narrative-warmth quality-only, LOOP-123 is current-luck consistency quality-only, and LOOP-124 is conclusion de-duplication quality-only: none changes route, DTO top-level, `/api/capabilities`, raw luck route, score, or supported status. Raw `GET /api/luck/cycles` remains a supported calculation route without reading text, score, annual trigger, or topic overlay fields.
+
+| Capability | Target Milestone | Status | Boundary |
+| --- | --- | --- | --- |
+| `luck-reading` | M36 | restricted | Consumes M13 raw luck cycles through chart-report carrier; explains current major-luck stage with trace, professional/plain readings, warning downgrade, and forbidden-claim audit |
+| `annual-trigger-reading` | M37 | restricted | Requires explicit `year`; explains original-chart and current-luck annual triggers without flow-month/day or event prediction claims |
+| `topic-timeline-reading` | M38 | restricted | Maps shared timeline signals into relationship, wealth, family, and career report language while preserving topic safety boundaries |
+
+Module tree:
+
+```
+backend.timeline-reading (internal foundation)
+  timeline-core (implemented in backend/src/domain/timeline.rs)
+  timeline-lexicon (implemented in backend/src/domain/timeline.rs; 28 compositional entries after LOOP-107)
+  primary-luck-reading (M36 restricted via /api/charts/report)
+  annual-trigger-reading (M37 restricted via /api/charts/report)
+  topic-timeline-overlay (M38 restricted via /api/charts/topic-report)
+frontend.timeline-report-ui
+  workbench short major-luck summary (M36)
+  chart report major-luck chapter (M36)
+  chart report annual-trigger chapter (M37)
+  topic report timeline chapter (M38; relationship folded into annual emotional-trigger chapter after M41)
+governance.timeline-quality-gate
+  DG-012 (closed by ADR 0022)
+  golden samples (closed by LOOP-104)
+  forbidden output suite (closed by LOOP-104)
+  no public score checks (closed by LOOP-104)
+  bounded-output checks (closed by LOOP-104)
+```
+
+No `score_internal`, 0-100 fortune score, flow-month, flow-day, daily push, date selection, event prediction, financial advice, relationship advice, family fate claim, or career-result guarantee may enter public API or UI through this restricted surface.
+
 ## Current Release Candidate Surface
 
-`docs/release/v1-release-candidate.md` records the M8 V1 release candidate boundary. It freezes supported date-layer/chart/analysis capabilities, restricted case/settings/share/frontend surfaces, and planned/target future capabilities. `tools/check-release-candidate.ps1` is included in `tools/check-project.ps1` and verifies closeout artifacts, frozen capability statuses, README route boundaries, frontend overclaim tests, and share privacy test evidence.
+`docs/release/v1-release-candidate.md` and `docs/release/v1-closeout.md` record the V1 preview release boundary. They freeze the final 10 supported and 7 restricted capabilities after M0-M28, while preserving historical M8/M9/M10 preflight evidence as stage-specific governance records. `tools/check-release-candidate.ps1` is included in `tools/check-project.ps1` and verifies closeout artifacts, frozen capability statuses, README route boundaries, frontend overclaim tests, and share privacy test evidence.
 
 `release-candidate` is a governance and delivery capability only. It does not add a new backend business API and does not change `/api/capabilities` beyond the existing V1 business surfaces.
 

@@ -12,7 +12,7 @@
       <a class="report-back" href="/">← 返回排盘</a>
       <div class="report-brand" aria-label="命轨报告">
         <strong>命盘报告</strong>
-        <span>Fate Track Archive</span>
+        <span>命轨只读卷宗</span>
       </div>
       <div class="report-progress-label" id="report-progress-label">只读报告 · 00%</div>
       <i class="report-progress" id="report-progress" aria-hidden="true"></i>
@@ -36,7 +36,9 @@
         time: params.get("time") || "",
         timezone: params.get("timezone") || "Asia/Shanghai",
         timePrecision: params.get("time_precision") || "unknown",
-        sex: params.get("sex") || "unspecified"
+        sex: params.get("sex") || "unspecified",
+        readingYear: params.get("reading_year") || String(new Date().getFullYear()),
+        year: params.get("year") || String(new Date().getFullYear())
       };
 
       void boot();
@@ -78,7 +80,7 @@
         luopan.append(createEl("span", "report-hero-star"));
 
         const inner = createEl("div", "report-hero-inner");
-        const kicker = createEl("div", "report-kicker", "Fate Track Celestial Archive");
+        const kicker = createEl("div", "report-kicker", "命轨结构化卷宗");
         const title = createEl("h1", "report-hero-title", "命盘报告");
         const rule = createEl("i", "report-hero-rule");
         rule.setAttribute("aria-hidden", "true");
@@ -88,6 +90,8 @@
         [
           ["日期", request.date], ["时间", request.time || "未知"],
           ["性别", sexLabel(request.sex)], ["时区", request.timezone],
+          ["观察年", request.readingYear],
+          ["引动年", request.year],
           ["章节", `${blocks.length} 节`]
         ].forEach(([label, value], index) => {
           const chip = createEl("span", "report-meta-chip", `${label}：${value}`);
@@ -112,13 +116,16 @@
         const indexHead = createEl("div", "report-index-head");
         indexHead.append(
           createEl("div", "report-index-title", "报告目录"),
-          createEl("div", "report-index-subtitle", "Archive Index")
+          createEl("div", "report-index-subtitle", "只读目录")
         );
 
         const indexList = createEl("div", "report-index-list");
         indexList.append(createIndexLink("00", "封面", "#report-cover"));
+        indexList.append(createIndexLink("T", "时间解释导航", "#timeline-report-guide"));
 
         const chapters = createEl("div", "report-chapters");
+        const timelineGuide = createTimelineGuide(data, blocks);
+        if (timelineGuide) chapters.append(timelineGuide);
         if (data.disclaimer) chapters.append(createDisclaimer(data.disclaimer));
 
         blocks.forEach((block, indexNumber) => {
@@ -151,12 +158,165 @@
         return d;
       }
 
+      function createTimelineGuide(data, blocks) {
+        const luck = data.luck_reading || {};
+        const annual = data.annual_trigger_reading || {};
+        const hasTimeline = luck.status === "restricted" || annual.status === "restricted" || luck.current_cycle || annual.annual_pillar;
+        if (!hasTimeline) return null;
+
+        const section = createEl("section", "timeline-report-guide report-reveal");
+        section.id = "timeline-report-guide";
+        section.dataset.sectionIndex = "timeline";
+        section.setAttribute("aria-label", "时间解释导航");
+
+        const header = createEl("div", "timeline-guide-head");
+        header.append(
+          createEl("div", "report-block-kicker", "时间解释"),
+          createEl("h2", "timeline-guide-title", "时间解释导航"),
+          createEl("p", "timeline-guide-lead", "这里集中展示已通过边界收口的大运阶段与年度引动。年份必须由页面显式传入；页面只呈现已经生成的解释、证据和边界提醒。")
+        );
+
+        const controls = createTimelineYearControls();
+        const cards = createEl("div", "timeline-guide-cards");
+        cards.append(
+          createTimelineGuideCard({
+            title: "大运阶段",
+            value: luck.current_cycle ? `${luck.current_cycle.start_age}-${luck.current_cycle.end_age}岁 · ${luck.current_cycle.ganzhi}` : "未定位",
+            note: luck.reference_year ? `${luck.reference_year} 年，虚岁 ${luck.reference_age || "--"}` : "未收到观察年",
+            href: findReportBlockHref(blocks, "大运走势"),
+            tone: "luck"
+          }),
+          createTimelineGuideCard({
+            title: "年度引动",
+            value: annual.annual_pillar?.ganzhi || "未生成",
+            note: annual.year ? `${annual.year} 年 · ${yearSourceLabel(annual.year_source)}` : "未收到引动年",
+            href: findReportBlockHref(blocks, "年度引动"),
+            tone: "annual"
+          }),
+          createTimelineGuideCard({
+            title: "证据追踪",
+            value: `${countItems(luck.evidence) + countItems(annual.evidence)} 条证据`,
+            note: `${countItems(luck.signals) + countItems(annual.signals)} 条结构信号，${countItems(luck.readings) + countItems(annual.readings)} 条解释`,
+            href: "#timeline-evidence",
+            tone: "evidence"
+          })
+        );
+
+        const evidence = createEl("div", "timeline-evidence-grid");
+        evidence.id = "timeline-evidence";
+        evidence.append(
+          createTimelineReadingDetails("大运证据", luck),
+          createTimelineReadingDetails("年度证据", annual)
+        );
+
+        section.append(header, controls, cards, evidence);
+        return section;
+      }
+
+      function createTimelineYearControls() {
+        const form = createEl("form", "timeline-year-control");
+        form.setAttribute("aria-label", "显式年份选择");
+        form.append(
+          createYearField("大运观察年", "reading_year", request.readingYear),
+          createYearField("年度引动年", "year", request.year),
+          createEl("button", "timeline-year-submit", "应用年份")
+        );
+        form.addEventListener("submit", (event) => {
+          event.preventDefault();
+          const formData = new FormData(form);
+          const next = new URLSearchParams(window.location.search);
+          next.set("date", request.date);
+          if (request.time) next.set("time", request.time);
+          next.set("timezone", request.timezone);
+          next.set("time_precision", request.timePrecision);
+          next.set("sex", request.sex || "unspecified");
+          next.set("reading_year", sanitizeYear(formData.get("reading_year"), request.readingYear));
+          next.set("year", sanitizeYear(formData.get("year"), request.year));
+          window.location.href = `/report.html?${next.toString()}`;
+        });
+        return form;
+      }
+
+      function createYearField(label, name, value) {
+        const field = createEl("label", "timeline-year-field");
+        field.append(createEl("span", "", label));
+        const input = document.createElement("input");
+        input.name = name;
+        input.type = "number";
+        input.inputMode = "numeric";
+        input.min = "1901";
+        input.max = "2100";
+        input.step = "1";
+        input.value = String(value || new Date().getFullYear());
+        field.append(input);
+        return field;
+      }
+
+      function createTimelineGuideCard({ title, value, note, href, tone }) {
+        const card = createEl("a", `timeline-guide-card ${tone || ""}`);
+        card.href = href || "#timeline-report-guide";
+        card.append(
+          createEl("span", "timeline-guide-card-title", title),
+          createEl("strong", "", value),
+          createEl("em", "", note)
+        );
+        return card;
+      }
+
+      function createTimelineReadingDetails(title, reading) {
+        const details = createEl("details", "timeline-evidence-detail");
+        details.open = title === "大运证据";
+        details.append(createEl("summary", "", `${title} · ${countItems(reading?.signals)} 信号 / ${countItems(reading?.evidence)} 证据`));
+        const content = createEl("div", "timeline-evidence-content");
+        const readings = Array.isArray(reading?.readings) ? reading.readings : [];
+        const signals = Array.isArray(reading?.signals) ? reading.signals : [];
+        const evidence = Array.isArray(reading?.evidence) ? reading.evidence : [];
+
+        if (readings.length > 0) {
+          readings.forEach((item) => {
+            content.append(createTimelineEvidenceItem("结构读法", item.professional));
+            content.append(createTimelineEvidenceItem("日常落点", item.plain));
+            content.append(createTimelineEvidenceItem("边界提醒", item.boundary));
+          });
+        } else {
+          content.append(createTimelineEvidenceItem("说明", "当前没有返回可展开解释，保留章节正文作为阅读主体。"));
+        }
+
+        if (signals.length > 0) {
+          const list = createEl("ul", "timeline-evidence-list");
+          signals.slice(0, 6).forEach((signal) => {
+            list.append(createEl("li", "", `${signal.label || signal.id}：${signal.summary || ""}`));
+          });
+          content.append(list);
+        }
+
+        if (evidence.length > 0) {
+          const list = createEl("ul", "timeline-evidence-list");
+          evidence.slice(0, 8).forEach((item) => {
+            list.append(createEl("li", "", `${timelineSourceLabel(item.source)} · ${item.chart_anchor || ""} → ${item.trigger || ""}：${item.detail || item.relation || ""}`));
+          });
+          content.append(list);
+        }
+
+        details.append(content);
+        return details;
+      }
+
+      function createTimelineEvidenceItem(label, text) {
+        const item = createEl("p", "timeline-evidence-item");
+        item.append(createEl("strong", "", label));
+        item.append(document.createTextNode(`：${safeText(text, "暂无说明。")}`));
+        return item;
+      }
+
       function createReportBlock(block, indexNumber) {
         const num = String(indexNumber + 1).padStart(2, "0");
-        const section = createEl("section", "report-block report-reveal");
+        const timelineKind = timelineBlockKind(block);
+        const section = createEl("section", `report-block report-reveal${timelineKind ? " is-timeline-block" : ""}`);
         section.id = `report-section-${indexNumber + 1}`;
         section.dataset.sectionIndex = String(indexNumber + 1);
         section.dataset.sectionNumber = num;
+        if (timelineKind) section.dataset.timelineKind = timelineKind;
         section.style.setProperty("--block-delay", `${Math.min(indexNumber * 80, 480)}ms`);
 
         const frame = createEl("span", "report-block-frame");
@@ -166,21 +326,38 @@
         const scan = createEl("span", "report-block-scan");
         scan.setAttribute("aria-hidden", "true");
 
-        const kicker = createEl("div", "report-block-kicker", `Archive Section ${num}`);
+        const kicker = createEl("div", "report-block-kicker", `报告章节 ${num}`);
         const title = createEl("h2", "report-block-title", safeText(block.title, "未命名章节"));
         const rule = createEl("i", "report-block-rule");
         rule.setAttribute("aria-hidden", "true");
-        const body = createEl("p", "report-block-body", safeText(block.body, "暂无正文内容。"));
+        const body = createReportBody(block, timelineKind);
 
         const footer = createEl("footer", "report-block-footer");
         footer.append(
-          createEl("span", "", "deterministic snapshot"),
+          createEl("span", "", "确定性快照"),
           createEl("span", "", "只读边界"),
-          createEl("span", "", "Fate Track")
+          createEl("span", "", timelineKind ? "时间证据" : "命轨")
         );
 
         section.append(frame, aura, scan, kicker, title, rule, body, footer);
         return section;
+      }
+
+      function createReportBody(block, timelineKind) {
+        const body = createEl("div", "report-block-body");
+        const text = safeText(block.body, "暂无正文内容。");
+        text.split(/\n{2,}/).filter(Boolean).forEach((paragraph) => {
+          body.append(createEl("p", "", paragraph));
+        });
+        if (timelineKind) {
+          const details = createEl("details", "timeline-inline-detail");
+          details.append(
+            createEl("summary", "", "阅读边界"),
+            createEl("p", "", "本章节只展示已经生成的大运/年度引动解释，不提供流月、流日、择日、事件预测或现实决策建议。")
+          );
+          body.append(details);
+        }
+        return body;
       }
 
       function createArchiveFooter(blockCount) {
@@ -190,7 +367,7 @@
         footer.append(
           createEl("div", "archive-seal", "归"),
           createEl("h2", "", "报告已归档"),
-          createEl("p", "", `本次命盘报告共 ${blockCount} 个章节。前端仅展示后端返回的只读结构化内容，不在报告页追加推断。`)
+          createEl("p", "", `本次命盘报告共 ${blockCount} 个章节。页面仅展示只读结构化内容，不在报告页追加推断。`)
         );
         return footer;
       }
@@ -203,8 +380,8 @@
         const hero = document.querySelector(".report-hero");
         const revealItems = document.querySelectorAll(".report-reveal");
         const indexLinks = document.querySelectorAll(".report-index a");
-        const activeTargets = document.querySelectorAll(".report-hero, .report-block");
-        const sections = document.querySelectorAll(".report-block");
+        const activeTargets = document.querySelectorAll(".report-hero, .timeline-report-guide, .report-block");
+        const sections = document.querySelectorAll(".timeline-report-guide, .report-block");
         const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
         if (reducedMotion) body.classList.add("is-reduced-motion");
 
@@ -310,16 +487,69 @@
       }
 
       function buildThresholdList(steps) { return Array.from({ length: steps + 1 }, (_, i) => i / steps); }
+      function findReportBlockHref(blocks, title) {
+        const index = blocks.findIndex((block) => block.title === title);
+        return index >= 0 ? `#report-section-${index + 1}` : "#timeline-report-guide";
+      }
+      function timelineBlockKind(block) {
+        if (block?.title === "大运走势") return "luck";
+        if (block?.title === "年度引动") return "annual";
+        return "";
+      }
+      function countItems(value) { return Array.isArray(value) ? value.length : 0; }
+      function sanitizeYear(value, fallback) {
+        const text = String(value || "").trim();
+        return /^\d{4}$/.test(text) ? text : String(fallback || new Date().getFullYear());
+      }
+      function yearSourceLabel(source) {
+        return source === "explicit" ? "显式年份" : safeText(source, "年度");
+      }
+      function timelineSourceLabel(source) {
+        const labels = {
+          "major-luck-current": "当前大运",
+          "major-luck-previous": "上一阶段大运",
+          "major-luck-next": "下一阶段大运",
+          "annual-trigger": "年度引动",
+          "luck-annual-overlay": "大运年度叠加"
+        };
+        return labels[source] || "结构证据";
+      }
       function createEl(tag, className = "", text = "") {
         const el = document.createElement(tag);
         if (className) el.className = className;
-        if (text) el.textContent = text;
+        if (text) el.textContent = localizeVisibleText(text);
         return el;
       }
       function safeText(value, fallback) {
         if (typeof value !== "string") return fallback;
         const trimmed = value.trim();
-        return trimmed.length > 0 ? trimmed : fallback;
+        return trimmed.length > 0 ? localizeVisibleText(trimmed) : fallback;
+      }
+      function localizeVisibleText(value) {
+        return String(value || "")
+          .replaceAll("shared timeline engine", "共享时间解释引擎")
+          .replaceAll("timeline engine", "时间解释引擎")
+          .replaceAll("timeline-core-v1", "共享时间解释规则")
+          .replaceAll("topic-timeline-overlay", "专题时间叠加")
+          .replaceAll("luck-annual-overlay", "大运年度叠加")
+          .replaceAll("major-luck-current", "当前大运")
+          .replaceAll("major-luck-previous", "上一阶段大运")
+          .replaceAll("major-luck-next", "下一阶段大运")
+          .replaceAll("annual-trigger", "年度引动")
+          .replaceAll("direct_officer", "正官")
+          .replaceAll("seven_killings", "七杀")
+          .replaceAll("direct_resource", "正印")
+          .replaceAll("indirect_resource", "偏印")
+          .replaceAll("eating_god", "食神")
+          .replaceAll("hurting_officer", "伤官")
+          .replaceAll("direct_wealth", "正财")
+          .replaceAll("indirect_wealth", "偏财")
+          .replaceAll("rob_wealth", "劫财")
+          .replaceAll("relationship-report", "情感专项")
+          .replaceAll("wealth-report", "金钱专项")
+          .replaceAll("family-report", "家庭专项")
+          .replaceAll("career-report", "事业专项")
+          .replaceAll("restricted", "边界锁定");
       }
       function sexLabel(s) { if (s === "male") return "男"; if (s === "female") return "女"; return "未指定"; }
       function clamp(value, min, max) { return Math.min(max, Math.max(min, value)); }

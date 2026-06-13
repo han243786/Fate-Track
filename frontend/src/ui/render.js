@@ -8,6 +8,14 @@ const METRIC_LABELS = {
   direct_wealth:"正财", indirect_wealth:"偏财", direct_officer:"正官", seven_killings:"七杀",
   direct_resource:"正印", indirect_resource:"偏印"
 };
+const SEVERITY_LABELS = {
+  info: "提示",
+  warn: "关注",
+  warning: "关注",
+  danger: "重要",
+  critical: "重要"
+};
+const INSIGHT_TAG_HIDDEN_TITLES = ["日主", "格局", "用神"];
 
 export function renderChart(dom, result) {
   dom.chart.pillars.innerHTML = "";
@@ -142,13 +150,20 @@ export function renderAnalysis(dom, snapshot, chartResult) {
   (snapshot.cards ?? []).forEach(card => {
     const article = document.createElement("article");
     article.className = "insight-card ornament-card";
+    const severityTag = shouldRenderInsightTag(card.title)
+      ? `<div class="insight-tag">${SEVERITY_LABELS[card.severity] || "提示"}</div>`
+      : "";
     article.innerHTML = `
       <div class="insight-title"><span>◉</span><h2>${card.title}</h2></div>
       <p>${card.body}</p>
-      <div class="insight-tag">${card.severity}</div>
+      ${severityTag}
     `;
     dom.analysis.cards.append(article);
   });
+}
+
+function shouldRenderInsightTag(title) {
+  return !INSIGHT_TAG_HIDDEN_TITLES.some(keyword => String(title || "").includes(keyword));
 }
 
 export function renderAnalysisError(dom, error) {
@@ -158,7 +173,121 @@ export function renderAnalysisError(dom, error) {
   dom.analysis.cards.innerHTML = "";
 }
 
-export function renderLuckCycles(dom, data) {
+const TOPIC_LABELS = {
+  relationship: "\u60c5\u611f",
+  wealth: "\u91d1\u94b1",
+  family: "\u5bb6\u5ead",
+  career: "\u4e8b\u4e1a"
+};
+
+export function renderTopicReportLoading(dom, topic) {
+  const label = topicLabel(topic);
+  dom.topicReport.title.textContent = `${label}\u7ed3\u6784\u4fe1\u53f7`;
+  dom.topicReport.status.textContent = "\u751f\u6210\u4e2d";
+  dom.topicReport.content.innerHTML = "";
+  const state = document.createElement("p");
+  state.className = "empty-state";
+  state.textContent = "\u7ed3\u6784\u4fe1\u53f7\u6b63\u5728\u63d0\u53d6";
+  dom.topicReport.content.append(state);
+}
+
+export function renderTopicReportIdle(dom, message = "\u4e13\u9879\u62a5\u544a\u5f85\u751f\u6210") {
+  dom.topicReport.title.textContent = "\u4e13\u9879\u63a8\u6f14";
+  dom.topicReport.status.textContent = "\u5f85\u751f\u6210";
+  dom.topicReport.content.innerHTML = "";
+  const state = document.createElement("p");
+  state.className = "empty-state";
+  state.textContent = message;
+  dom.topicReport.content.append(state);
+}
+
+export function renderTopicReport(dom, report) {
+  const label = report.topic_label || topicLabel(report.topic);
+  dom.topicReport.title.textContent = `${label}\u7ed3\u6784\u4fe1\u53f7`;
+  dom.topicReport.status.textContent = `${report.year} \u00b7 ${yearSourceLabel(report.year_source)}`;
+  dom.topicReport.content.innerHTML = "";
+
+  const signals = document.createElement("section");
+  signals.className = "topic-signal-section topic-signal-only";
+  const title = document.createElement("h3");
+  title.textContent = "\u7ed3\u6784\u4fe1\u53f7";
+  signals.append(title);
+
+  if (Array.isArray(report.signals) && report.signals.length > 0) {
+    const grid = document.createElement("div");
+    grid.className = "topic-signal-grid";
+    report.signals.forEach(signal => {
+      const item = document.createElement("div");
+      item.className = "topic-signal";
+      const head = document.createElement("div");
+      head.className = "topic-signal-head";
+      const labelNode = document.createElement("span");
+      labelNode.textContent = signal.label || signal.id;
+      const level = document.createElement("strong");
+      level.textContent = signal.qualitative_level || "";
+      head.append(labelNode, level);
+      const summary = document.createElement("p");
+      summary.textContent = localizeVisibleText(signal.summary || "");
+      item.append(head, summary);
+      grid.append(item);
+    });
+    signals.append(grid);
+  } else {
+    const empty = document.createElement("p");
+    empty.className = "empty-state";
+    empty.textContent = "\u6682\u65e0\u7ed3\u6784\u4fe1\u53f7";
+    signals.append(empty);
+  }
+
+  dom.topicReport.content.append(signals);
+}
+
+export function renderTopicReportError(dom, error) {
+  dom.topicReport.title.textContent = "\u4e13\u9879\u63a8\u6f14";
+  dom.topicReport.status.textContent = "\u751f\u6210\u5931\u8d25";
+  dom.topicReport.content.innerHTML = "";
+  const state = document.createElement("p");
+  state.className = "empty-state";
+  state.textContent = `\u7ed3\u6784\u4fe1\u53f7\u751f\u6210\u5931\u8d25: ${error.message}`;
+  dom.topicReport.content.append(state);
+}
+
+function topicLabel(topic) {
+  return TOPIC_LABELS[topic] || "\u4e13\u9879";
+}
+
+function yearSourceLabel(source) {
+  return source === "explicit" ? "\u663e\u5f0f\u5e74\u5ea6" : source || "\u5e74\u5ea6";
+}
+
+function localizeVisibleText(value) {
+  return String(value || "")
+    .replaceAll("shared timeline engine", "共享时间解释引擎")
+    .replaceAll("timeline engine", "时间解释引擎")
+    .replaceAll("timeline-core-v1", "共享时间解释规则")
+    .replaceAll("topic-timeline-overlay", "专题时间叠加")
+    .replaceAll("luck-annual-overlay", "大运年度叠加")
+    .replaceAll("major-luck-current", "当前大运")
+    .replaceAll("major-luck-previous", "上一阶段大运")
+    .replaceAll("major-luck-next", "下一阶段大运")
+    .replaceAll("annual-trigger", "年度引动")
+    .replaceAll("direct_officer", "正官")
+    .replaceAll("seven_killings", "七杀")
+    .replaceAll("direct_resource", "正印")
+    .replaceAll("indirect_resource", "偏印")
+    .replaceAll("eating_god", "食神")
+    .replaceAll("hurting_officer", "伤官")
+    .replaceAll("direct_wealth", "正财")
+    .replaceAll("indirect_wealth", "偏财")
+    .replaceAll("rob_wealth", "劫财")
+    .replaceAll("relationship-report", "情感专项")
+    .replaceAll("wealth-report", "金钱专项")
+    .replaceAll("family-report", "家庭专项")
+    .replaceAll("career-report", "事业专项")
+    .replaceAll("restricted", "边界锁定");
+}
+
+export function renderLuckCycles(dom, data, luckReading, annualTriggerReading) {
   dom.luck.container.innerHTML = "";
   dom.luck.current.innerHTML = "";
   dom.luck.direction.textContent = "";
@@ -169,28 +298,58 @@ export function renderLuckCycles(dom, data) {
   }
 
   dom.luck.direction.textContent = data.direction === "forward" ? "顺行（阳年男命 / 阴年女命）" : "逆行（阳年女命 / 阴年男命）";
+  const currentIndex = Number.isInteger(luckReading?.current_index)
+    ? luckReading.current_index - 1
+    : 0;
+  const currentCycle = luckReading?.current_cycle ?? data.cycles[currentIndex] ?? data.cycles[0] ?? null;
+  const firstReading = localizeVisibleText(luckReading?.readings?.[0]?.plain || "");
+  const annualSummary = localizeVisibleText(annualTriggerReading?.signals?.find(signal => signal.source === "annual-trigger")?.summary
+    || annualTriggerReading?.signals?.[0]?.summary
+    || "");
 
   data.cycles.forEach((c, i) => {
     const li = document.createElement("li");
-    const isFirst = i === 0;
-    li.className = `luck-item${isFirst ? " glow" : ""}`;
+    const isCurrent = currentCycle
+      ? c.start_age === currentCycle.start_age && c.end_age === currentCycle.end_age && c.ganzhi === currentCycle.ganzhi
+      : i === currentIndex;
+    li.className = `luck-item${isCurrent ? " current glow" : ""}`;
+    if (isCurrent) li.setAttribute("aria-current", "step");
     li.innerHTML = `
       <span class="timeline-node" aria-hidden="true"></span>
       <article class="luck-card">
         <div class="luck-age"><strong>${c.start_age}-${c.end_age}岁</strong></div>
         <div class="luck-gz">${c.ganzhi}</div>
-        <div class="luck-tags"><span>${c.label}</span></div>
+        <div class="luck-tags">${isCurrent ? '<span class="luck-current-badge">当前</span>' : ""}<span>${c.label}</span></div>
       </article>
     `;
     dom.luck.container.append(li);
   });
 
   // Current luck card
-  const current = data.cycles.length > 0 ? data.cycles[0] : null;
-  if (current) {
+  if (currentCycle) {
+    const yearText = luckReading?.reference_year
+      ? `${luckReading.reference_year}年 · ${luckReading.reference_age}岁`
+      : "未指定观察年份";
+    const annualText = annualTriggerReading?.year
+      ? `${annualTriggerReading.year}年 · ${annualTriggerReading.annual_pillar?.ganzhi || "年度干支"}`
+      : "未指定年度引动";
+    const readingText = firstReading || "大运解释层未返回日常摘要，当前仅展示阶段坐标。";
+    const hasReadingBasis = (
+      (luckReading?.signals?.length || 0)
+      + (annualTriggerReading?.signals?.length || 0)
+      + (luckReading?.evidence?.length || 0)
+      + (annualTriggerReading?.evidence?.length || 0)
+    ) > 0;
     dom.luck.current.innerHTML = `
-      <p>当前大运：<strong>${current.start_age}-${current.end_age}岁 · ${current.ganzhi}</strong></p>
-      <p>起运年龄：${current.start_age}岁 <span>ⓘ</span></p>
+      <div class="current-luck-meta">
+        <span>观察年份 <strong>${yearText}</strong></span>
+        <span>引动年份 <strong>${annualText}</strong></span>
+        <span>依据 <strong>${hasReadingBasis ? "已整理" : "待生成"}</strong></span>
+      </div>
+      <p>当前大运：<strong>${currentCycle.start_age}-${currentCycle.end_age}岁 · ${currentCycle.ganzhi}</strong></p>
+      <p class="luck-reading-summary">${readingText}</p>
+      ${annualSummary ? `<p class="annual-trigger-summary">年度引动：${annualSummary}</p>` : ""}
+      <p class="timeline-boundary-copy">工作台只保留短摘要；完整大运、年度引动和阅读依据请进入命盘报告页阅读。</p>
     `;
   }
 }

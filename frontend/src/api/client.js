@@ -88,10 +88,25 @@ export class ApiClient {
     return this.#getJson(`/api/data/derive?type=${encodeURIComponent(type)}`);
   }
 
-  chartReport({ date, time, timezone, timePrecision, sex }) {
+  chartReport({ date, time, timezone, timePrecision, sex, readingYear, year }) {
     const params = new URLSearchParams({ date, timezone, time_precision: timePrecision, sex: sex || "unspecified" });
     if (timePrecision === "exact" && time) params.set("time", time);
+    if (readingYear) params.set("reading_year", String(readingYear));
+    if (year) params.set("year", String(year));
     return this.#getJson(`/api/charts/report?${params.toString()}`);
+  }
+
+  topicReport({ topic, date, time, timezone, timePrecision, sex, year }) {
+    const params = new URLSearchParams({
+      topic,
+      date,
+      timezone,
+      time_precision: timePrecision,
+      sex: sex || "unspecified",
+      year: String(year)
+    });
+    if (timePrecision === "exact" && time) params.set("time", time);
+    return this.#getJson(`/api/charts/topic-report?${params.toString()}`);
   }
 
   async #getJson(path) {

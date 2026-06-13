@@ -36,7 +36,9 @@ pub fn compare_all() -> Vec<ComparisonRow> {
                         let astro_day = ganzhi::day_ganzhi(date);
                         if android_day != astro_day {
                             rows.push(ComparisonRow {
-                                year, month, day,
+                                year,
+                                month,
+                                day,
                                 field: "day_pillar".into(),
                                 android_value: android_day,
                                 astronomy_value: astro_day,
@@ -57,9 +59,10 @@ pub fn compare_all() -> Vec<ComparisonRow> {
                 if let Some(lunar) = table.lookup(date) {
                     let android_month = lunar.gan_zhi_month.clone();
                     // Astronomy month: derived from our engine
-                    if let Some(astro_cal_month) = calendar.iter()
-                        .find(|m| m.year == year && m.first_day_gregorian_utc.starts_with(&format!("{}", year)))
-                    {
+                    if let Some(astro_cal_month) = calendar.iter().find(|m| {
+                        m.year == year
+                            && m.first_day_gregorian_utc.starts_with(&format!("{}", year))
+                    }) {
                         // Simplified comparison: check zhi only
                         let _android_zhi = android_month.chars().nth(1).unwrap_or('?');
                         if !astro_cal_month.month_name.contains(&format!("{}月", month)) {
@@ -73,11 +76,19 @@ pub fn compare_all() -> Vec<ComparisonRow> {
 
     // Summary
     let total = rows.len();
-    let android_diff = rows.iter().filter(|r| r.category == "android_table_difference").count();
-    let _ruleset_diff = rows.iter().filter(|r| r.category == "ruleset_difference").count();
+    let android_diff = rows
+        .iter()
+        .filter(|r| r.category == "android_table_difference")
+        .count();
+    let _ruleset_diff = rows
+        .iter()
+        .filter(|r| r.category == "ruleset_difference")
+        .count();
 
     rows.push(ComparisonRow {
-        year: 0, month: 0, day: 0,
+        year: 0,
+        month: 0,
+        day: 0,
         field: "__summary__".into(),
         android_value: format!("android_table_diff={}", android_diff),
         astronomy_value: format!("total_compared={}", total),
@@ -89,7 +100,10 @@ pub fn compare_all() -> Vec<ComparisonRow> {
 
 fn load_android_table() -> LunarTable {
     let path = Path::new(env!("CARGO_MANIFEST_DIR"))
-        .parent().unwrap()
-        .join("data").join("raw").join("lunar_data.yaml");
+        .parent()
+        .unwrap()
+        .join("data")
+        .join("raw")
+        .join("lunar_data.yaml");
     LunarDataSource::new(path).load_table().unwrap()
 }

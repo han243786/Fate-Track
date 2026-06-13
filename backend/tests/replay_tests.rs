@@ -37,24 +37,40 @@ fn replay_android_golden_anchors() {
         let day_gz = ganzhi::day_ganzhi(date);
 
         let mut ok = true;
-        if &result.gan_zhi_year != exp_year { ok = false; }
-        if &result.gan_zhi_month != exp_month { ok = false; }
-        if &result.gan_zhi_day != exp_day { ok = false; }
-        if day_gz != *exp_day { ok = false; }
+        if &result.gan_zhi_year != exp_year {
+            ok = false;
+        }
+        if &result.gan_zhi_month != exp_month {
+            ok = false;
+        }
+        if &result.gan_zhi_day != exp_day {
+            ok = false;
+        }
+        if day_gz != *exp_day {
+            ok = false;
+        }
 
         if ok {
             passed += 1;
         } else {
             failed.push(format!(
                 "{}: expected {}/{}/{}, got {}/{}/{} (astro day: {})",
-                iso, exp_year, exp_month, exp_day,
-                result.gan_zhi_year, result.gan_zhi_month, result.gan_zhi_day, day_gz
+                iso,
+                exp_year,
+                exp_month,
+                exp_day,
+                result.gan_zhi_year,
+                result.gan_zhi_month,
+                result.gan_zhi_day,
+                day_gz
             ));
         }
     }
 
     if !failed.is_empty() {
-        for f in &failed { eprintln!("REPLAY FAIL: {}", f); }
+        for f in &failed {
+            eprintln!("REPLAY FAIL: {}", f);
+        }
         panic!("{} replay anchors failed", failed.len());
     }
     eprintln!("Replay: {} golden anchors all verified", passed);
@@ -63,7 +79,13 @@ fn replay_android_golden_anchors() {
 
 fn load_android() -> LunarTable {
     LunarDataSource::new(
-        Path::new(env!("CARGO_MANIFEST_DIR")).parent().unwrap()
-            .join("data").join("raw").join("lunar_data.yaml")
-    ).load_table().unwrap()
+        Path::new(env!("CARGO_MANIFEST_DIR"))
+            .parent()
+            .unwrap()
+            .join("data")
+            .join("raw")
+            .join("lunar_data.yaml"),
+    )
+    .load_table()
+    .unwrap()
 }

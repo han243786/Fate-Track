@@ -13,6 +13,7 @@ mod lunar;
 mod report;
 mod settings;
 mod share;
+mod topic_report;
 
 use crate::config::AppConfig;
 use crate::error::AppError;
@@ -45,6 +46,7 @@ pub fn route(config: &AppConfig, request: &Request) -> Result<Response, AppError
         )),
         "/api/data/derive" => derive::derive(request),
         "/api/charts/report" => report::generate(config, request),
+        "/api/charts/topic-report" => topic_report::generate(config, request),
         _ => Err(AppError::NotFound(request.path.clone())),
     }
 }

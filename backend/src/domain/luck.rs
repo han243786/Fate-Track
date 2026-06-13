@@ -1,6 +1,8 @@
 // M13: Luck cycle calculation (大运).
 // ADR 0020 closes DG-005.
 
+use crate::astronomy::terms::solar_terms_for_year;
+use crate::calendar::civil::CivilDate;
 use crate::domain::bazi::{BRANCHES, Pillar, STEMS, Sex};
 
 const GAN_YANG: [&str; 5] = ["甲", "丙", "戊", "庚", "壬"];
@@ -12,6 +14,38 @@ pub struct LuckCycle {
     pub start_age: u8,
     pub end_age: u8,
     pub pillar: Pillar,
+}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct LuckCycleContext {
+    pub direction: &'static str,
+    pub year_gan: String,
+    pub days_to_jie: u16,
+    pub starting_age: u8,
+    pub cycles: Vec<LuckCycle>,
+}
+
+pub fn compute_luck_cycle_context(
+    year_gan: &str,
+    month_pillar: &Pillar,
+    sex: &Sex,
+    birth_date: CivilDate,
+) -> LuckCycleContext {
+    let days_to_jie = compute_days_to_jie(year_gan, sex, birth_date);
+    let cycles = compute_luck_cycles(year_gan, month_pillar, sex, days_to_jie);
+    let starting_age = cycles.first().map(|cycle| cycle.start_age).unwrap_or(0);
+
+    LuckCycleContext {
+        direction: if is_forward(year_gan, sex) {
+            "forward"
+        } else {
+            "reverse"
+        },
+        year_gan: year_gan.to_string(),
+        days_to_jie,
+        starting_age,
+        cycles,
+    }
 }
 
 /// Compute luck cycles for a given chart.
@@ -76,6 +110,69 @@ pub fn compute_luck_cycles(
         });
     }
     cycles
+}
+
+fn compute_days_to_jie(year_gan: &str, sex: &Sex, birth_date: CivilDate) -> u16 {
+    let terms = solar_terms_for_year(birth_date.year);
+    let doy = birth_date.day_of_year() as u16;
+    let jie_indices = [0usize, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22];
+
+    if is_forward(year_gan, sex) {
+        let mut next_jie_doy = 366u16;
+        for &index in &jie_indices {
+            if let Some(term) = terms.get(index) {
+                let td = (term.jd_tt
+                    - crate::astronomy::time::gregorian_to_jd(birth_date.year, 1, 1, 0.0).whole())
+                    as u16
+                    + 1;
+                if td > doy && td < next_jie_doy {
+                    next_jie_doy = td;
+                }
+            }
+        }
+        if next_jie_doy == 366 {
+            let next_year_terms = solar_terms_for_year(birth_date.year + 1);
+            if let Some(term) = next_year_terms.first() {
+                next_jie_doy = (term.jd_tt
+                    - crate::astronomy::time::gregorian_to_jd(birth_date.year + 1, 1, 1, 0.0)
+                        .whole()) as u16
+                    + 365;
+            }
+        }
+        next_jie_doy.saturating_sub(doy)
+    } else {
+        let mut prev_jie_doy = 0u16;
+        for &index in &jie_indices {
+            if let Some(term) = terms.get(index) {
+                let td = (term.jd_tt
+                    - crate::astronomy::time::gregorian_to_jd(birth_date.year, 1, 1, 0.0).whole())
+                    as u16
+                    + 1;
+                if td <= doy && td > prev_jie_doy {
+                    prev_jie_doy = td;
+                }
+            }
+        }
+        if prev_jie_doy == 0 {
+            let prev_year_terms = solar_terms_for_year(birth_date.year - 1);
+            if let Some(term) = prev_year_terms.get(11) {
+                let td = (term.jd_tt
+                    - crate::astronomy::time::gregorian_to_jd(birth_date.year - 1, 1, 1, 0.0)
+                        .whole()) as u16
+                    + 1;
+                prev_jie_doy = td;
+            }
+            doy + 365u16 - prev_jie_doy
+        } else {
+            doy - prev_jie_doy
+        }
+    }
+}
+
+fn is_forward(year_gan: &str, sex: &Sex) -> bool {
+    let yang = GAN_YANG.contains(&year_gan);
+    let male = matches!(sex, Sex::Male);
+    (yang && male) || (!yang && !male)
 }
 
 #[cfg(test)]

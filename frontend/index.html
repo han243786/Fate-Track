@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>命轨工作台 · Fate Track</title>
+  <title>命轨工作台</title>
   <link rel="stylesheet" href="./src/styles.css" />
 </head>
 <body>
@@ -18,7 +18,7 @@
         </div>
         <div>
           <div class="brand-title">命轨</div>
-          <div class="brand-subtitle">Fate Track</div>
+          <div class="brand-subtitle">四柱结构工作台</div>
         </div>
         <span class="seal-mark" aria-hidden="true">命<br />理</span>
       </section>
@@ -71,6 +71,37 @@
           <button id="chart-run-button" class="primary-action" type="button"><span>✥</span>起盘</button>
           <button id="chart-report-button" class="secondary-action" type="button"><span>▤</span>查看命盘报告</button>
         </div>
+
+        <section class="topic-shortcuts ornament-card" aria-labelledby="topic-shortcuts-title">
+          <div class="topic-shortcuts-title" id="topic-shortcuts-title">专项推演</div>
+          <div class="topic-grid" aria-label="四项专项推演">
+            <button id="topic-relationship-button" class="topic-action is-ready" type="button" data-topic="relationship">
+              <span aria-hidden="true">情</span>
+              <strong>情感</strong>
+              <em>已接入</em>
+            </button>
+            <button id="topic-wealth-button" class="topic-action is-ready" type="button" data-topic="wealth">
+              <span aria-hidden="true">财</span>
+              <strong>金钱</strong>
+              <em>已接入</em>
+            </button>
+            <button id="topic-family-button" class="topic-action is-ready" type="button" data-topic="family">
+              <span aria-hidden="true">家</span>
+              <strong>家庭</strong>
+              <em>已接入</em>
+            </button>
+            <button id="topic-career-button" class="topic-action is-ready" type="button" data-topic="career">
+              <span aria-hidden="true">业</span>
+              <strong>事业</strong>
+              <em>已接入</em>
+            </button>
+          </div>
+          <button id="topic-full-report-button" class="secondary-action topic-full-report-action" type="button">
+            <span aria-hidden="true">▦</span>
+            <strong>查看专项报告</strong>
+            <em id="topic-selected-label">当前：情感</em>
+          </button>
+        </section>
       </section>
 
       <div class="boundary-note">
@@ -127,6 +158,16 @@
       </section>
 
       <section class="insight-grid" id="analysis-cards" aria-label="洞察卡"></section>
+
+      <section class="topic-report-panel ornament-card" id="topic-report-panel" aria-labelledby="topic-report-title">
+        <div class="panel-title topic-panel-title">
+          <h2 id="topic-report-title">专项推演</h2>
+          <span id="topic-report-status">待生成</span>
+        </div>
+        <div class="topic-report-content" id="topic-report-content">
+          <p class="empty-state">专项报告待生成</p>
+        </div>
+      </section>
     </section>
 
     <aside class="timeline-panel" aria-label="大运时间轨" aria-labelledby="luck-title">

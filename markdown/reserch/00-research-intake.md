@@ -9,6 +9,7 @@
 | RPT-001 | `命轨 Fate-Track V1 产品需求与八字算法规格研究报告.md` | 已是中文，作为产品与算法中文源报告 | 产品树、算法目标、数据模型、测试策略 |
 | RPT-002 | `Fate-Track V1 Design Report.md` | `zh-CN/Fate-Track V1 Design Report.zh-CN.md` | 功能树、用户故事、架构、前端 IA、安全解释 |
 | RPT-003 | `Fate-Track V1 Product Spec and Engineering Plan.md` | `zh-CN/Fate-Track V1 Product Spec and Engineering Plan.zh-CN.md` | API 合约、工程分层、隐私安全、验证计划 |
+| RPT-004 | `Rust 四柱八字判定引擎的研究与实现方案.md` | 原文已为中文；规范副本 `zh-CN/Rust 四柱八字判定引擎的研究与实现方案.zh-CN.md` | M29-M33 四专项推演：规则层、工程评分层、trace、风险和验收样例 |
 
 ## 2. 治理采纳状态
 
@@ -26,6 +27,10 @@
 | 安全文案 | 禁止确定性、诊断式、死亡/疾病/财富保证等断言 | accepted-policy | 进入 ADR 0005 与 General Policy |
 | 前端 IA | 命盘工作台、规则徽标、边界警告、术语抽屉、移动端 stepper | target | 进入产品树和模块树目标 |
 | 黄金测试 | 1901–2100、立春/节令边界、甲子日锚点、2033 异常、时区回放 | target | 进入标准矩阵和后续测试目录规划 |
+| 四专项规则层 | 五行阴阳、十神、传统藏干、月令通根、六合/六冲/三刑/六害 | accepted-design | 进入 `04-topic-report-engine-governance-intake.md`，作为 M29 公共基础 |
+| 四专项工程评分 | 原局基线 + 大运均值 + 流年均值 + trace | adapted | 仅作 restricted topic report 内部启发式，不作为古籍定论或用户可见命运分 |
+| 情感 blended 模式 | 未知性别时同时参考财星与官杀，核心看日支夫妻宫 | adapted | M30 使用中性解释；有性别时仅轻量偏置，不做婚恋断言 |
+| topic 内部流年触发 | 消费指定/当前流年，与原局宫位和十神关系触发 | adapted | 只服务四专项报告，不宣称完整流年/流月能力 |
 
 ## 3. 当前项目与研究目标的差异
 
@@ -71,3 +76,5 @@
 - 是否在 V1 直接开放农历输入，还是先只通过日历工具间接支持。
 - 是否立即引入 Axum，还是等当前 HTTP 骨架跑通第一版命盘 API 后迁移。
 - 账号、云同步、保存上限和数据删除策略尚未最终指定。
+- LOOP-093 已采纳 topic-report 统一 route：`GET /api/charts/topic-report`，通过 `topic` 参数区分四专项。
+- LOOP-093 已采纳年度引动显式 `year`：API 不隐式取当前年，前端可预填但必须随请求发送。

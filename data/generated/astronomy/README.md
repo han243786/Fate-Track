@@ -1,6 +1,8 @@
 # Astronomy Generated Data Preflight
 
-This directory is reserved for M9 astronomy-engine generated artifacts.
+This directory contains both historical M9/M10 preflight governance artifacts and the later generated astronomy outputs used by the preview release.
+
+Important: historical M9/M10 text below intentionally preserves phrases such as "no generated astronomy table has been accepted yet" because those phrases are part of the preflight anti-overclaim gate. The current release status is recorded in `docs/release/v1-release-candidate.md`, `docs/release/v1-closeout.md`, ADR 0021, and `93-capability-promotion-ledger.md`: `astronomy-engine` is supported as an independent verified engine, while Android date-layer runtime replacement remains a separate ADR decision.
 
 Current status:
 

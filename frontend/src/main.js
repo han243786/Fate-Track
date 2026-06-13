@@ -7,17 +7,31 @@ import {
   renderAnalysisError,
   renderChart,
   renderChartError,
-  renderLuckCycles
+  renderLuckCycles,
+  renderTopicReport,
+  renderTopicReportError,
+  renderTopicReportIdle,
+  renderTopicReportLoading
 } from "./ui/render.js";
 
 const STORAGE_KEY = "ft-chart-form";
+const TOPIC_LABELS = {
+  relationship: "情感",
+  wealth: "金钱",
+  family: "家庭",
+  career: "事业"
+};
 
 const dom = getDom();
 const state = createAppState({ apiBase: loadApiBase() ?? defaultApiBase });
+let topicRequestVersion = 0;
+let chartWorkspaceRuns = 0;
 
 restoreForm();
 hydrateForm();
 bindSexButtons();
+bindTopicButtons();
+syncSelectedTopic();
 
 dom.chartForm.runButton.addEventListener("click", () => {
   readChartForm();
@@ -34,10 +48,19 @@ dom.chartForm.reportButton.addEventListener("click", () => {
   params.set("timezone", "Asia/Shanghai");
   params.set("time_precision", state.chartForm.time ? "exact" : "unknown");
   if (state.chartForm.sex) params.set("sex", state.chartForm.sex);
+  const year = String(currentReadingYear());
+  params.set("reading_year", year);
+  params.set("year", year);
   window.location.href = `/report.html?${params.toString()}`;
 });
 
 async function runChartWorkspace(client = new ApiClient(state.apiBase)) {
+  topicRequestVersion += 1;
+  chartWorkspaceRuns += 1;
+  renderTopicReportIdle(
+    dom,
+    chartWorkspaceRuns > 1 ? "排盘资料已更新，请重新选择专项推演。" : "专项报告待生成"
+  );
   try {
     const request = chartRequest();
     const [chart, analysis, lunar] = await Promise.all([
@@ -49,14 +72,49 @@ async function runChartWorkspace(client = new ApiClient(state.apiBase)) {
     renderAnalysis(dom, analysis, chart);
     showLunar(lunar);
     try {
-      const luck = await client.luckCycles(chartRequest());
-      renderLuckCycles(dom, luck);
+      const [luck, report] = await Promise.all([
+        client.luckCycles(request),
+        client.chartReport({
+          ...request,
+          readingYear: currentReadingYear(),
+          year: currentReadingYear()
+        })
+      ]);
+      renderLuckCycles(dom, luck, report.luck_reading, report.annual_trigger_reading);
     } catch (e) {
-      dom.luck.container.innerHTML = `<li class="empty-state">大运: ${e.message}</li>`;
+      try {
+        const luck = await client.luckCycles(request);
+        renderLuckCycles(dom, luck);
+      } catch {
+        dom.luck.container.innerHTML = `<li class="empty-state">大运: ${e.message}</li>`;
+      }
     }
   } catch (error) {
     renderChartError(dom, error);
     renderAnalysisError(dom, error);
+  }
+}
+
+async function runTopicReport(topic, client = new ApiClient(state.apiBase)) {
+  setSelectedTopic(topic);
+  const request = chartRequest();
+  const requestVersion = topicRequestVersion + 1;
+  topicRequestVersion = requestVersion;
+  const requestKey = chartRequestKey(request);
+  renderTopicReportLoading(dom, topic);
+  try {
+    const report = await client.topicReport({
+      ...request,
+      topic,
+      year: new Date().getFullYear()
+    });
+    if (requestVersion !== topicRequestVersion || requestKey !== chartRequestKey(chartRequest())) {
+      return;
+    }
+    renderTopicReport(dom, report);
+  } catch (error) {
+    if (requestVersion !== topicRequestVersion) return;
+    renderTopicReportError(dom, error);
   }
 }
 
@@ -70,10 +128,31 @@ function bindSexButtons() {
   });
 }
 
+function bindTopicButtons() {
+  dom.topics.buttons.forEach(button => {
+    if (button.disabled) return;
+    button.addEventListener("click", () => {
+      readChartForm();
+      persistForm();
+      runTopicReport(button.dataset.topic || "relationship");
+    });
+  });
+
+  dom.topics.fullReportButton.addEventListener("click", () => {
+    readChartForm();
+    persistForm();
+    window.location.href = `/topic-report.html?${topicReportParams(state.selectedTopic).toString()}`;
+  });
+}
+
 function showLunar(lunar) {
   dom.lunarDisplay.textContent = lunar
     ? `${lunar.lunar?.year || ""}${lunar.lunar?.month_name || ""}${lunar.lunar?.day_name || ""}`
     : "--";
+}
+
+function currentReadingYear() {
+  return new Date().getFullYear();
 }
 
 function persistForm() {
@@ -103,6 +182,20 @@ function hydrateForm() {
   });
 }
 
+function setSelectedTopic(topic) {
+  state.selectedTopic = TOPIC_LABELS[topic] ? topic : "relationship";
+  syncSelectedTopic();
+}
+
+function syncSelectedTopic() {
+  const label = TOPIC_LABELS[state.selectedTopic] || TOPIC_LABELS.relationship;
+  dom.topics.buttons.forEach(button => {
+    button.classList.toggle("is-selected", button.dataset.topic === state.selectedTopic);
+  });
+  dom.topics.selectedLabel.textContent = `当前：${label}`;
+  dom.topics.fullReportButton.setAttribute("aria-label", `查看${label}专项报告`);
+}
+
 function readChartForm() {
   state.chartForm.date = dom.chartForm.date.value || state.chartForm.date;
   state.chartForm.time = dom.chartForm.time.value || state.chartForm.time;
@@ -117,6 +210,28 @@ function chartRequest() {
     timePrecision: state.chartForm.time ? "exact" : "unknown",
     sex: state.chartForm.sex
   };
+}
+
+function chartRequestKey(request) {
+  return [
+    request.date,
+    request.time || "",
+    request.timezone,
+    request.timePrecision,
+    request.sex || "unspecified"
+  ].join("|");
+}
+
+function topicReportParams(topic) {
+  const params = new URLSearchParams();
+  params.set("topic", topic);
+  params.set("date", state.chartForm.date);
+  if (state.chartForm.time) params.set("time", state.chartForm.time);
+  params.set("timezone", "Asia/Shanghai");
+  params.set("time_precision", state.chartForm.time ? "exact" : "unknown");
+  params.set("sex", state.chartForm.sex || "unspecified");
+  params.set("year", String(new Date().getFullYear()));
+  return params;
 }
 
 runChartWorkspace();

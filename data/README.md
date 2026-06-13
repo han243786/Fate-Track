@@ -41,9 +41,11 @@ The Rust regression suite now embeds all 49 cases from `D:\myproject\Perpetual c
 
 This metadata describes the date-only Android baseline. It must not be used to claim hour-pillar, timezone-history, true-solar-time, or full chart support.
 
-## M9 Astronomy Generated-Data Preflight
+## Astronomy Generated-Data Governance And Artifacts
 
-`data/generated/astronomy/` currently contains only governance preflight artifacts:
+`data/generated/astronomy/` contains historical M9/M10 governance preflight artifacts plus later generated astronomy outputs. Historical preflight documents keep their original anti-overclaim language; the current preview release status is defined by `docs/release/v1-release-candidate.md`, `docs/release/v1-closeout.md`, ADR 0021, and `93-capability-promotion-ledger.md`.
+
+The directory includes:
 
 - `source-policy.json`
 - `generation-plan.json`
@@ -84,8 +86,12 @@ This metadata describes the date-only Android baseline. It must not be used to c
 - `manifests/astronomy-engine-v0-draft.json`: not-accepted planning manifest instance.
 - `comparison-report-template.md`
 - `README.md`
+- `out/solar-terms-1901-2100.json`
+- `out/new-moons-1901-2100.json`
+- `out/lunar-calendar-1901-2100.json`
+- `out/android-comparison-1901-2100.json`
 
-No generated astronomy table has been accepted yet. ADR 0015 selects a parallel-first upgrade strategy: the Android date layer remains accepted-current, and any astronomy replacement requires generated artifacts, hashes, comparison reports, replay policy, and a later replacement ADR.
+M23 promotes `astronomy-engine` to supported as an independent verified engine. The Android date layer remains the accepted runtime baseline for `/api/calendar/query`; any replacement still requires a separate ADR and rollback plan.
 
 The draft manifest must remain `not_accepted` until a real generation command, generated artifact, artifact hashes, comparison report, golden cases, and runtime/replay policy exist.
 

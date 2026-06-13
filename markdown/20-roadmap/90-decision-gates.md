@@ -16,6 +16,8 @@
 | DG-008 | 星历/天文引擎何时替代或并行 Android 日期层 | closed for M9 preflight: parallel first by ADR 0015 | M9 开始前 | Android 日期层保持 accepted-current；替换必须另有 ADR 和双引擎证据 |
 | DG-009 | share token storage, expiration, revocation, and noindex policy | closed for M6: local volatile hashed token + noindex public DTO | before M6 implementation | share must not claim permanent public links, accounts, database persistence, cloud sync, cross-device sync, or enumerable public directory |
 | DG-010 | 分析文案是否允许生成式扩写 | closed: structured fixed-template only | M4 开始前 | 不得返回自由生成长文或高风险确定性断言 |
+| DG-011 | 四专项推演是否允许进入 post-preview restricted 能力，以及研究报告如何采纳 | closed for M29-M33 restricted implementation: RPT-004 intake accepted fixed rules, adapted heuristic scoring, forbids direct code copy; LOOP-093 adopted route/year/score decisions; LOOP-094 implemented relationship; LOOP-095 implemented wealth/family/career | 后续 topic 扩展复用同一门禁或另开 DG | topic-report 可逐项进入 restricted implementation；不得把研究权重宣称为古籍定值；不得宣称完整流年/流月系统、金融建议、婚恋建议、亲属命运或职业结果预测；未完成 closeout 的后续 topic 必须保持 planned/unsupported |
+| DG-012 | 大运/流年解释层如何进入 post-preview，且不污染 M13 raw `luck-cycles` 和 M29-M33 topic 年度引动边界 | closed: ADR 0022 accepts a separate restricted-upper-bound timeline reading layer; M35 may implement internal foundation only | M35 实现前已关闭 | `GET /api/luck/cycles` 必须保持 raw supported calculation；M35 不得新增 public route、UI、report chapter 或 `/api/capabilities` 声明；未来 API 必须显式 `year`；不得公开 `score_internal`、0-100 运势分、排序分或完整流月/流日/event prediction claim |
 
 ## 2. 决策记录格式
 
