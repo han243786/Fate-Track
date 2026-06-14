@@ -334,6 +334,12 @@ describe("workspace markup", () => {
     assert.doesNotMatch(renderSource, /未返回日常摘要/);
     assert.doesNotMatch(reportHtml, /未收到观察年|未收到引动年/);
     assert.match(reportHtml, /publicTimelinePart/);
+    assert.match(topicReportSource, /function publicTopicSignalText\(value, fallback\)/);
+    assert.match(topicReportSource, /publicTopicSignalText\(signal\.qualitative_level, "观察"\)/);
+    assert.match(topicReportSource, /function publicTraceText\(value, fallback\)/);
+    assert.doesNotMatch(topicReportSource, /safeText\(signal\.label, "结构线索"\)/);
+    assert.doesNotMatch(topicReportSource, /safeText\(signal\.qualitative_level, "观察"\)/);
+    assert.doesNotMatch(topicReportSource, /safeText\(signal\.summary, "暂无摘要。"\)/);
     assert.doesNotMatch(renderSource, /<div class="insight-tag">\$\{card\.severity\}<\/div>/);
     assert.doesNotMatch(renderSource, /证据 <strong>/);
     assert.doesNotMatch(renderSource, /证据追踪/);

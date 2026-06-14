@@ -69,9 +69,9 @@ function buildTopicBlocks(data) {
       title: "结构线索总览",
       body: data.signals
         .map((signal) => {
-          const label = safeText(signal.label, "结构线索");
-          const level = safeText(signal.qualitative_level, "观察");
-          const summary = safeText(signal.summary, "暂无摘要。");
+          const label = publicTopicSignalText(signal.label, "结构线索");
+          const level = publicTopicSignalText(signal.qualitative_level, "观察");
+          const summary = publicTopicSignalText(signal.summary, "暂无摘要。");
           return `${label}：${level}\n${summary}`;
         })
         .join("\n\n")
@@ -292,7 +292,7 @@ function createTopicTraceDetails(trace, warnings) {
   if (trace.length > 0) {
     trace.forEach((item) => {
       const label = traceSourceLabel(item.source || item.id);
-      const interpretation = safeText(item.interpretation, "本段依据当前命盘结构与已选年份合参。");
+      const interpretation = publicTraceText(item.interpretation, "本段依据当前命盘结构与已选年份合参。");
       content.append(createTimelineEvidenceItem(label, interpretation));
     });
   } else {
@@ -536,6 +536,17 @@ function publicWarningText(value) {
     return "部分阅读条件暂不完整，本段已按谨慎方式处理。";
   }
   return safeText(text, "部分阅读条件暂不完整，本段已按谨慎方式处理。");
+}
+
+function publicTopicSignalText(value, fallback) {
+  const text = localizeVisibleText(value || "").trim();
+  if (!text) return fallback;
+  return /[A-Za-z_]/.test(text) ? fallback : text;
+}
+
+function publicTraceText(value, fallback) {
+  const text = safeText(value, fallback);
+  return /[A-Za-z_]/.test(text) ? fallback : text;
 }
 
 function readYear(value) {

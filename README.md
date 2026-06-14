@@ -19,7 +19,7 @@ Windows 预览版：
 当前包的 SHA256：
 
 ```text
-431f38b1f259bec46675127b9ce2aad6b867eeaebaefd268e432440bfdc2f1a5  Fate-Track-Windows-x64.zip
+f51495a542f5745c6e4e761022665ac2aa38c4ff46443892ef54f21d7313554d  Fate-Track-Windows-x64.zip
 ```
 
 ## 安装与启动
