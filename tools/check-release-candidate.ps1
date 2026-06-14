@@ -48,6 +48,7 @@ $ledger = Read-Text "markdown/20-roadmap/93-capability-promotion-ledger.md"
 $readme = Read-Text "README.md"
 $release = Read-Text "docs/release/v1-release-candidate.md"
 $releaseCloseout = Read-Text "docs/release/v1-closeout.md"
+$productBoundary = Read-Text "docs/release/current-product-boundary.md"
 $desktopPackaging = Read-Text "docs/release/desktop-packaging.md"
 $desktopWorkflow = Read-Text ".github/workflows/release-desktop.yml"
 $desktopPackageScript = Read-Text "tools/package-desktop-windows.ps1"
@@ -92,6 +93,7 @@ foreach ($pair in @(
 
 foreach ($needle in @(
     "All M0-M28 closed",
+    "docs/release/current-product-boundary.md",
     "1901-2100",
     "Android date layer remains the accepted current baseline.",
     "luck-cycles",
@@ -109,6 +111,30 @@ foreach ($needle in @(
     "Fate Track"
 )) {
     Assert-Contains $readme $needle "README missing user-facing product identity: $needle"
+}
+
+foreach ($needle in @(
+    'current-product-boundary.md',
+    'supported',
+    'restricted',
+    'planned',
+    'score_internal',
+    'GET /api/luck/cycles',
+    'relationship',
+    'wealth',
+    'family',
+    'career',
+    '1901',
+    '2100'
+)) {
+    Assert-Contains $productBoundary $needle "Current product boundary missing: $needle"
+}
+
+foreach ($needle in @(
+    'docs/release/current-product-boundary.md',
+    'current-product-boundary.md'
+)) {
+    Assert-Contains $readme $needle "README missing current product boundary link: $needle"
 }
 
 foreach ($needle in @(
@@ -157,6 +183,7 @@ foreach ($needle in @(
     "cargo clippy --all-targets -- -D warnings",
     "cargo test",
     "docs/release/v1-release-candidate.md",
+    "docs/release/current-product-boundary.md",
     "Fate-Track-Windows-x64.zip",
     "SHA256SUMS.txt"
 )) {
@@ -178,6 +205,7 @@ foreach ($needle in @(
     "clippy",
     "npm.cmd",
     "tools\check-project.ps1",
+    "docs\release\current-product-boundary.md",
     "cargo",
     "build",
     "Fate-Track-Windows-x64.zip",

@@ -104,6 +104,7 @@ Windows 预览版：
 - 本地案例管理
 - 脱敏分享预览
 - 术语解释
+- 金、木、水、火、土五套界面主题
 
 ## 当前不做什么
 
@@ -115,8 +116,14 @@ Windows 预览版：
 - 账号系统
 - 云端同步
 - 自动更新
+- 在线 AI 解读
+- 流月、流日、择日、每日运势
 - 安装包格式，如 `.msi`、`.dmg`、`.deb`
 - 公开代码签名和 macOS 公证
+
+更完整的封版范围见：
+
+[当前产品边界](docs/release/current-product-boundary.md)
 
 ## 校验下载文件
 
@@ -196,5 +203,6 @@ powershell -File tools\check-project.ps1
 更多工程治理、决策记录和里程碑文档请见：
 
 - [发布候选边界](docs/release/v1-release-candidate.md)
+- [当前产品边界](docs/release/current-product-boundary.md)
 - [V1 收口记录](docs/release/v1-closeout.md)
 - [桌面封装说明](docs/release/desktop-packaging.md)

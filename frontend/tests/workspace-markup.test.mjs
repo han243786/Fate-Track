@@ -183,6 +183,10 @@ describe("workspace markup", () => {
 
   it("keeps newly added report chrome localized", () => {
     assert.match(html, /四柱结构工作台/);
+    assert.match(html, /当前功能边界已锁定/);
+    assert.match(html, /本地排盘与报告/);
+    assert.match(html, /本地计算/);
+    assert.match(html, /可查看/);
     assert.match(reportHtml, /命轨只读卷宗/);
     assert.match(reportHtml, /报告章节/);
     assert.match(topicReportHtml, /命轨专项卷宗/);
@@ -198,7 +202,10 @@ describe("workspace markup", () => {
       "timeline evidence",
       "deterministic snapshot",
       "observation year",
-      "annual year"
+      "annual year",
+      "已接入",
+      "微盘",
+      "三统"
     ]) {
       assert.doesNotMatch([html, reportHtml, topicReportHtml, topicReportSource].join("\n"), new RegExp(visibleEnglish));
     }

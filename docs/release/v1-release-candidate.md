@@ -4,6 +4,8 @@
 
 All M0-M28 closed. Release candidate supported. V1 capability matrix: 10 supported, 7 restricted, 0 target, 0 planned. Boundary locked.
 
+当前 post-preview 产品边界已经另行冻结在 `docs/release/current-product-boundary.md`；该文件记录当前运行时的 10 supported、14 restricted、0 planned 产品口径，不改写本 V1 preview release candidate 的历史矩阵。
+
 ## Validation Command
 
 ```powershell

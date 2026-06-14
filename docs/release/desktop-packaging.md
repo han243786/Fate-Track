@@ -50,7 +50,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File tools\package-desktop-window
 - `dist/desktop-windows/Fate-Track-Windows-x64.zip`
 - `dist/desktop-windows/SHA256SUMS.txt`
 
-Windows zip 内包含 `minggui-desktop.exe`、`README.md`、`docs/release/desktop-packaging.md`、`docs/release/v1-release-candidate.md` 和 `docs/release/v1-closeout.md`。
+Windows zip 内包含 `minggui-desktop.exe`、`README.md`、`docs/release/desktop-packaging.md`、`docs/release/current-product-boundary.md`、`docs/release/v1-release-candidate.md` 和 `docs/release/v1-closeout.md`。
 
 如果门禁已经在同一提交上完成，可临时使用 `-SkipQualityGate` 只重新生成本地 zip。
 
