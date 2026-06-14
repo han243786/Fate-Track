@@ -222,7 +222,7 @@ export function renderTopicReport(dom, report) {
       const head = document.createElement("div");
       head.className = "topic-signal-head";
       const labelNode = document.createElement("span");
-      labelNode.textContent = signal.label || signal.id;
+      labelNode.textContent = signal.label || "\u7ed3\u6784\u7ebf\u7d22";
       const level = document.createElement("strong");
       level.textContent = signal.qualitative_level || "";
       head.append(labelNode, level);
@@ -257,7 +257,7 @@ function topicLabel(topic) {
 }
 
 function yearSourceLabel(source) {
-  return source === "explicit" ? "\u5df2\u9009\u5e74\u4efd" : source || "\u5e74\u5ea6";
+  return source === "explicit" ? "\u5df2\u9009\u5e74\u4efd" : "\u5e74\u5ea6";
 }
 
 function localizeVisibleText(value) {

@@ -69,7 +69,7 @@ function buildTopicBlocks(data) {
       title: "结构线索总览",
       body: data.signals
         .map((signal) => {
-          const label = safeText(signal.label, signal.id || "结构线索");
+          const label = safeText(signal.label, "结构线索");
           const level = safeText(signal.qualitative_level, "观察");
           const summary = safeText(signal.summary, "暂无摘要。");
           return `${label}：${level}\n${summary}`;
@@ -84,7 +84,7 @@ function buildTopicBlocks(data) {
     blocks.push({
       id: "topic-warnings",
       title: "阅读边界提醒",
-      body: data.warnings.join("\n\n")
+      body: data.warnings.map(publicWarningText).join("\n\n")
     });
   }
 
@@ -217,7 +217,7 @@ function createTopicTimelineGuide(data, blocks) {
     createTimelineGuideCard({
       title: "已选年份",
       value: `${data.year || request.year} 年`,
-      note: data.year_source === "explicit" ? "按当前选择" : safeText(data.year_source, "年度"),
+      note: data.year_source === "explicit" ? "按当前选择" : "年度",
       href: "#topic-timeline-guide",
       tone: "annual"
     }),
@@ -300,7 +300,7 @@ function createTopicTraceDetails(trace, warnings) {
   }
   if (Array.isArray(warnings) && warnings.length > 0) {
     const list = createEl("ul", "timeline-evidence-list");
-    warnings.slice(0, 4).forEach((warning) => list.append(createEl("li", "", safeText(warning, "边界提醒"))));
+    warnings.slice(0, 4).forEach((warning) => list.append(createEl("li", "", publicWarningText(warning))));
     content.append(createTimelineEvidenceItem(
       "边界提醒",
       "以下提醒来自阅读边界规则；本段是命理结构阅读，不是现实事件预告。"
@@ -518,6 +518,24 @@ function traceSourceLabel(source) {
     "topic-timeline-overlay": "专题时间叠加"
   };
   return labels[source] || "结构依据";
+}
+
+function publicWarningText(value) {
+  const text = String(value || "").trim();
+  if (!text) return "部分阅读条件暂不完整，本段已按谨慎方式处理。";
+  if (/unknown[_-]hour|时辰未知/.test(text)) {
+    return "时辰信息不完整，相关时间线索已按谨慎方式阅读。";
+  }
+  if (/sex|gender|性别未指定/.test(text)) {
+    return "性别未指定，涉及取象差异的部分已按中性方式阅读。";
+  }
+  if (/luck[_-]cycle|reference[_-]age|timeline|annual[_-]trigger|not[_-]requested/.test(text)) {
+    return "部分大运或年度线索暂不完整，本段已按可确认的信息阅读。";
+  }
+  if (/[A-Za-z_]/.test(text)) {
+    return "部分阅读条件暂不完整，本段已按谨慎方式处理。";
+  }
+  return safeText(text, "部分阅读条件暂不完整，本段已按谨慎方式处理。");
 }
 
 function readYear(value) {

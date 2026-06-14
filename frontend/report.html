@@ -293,7 +293,7 @@
         if (signals.length > 0) {
           const list = createEl("ul", "timeline-evidence-list");
           signals.slice(0, 6).forEach((signal) => {
-            list.append(createEl("li", "", `${signal.label || signal.id}：${signal.summary || ""}`));
+            list.append(createEl("li", "", `${signal.label || "结构线索"}：${signal.summary || ""}`));
           });
           content.append(list);
         }
@@ -510,7 +510,7 @@
         return /^\d{4}$/.test(text) ? text : String(fallback || new Date().getFullYear());
       }
       function yearSourceLabel(source) {
-        return source === "explicit" ? "已选年份" : safeText(source, "年度");
+        return source === "explicit" ? "已选年份" : "年度";
       }
       function timelineSourceLabel(source) {
         const labels = {
