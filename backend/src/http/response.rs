@@ -31,7 +31,7 @@ impl Response {
         let body = format!(
             "{{\"error\":{},\"message\":{}}}",
             json::string(error.code()),
-            json::string(&error.message())
+            json::string(error.public_message())
         );
 
         Self {

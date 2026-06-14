@@ -45,4 +45,15 @@ impl AppError {
             }
         }
     }
+
+    pub fn public_message(&self) -> &'static str {
+        match self {
+            Self::BadRequest(_) => "请求参数不完整或格式不正确。",
+            Self::Io { .. } => "本地数据暂时不可读取，请稍后重试。",
+            Self::MethodNotAllowed(_) => "当前操作方式不支持。",
+            Self::NotFound(_) => "未找到可查看内容。",
+            Self::OutOfRange(_) => "当前日期超出可用范围。",
+            Self::Unsupported { .. } => "当前能力尚未开放。",
+        }
+    }
 }

@@ -472,13 +472,13 @@ mod tests {
         let public_request =
             format!("GET /api/share/preview?action=public&token={token} HTTP/1.1\r\n\r\n");
         let public = parse_and_handle(&project_data_app(), public_request.as_bytes());
-        assert_error(public, 404, "not_found", "share unavailable");
+        assert_error(public, 404, "not_found", "未找到可查看内容。");
 
         let invalid = parse_and_handle(
             &project_data_app(),
             b"GET /api/share/preview?action=public&token=invalid-token HTTP/1.1\r\n\r\n",
         );
-        assert_error(invalid, 404, "not_found", "share unavailable");
+        assert_error(invalid, 404, "not_found", "未找到可查看内容。");
     }
 
     #[test]
@@ -512,7 +512,12 @@ mod tests {
             b"GET /api/charts/basis/preview?date=2025-01-01&timezone=Asia%2FShanghai&calendar=lunar HTTP/1.1\r\n\r\n",
         );
 
-        assert_error(response, 501, "unsupported_capability", "lunar-input");
+        assert_error(
+            response,
+            501,
+            "unsupported_capability",
+            "当前能力尚未开放。",
+        );
     }
 
     #[test]
@@ -522,7 +527,12 @@ mod tests {
             b"GET /api/charts/basis/preview?date=2025-01-01&timezone=Asia%2FShanghai&true_solar_time=true HTTP/1.1\r\n\r\n",
         );
 
-        assert_error(response, 501, "unsupported_capability", "true-solar-time");
+        assert_error(
+            response,
+            501,
+            "unsupported_capability",
+            "当前能力尚未开放。",
+        );
     }
 
     #[test]
@@ -532,12 +542,7 @@ mod tests {
             b"GET /api/charts/basis/preview?date=2025-01-01&timezone=Asia%2FShanghai&time_precision=exact&time=25:00 HTTP/1.1\r\n\r\n",
         );
 
-        assert_error(
-            response,
-            400,
-            "bad_request",
-            "time must use HH:MM in 24-hour format",
-        );
+        assert_error(response, 400, "bad_request", "请求参数不完整或格式不正确。");
     }
 
     #[test]
@@ -620,18 +625,13 @@ mod tests {
             &project_data_app(),
             b"GET /api/charts/topic-report?topic=relationship&date=2025-01-01&timezone=Asia%2FShanghai HTTP/1.1\r\n\r\n",
         );
-        assert_error(missing, 400, "bad_request", "missing query parameter: year");
+        assert_error(missing, 400, "bad_request", "请求参数不完整或格式不正确。");
 
         let short = parse_and_handle(
             &project_data_app(),
             b"GET /api/charts/topic-report?topic=relationship&date=2025-01-01&timezone=Asia%2FShanghai&year=26 HTTP/1.1\r\n\r\n",
         );
-        assert_error(
-            short,
-            400,
-            "bad_request",
-            "year must be a four digit integer",
-        );
+        assert_error(short, 400, "bad_request", "请求参数不完整或格式不正确。");
     }
 
     #[test]
@@ -1190,7 +1190,7 @@ mod tests {
             missing_topic,
             400,
             "bad_request",
-            "missing query parameter: topic",
+            "请求参数不完整或格式不正确。",
         );
 
         let unknown_topic = parse_and_handle(
@@ -1201,7 +1201,7 @@ mod tests {
             unknown_topic,
             400,
             "bad_request",
-            "unsupported topic value: health",
+            "请求参数不完整或格式不正确。",
         );
     }
 
@@ -1212,12 +1212,7 @@ mod tests {
             b"GET /api/calendar/query HTTP/1.1\r\n\r\n",
         );
 
-        assert_error(
-            response,
-            400,
-            "bad_request",
-            "missing query parameter: date",
-        );
+        assert_error(response, 400, "bad_request", "请求参数不完整或格式不正确。");
     }
 
     #[test]
@@ -1227,7 +1222,7 @@ mod tests {
             b"GET /api/calendar/query?date=2025-02-29 HTTP/1.1\r\n\r\n",
         );
 
-        assert_error(response, 400, "bad_request", "date must use YYYY-MM-DD");
+        assert_error(response, 400, "bad_request", "请求参数不完整或格式不正确。");
     }
 
     #[test]
@@ -1238,12 +1233,7 @@ mod tests {
         ] {
             let response = parse_and_handle(&project_data_app(), request);
 
-            assert_error(
-                response,
-                404,
-                "out_of_range",
-                "calendar date out of supported range",
-            );
+            assert_error(response, 404, "out_of_range", "当前日期超出可用范围。");
         }
     }
 
@@ -1274,7 +1264,12 @@ mod tests {
             b"GET /api/calendar/query?date=2025-01-01 HTTP/1.1\r\n\r\n",
         );
 
-        assert_error(response, 500, "io_error", "read lunar data");
+        assert_error(
+            response,
+            500,
+            "io_error",
+            "本地数据暂时不可读取，请稍后重试。",
+        );
     }
 
     fn assert_error(
@@ -1294,6 +1289,24 @@ mod tests {
             "body did not contain {expected_message:?}: {}",
             response.body
         );
+        for internal in [
+            "missing query parameter",
+            "unsupported topic value",
+            "date must use YYYY-MM-DD",
+            "time must use HH:MM",
+            "calendar date out of supported range",
+            "read lunar data",
+            "route not found",
+            "capability is planned",
+            "lunar-input",
+            "true-solar-time",
+        ] {
+            assert!(
+                !response.body.contains(internal),
+                "error response leaked internal detail {internal:?}: {}",
+                response.body
+            );
+        }
     }
 
     #[test]

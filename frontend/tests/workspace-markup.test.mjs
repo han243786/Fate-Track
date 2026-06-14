@@ -247,6 +247,7 @@ describe("workspace markup", () => {
       reportHtml,
       topicReportHtml,
       topicReportSource,
+      mainSource,
       renderSource
     ].join("\n");
 
@@ -255,6 +256,8 @@ describe("workspace markup", () => {
     assert.match(reportHtml, /阅读依据/);
     assert.match(reportHtml, /结构线索/);
     assert.match(topicReportSource, /结构线索总览/);
+    assert.match(html, /专项推演待整理/);
+    assert.match(mainSource, /专项推演待整理/);
     assert.match(renderSource, /\\u7ed3\\u6784\\u7ebf\\u7d22/);
 
     for (const forbidden of [
@@ -265,18 +268,22 @@ describe("workspace markup", () => {
       "生成失败",
       "暂无报告数据",
       "暂无专项报告数据",
+      "待生成",
+      "专项报告待生成",
       "结构信号正在提取",
       "结构信号生成失败",
       "证据追踪",
       "确定性快照",
       "时间证据",
-      "未生成章节"
+      "未生成章节",
+      "大运:"
     ]) {
       assert.doesNotMatch(visibleChrome, new RegExp(forbidden));
     }
 
     assert.doesNotMatch(reportHtml, /error instanceof Error \? error\.message/);
     assert.doesNotMatch(topicReportSource, /error instanceof Error \? error\.message/);
+    assert.doesNotMatch(mainSource, /error\.message|e\.message|String\(error\)/);
     assert.doesNotMatch(renderSource, /error\.message/);
   });
 

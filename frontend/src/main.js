@@ -71,7 +71,7 @@ async function runChartWorkspace(client = new ApiClient(state.apiBase)) {
   chartWorkspaceRuns += 1;
   renderTopicReportIdle(
     dom,
-    chartWorkspaceRuns > 1 ? "排盘资料已更新，请重新选择专项推演。" : "专项报告待生成"
+    chartWorkspaceRuns > 1 ? "排盘资料已更新，请重新选择专项推演。" : "专项推演待整理"
   );
   try {
     const request = chartRequest();
@@ -98,7 +98,7 @@ async function runChartWorkspace(client = new ApiClient(state.apiBase)) {
         const luck = await client.luckCycles(request);
         renderLuckCycles(dom, luck);
       } catch {
-        dom.luck.container.innerHTML = `<li class="empty-state">大运: ${e.message}</li>`;
+        dom.luck.container.innerHTML = `<li class="empty-state">大运暂时没有整理完成，请重新起盘后再试。</li>`;
       }
     }
   } catch (error) {
