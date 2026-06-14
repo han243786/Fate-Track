@@ -66,7 +66,7 @@ fn run_webview(url: &str) -> Result<()> {
         .with_resizable(true)
         .with_maximized(true)
         .build(&event_loop)
-        .context("创建命轨桌面窗口失败")?;
+        .context("启动命轨桌面界面失败")?;
 
     let builder = WebViewBuilder::new()
         .with_url(url)

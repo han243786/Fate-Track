@@ -19,7 +19,7 @@ Windows 预览版：
 当前包的 SHA256：
 
 ```text
-f51495a542f5745c6e4e761022665ac2aa38c4ff46443892ef54f21d7313554d  Fate-Track-Windows-x64.zip
+a170271b4fc20f51880f3ed1fe00c182b5ce33bf820863c0608bb5937119cc9a  Fate-Track-Windows-x64.zip
 ```
 
 ## 安装与启动
@@ -112,7 +112,7 @@ f51495a542f5745c6e4e761022665ac2aa38c4ff46443892ef54f21d7313554d  Fate-Track-Win
 - 账号功能
 - 云端同步
 - 自动更新
-- 在线智能解读
+- 在线解读服务
 - 流月、流日、择日、每日运势
 - 安装包格式，如 `.msi`、`.dmg`、`.deb`
 - 公开代码签名和 macOS 公证

@@ -108,6 +108,7 @@ foreach ($forbidden in @(
     'score_internal',
     'backend',
     'frontend',
+    (Text-FromCodepoints @(0x667a, 0x80fd, 0x89e3, 0x8bfb)),
     (Text-FromCodepoints @(0x751f, 0x6210, 0x547d, 0x76d8)),
     (Text-FromCodepoints @(0x7cfb, 0x7edf, 0x4f1a)),
     (Text-FromCodepoints @(0x8d26, 0x53f7, 0x7cfb, 0x7edf)),
@@ -127,6 +128,7 @@ foreach ($forbidden in @(
     'Method Not Allowed',
     'error.message',
     'String(error)',
+    (Text-FromCodepoints @(0x667a, 0x80fd, 0x89e3, 0x8bfb)),
     (Text-FromCodepoints @(0x8bc4, 0x5206))
 )) {
     Assert-NotContains $publicUiSources $forbidden "Public UI source leaked mechanical or internal wording: $forbidden"
@@ -194,6 +196,7 @@ try {
         'backend',
         'frontend',
         ' AI ',
+        (Text-FromCodepoints @(0x667a, 0x80fd, 0x89e3, 0x8bfb)),
         (Text-FromCodepoints @(0x751f, 0x6210, 0x547d, 0x76d8)),
         (Text-FromCodepoints @(0x7cfb, 0x7edf, 0x4f1a)),
         (Text-FromCodepoints @(0x6307, 0x5b9a, 0x5e74, 0x4efd)),
