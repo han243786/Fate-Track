@@ -107,5 +107,7 @@ LOOP-132 已完成用户可见机械口吻与后端错误泄露收束：命盘�
 
 LOOP-133 已完成公开错误响应与首屏状态再收束：HTTP JSON 错误响应继续保留稳定 `error` code，但公开 `message` 统一为产品级中文提示，不再暴露参数名、route、capability、IO context 或内部异常文字；工作台首屏和大运兜底文案同步从“待生成 / 大运: error”改为“待整理 / 暂时没有整理完成”。新增后端与前端门禁防止后端变量、错误详情和机械状态词回流。能力状态不变，不新增 API、DTO、报告能力、score、存储或云同步能力。
 
+LOOP-134 已完成静态兜底与前端异常文案产品化：桌面壳层静态资源错误 body 从 `Bad Request` / `Not Found` / `Method Not Allowed` 改为中文产品提示，前端 `ApiClient` 非 OK 异常不再携带 `404 Not Found` 这类 HTTP 术语；新增桌面单测与前端门禁防止英文机械错误、窗口形态和内部错误细节回流。能力状态不变，不新增 API、DTO、报告能力、score、存储或云同步能力。
+
 ---
 Closed: 2026-06-09

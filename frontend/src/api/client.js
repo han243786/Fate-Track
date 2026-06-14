@@ -112,7 +112,7 @@ export class ApiClient {
   async #getJson(path) {
     const response = await fetch(`${this.apiBase}${path}`);
     if (!response.ok) {
-      throw new Error(`${response.status} ${response.statusText}`);
+      throw new Error("请求暂时没有完成，请稍后重试。");
     }
     return response.json();
   }

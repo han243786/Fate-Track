@@ -248,6 +248,7 @@ describe("workspace markup", () => {
       topicReportHtml,
       topicReportSource,
       mainSource,
+      readFileSync(new URL("../src/api/client.js", import.meta.url), "utf8"),
       renderSource
     ].join("\n");
 
@@ -270,6 +271,9 @@ describe("workspace markup", () => {
       "暂无专项报告数据",
       "待生成",
       "专项报告待生成",
+      "404 Not Found",
+      "Bad Request",
+      "Method Not Allowed",
       "结构信号正在提取",
       "结构信号生成失败",
       "证据追踪",

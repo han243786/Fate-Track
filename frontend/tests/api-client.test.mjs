@@ -37,7 +37,7 @@ describe("ApiClient.calendarDate", () => {
 
     await assert.rejects(
       () => new ApiClient("http://127.0.0.1:8787").calendarDate("2101-01-01"),
-      /404 Not Found/
+      /请求暂时没有完成，请稍后重试。/
     );
   });
 });

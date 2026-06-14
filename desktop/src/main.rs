@@ -160,7 +160,7 @@ fn handle_stream(mut stream: TcpStream, app: &App, origin: &str) {
     }
 
     if method != "GET" && method != "HEAD" {
-        let response = static_error("405 Method Not Allowed", "Method Not Allowed");
+        let response = static_error("405 Method Not Allowed", "当前操作方式不支持。");
         let _ = write_static_response(&mut stream, response, method == "HEAD");
         return;
     }
@@ -184,7 +184,7 @@ fn static_response(raw_path: &str, origin: &str) -> StaticResponse {
         asset_path.push_str("index.html");
     }
     if asset_path.contains("..") || asset_path.contains('\\') {
-        return static_error("400 Bad Request", "Bad Request");
+        return static_error("400 Bad Request", "请求路径不可用。");
     }
 
     if asset_path == "src/config.js" {
@@ -205,7 +205,7 @@ fn static_response(raw_path: &str, origin: &str) -> StaticResponse {
         };
     }
 
-    static_error("404 Not Found", "Not Found")
+    static_error("404 Not Found", "未找到可查看内容。")
 }
 
 fn desktop_config_js(origin: &str) -> Vec<u8> {
@@ -268,5 +268,31 @@ fn mime_type(path: &str) -> &'static str {
         "wasm" => "application/wasm",
         "txt" => "text/plain; charset=utf-8",
         _ => "application/octet-stream",
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn static_resource_errors_use_product_copy() {
+        let bad = static_response("/../secret", "http://127.0.0.1:1");
+        assert_eq!(bad.status, "400 Bad Request");
+        assert_eq!(String::from_utf8(bad.body).unwrap(), "请求路径不可用。");
+
+        let missing = static_response("/missing-file.html", "http://127.0.0.1:1");
+        assert_eq!(missing.status, "404 Not Found");
+        assert_eq!(
+            String::from_utf8(missing.body).unwrap(),
+            "未找到可查看内容。"
+        );
+
+        let method = static_error("405 Method Not Allowed", "当前操作方式不支持。");
+        assert_eq!(method.status, "405 Method Not Allowed");
+        assert_eq!(
+            String::from_utf8(method.body).unwrap(),
+            "当前操作方式不支持。"
+        );
     }
 }
