@@ -119,9 +119,36 @@
       <div class="boundary-note">
         <span class="shield">◇</span>
         <span>当前功能边界已锁定 · 本地排盘与报告</span>
-        <button id="product-boundary-button" class="boundary-link" type="button">查看边界</button>
+        <button id="product-boundary-button" class="boundary-link" type="button" aria-expanded="false" aria-controls="product-boundary-panel">查看边界</button>
         <span class="lock">▣</span>
       </div>
+
+      <section id="product-boundary-panel" class="product-boundary-panel" aria-labelledby="product-boundary-title" hidden>
+        <p class="boundary-kicker">当前产品边界</p>
+        <h2 id="product-boundary-title">命轨当前只做这些事</h2>
+        <p class="boundary-lead">本应用用于本地四柱排盘、报告阅读与年度节奏参考，不提供现实决策承诺。</p>
+        <div class="boundary-columns">
+          <section>
+            <h3>可以查看</h3>
+            <ul>
+              <li>公历日期起盘与四柱命盘</li>
+              <li>主盘报告与四类专项报告</li>
+              <li>大运与指定年份引动说明</li>
+              <li>本地案例、脱敏分享预览和术语解释</li>
+            </ul>
+          </section>
+          <section>
+            <h3>当前不做</h3>
+            <ul>
+              <li>农历直接输入、真太阳时、历史时区</li>
+              <li>在线 AI 解读、账号、云同步、自动更新</li>
+              <li>流月、流日、择日</li>
+              <li>医疗、法律、投资、婚姻或职业结果承诺</li>
+            </ul>
+          </section>
+        </div>
+        <p class="boundary-fineprint">五行主题只改变视觉风格，不改变计算和报告结论。</p>
+      </section>
 
       <footer class="side-footer">
         <span>命轨 v1.0</span>
@@ -195,36 +222,6 @@
       <div class="current-luck ornament-card" id="currentLuck"></div>
     </aside>
   </main>
-
-  <dialog id="product-boundary-dialog" class="product-boundary-dialog" aria-labelledby="product-boundary-title">
-    <form method="dialog" class="product-boundary-card">
-      <button id="product-boundary-close" class="boundary-close" type="submit" aria-label="关闭产品边界说明">×</button>
-      <p class="boundary-kicker">当前产品边界</p>
-      <h2 id="product-boundary-title">命轨当前只做这些事</h2>
-      <p class="boundary-lead">本应用用于本地四柱排盘、报告阅读与年度节奏参考，不提供现实决策承诺。</p>
-      <div class="boundary-columns">
-        <section>
-          <h3>可以查看</h3>
-          <ul>
-            <li>公历日期起盘与四柱命盘</li>
-            <li>主盘报告与四类专项报告</li>
-            <li>大运与指定年份引动说明</li>
-            <li>本地案例、脱敏分享预览和术语解释</li>
-          </ul>
-        </section>
-        <section>
-          <h3>当前不做</h3>
-          <ul>
-            <li>农历直接输入、真太阳时、历史时区</li>
-            <li>在线 AI 解读、账号、云同步、自动更新</li>
-            <li>流月、流日、择日</li>
-            <li>医疗、法律、投资、婚姻或职业结果承诺</li>
-          </ul>
-        </section>
-      </div>
-      <p class="boundary-fineprint">五行主题只改变视觉风格，不改变计算和报告结论。</p>
-    </form>
-  </dialog>
 
   <script type="module" src="./src/main.js"></script>
 </body>

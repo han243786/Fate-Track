@@ -550,47 +550,16 @@ html[data-wuxing-theme="water"] .wuxing-theme-action {
   outline:none;
 }
 
-.product-boundary-dialog {
-  width:min(720px, calc(100vw - 28px));
-  max-height:min(760px, calc(100dvh - 28px));
-  padding:0;
-  border:0;
-  background:transparent;
-  color:var(--ink);
-}
-.product-boundary-dialog::backdrop {
-  background:rgba(0,0,0,0.68);
-  backdrop-filter:blur(10px);
-}
-.product-boundary-card {
-  position:relative;
+.product-boundary-panel {
   margin:0;
-  padding:28px;
+  padding:18px 30px 20px;
   border:1px solid var(--line-strong);
-  border-radius:var(--radius-md);
+  border-left:0;
+  border-right:0;
   background:
-    radial-gradient(circle at 14% 16%, color-mix(in srgb, var(--gold) 14%, transparent), transparent 14rem),
-    radial-gradient(circle at 88% 8%, color-mix(in srgb, var(--jade) 12%, transparent), transparent 16rem),
-    linear-gradient(145deg, var(--panel-2), color-mix(in srgb, var(--bg) 88%, #000));
-  box-shadow:var(--shadow);
-}
-.boundary-close {
-  position:absolute;
-  top:12px;
-  right:12px;
-  width:34px;
-  height:34px;
-  border:1px solid var(--line);
-  border-radius:50%;
-  background:rgba(0,0,0,0.24);
-  color:var(--muted);
-  font-size:1.1rem;
-}
-.boundary-close:hover,
-.boundary-close:focus-visible {
-  color:var(--gold-bright);
-  border-color:var(--line-strong);
-  outline:none;
+    radial-gradient(circle at 14% 16%, color-mix(in srgb, var(--gold) 12%, transparent), transparent 11rem),
+    radial-gradient(circle at 90% 8%, color-mix(in srgb, var(--jade) 10%, transparent), transparent 12rem),
+    color-mix(in srgb, var(--panel-2) 86%, transparent);
 }
 .boundary-kicker {
   margin:0 0 8px;
@@ -598,12 +567,11 @@ html[data-wuxing-theme="water"] .wuxing-theme-action {
   font-size:0.72rem;
   letter-spacing:0.14em;
 }
-.product-boundary-card h2 {
+.product-boundary-panel h2 {
   margin:0;
-  max-width:560px;
   font-family:var(--serif);
   color:var(--gold-bright);
-  font-size:clamp(1.5rem, 3vw, 2.25rem);
+  font-size:1.05rem;
   letter-spacing:0.04em;
 }
 .boundary-lead {
@@ -614,7 +582,7 @@ html[data-wuxing-theme="water"] .wuxing-theme-action {
 }
 .boundary-columns {
   display:grid;
-  grid-template-columns:repeat(2, minmax(0, 1fr));
+  grid-template-columns:1fr;
   gap:14px;
 }
 .boundary-columns section {
@@ -2288,5 +2256,5 @@ html.report-root {
 }
 @media (max-width: 640px) {
   .pillar-stage { grid-template-columns:repeat(2, 1fr); }
-  .product-boundary-card { padding:24px 18px; }
+  .product-boundary-panel { padding:16px 18px 18px; }
 }

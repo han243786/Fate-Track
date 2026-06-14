@@ -24,8 +24,7 @@ export function getDom() {
     },
     boundary: {
       button: required("#product-boundary-button"),
-      dialog: required("#product-boundary-dialog"),
-      closeButton: required("#product-boundary-close")
+      panel: required("#product-boundary-panel")
     },
     topicReport: {
       panel: required("#topic-report-panel"),

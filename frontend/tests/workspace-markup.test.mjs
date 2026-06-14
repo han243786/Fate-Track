@@ -37,9 +37,8 @@ describe("workspace markup", () => {
       "wuxing-theme-mark",
       "wuxing-theme-label",
       "product-boundary-button",
-      "product-boundary-dialog",
+      "product-boundary-panel",
       "product-boundary-title",
-      "product-boundary-close",
       "topic-report-panel",
       "topic-report-content",
       "lunar-display"
@@ -242,7 +241,7 @@ describe("workspace markup", () => {
     }
   });
 
-  it("shows a user-facing product boundary dialog without expanding features", () => {
+  it("shows a user-facing inline product boundary panel without expanding features", () => {
     assert.match(html, /id="product-boundary-button"/);
     assert.match(html, /查看边界/);
     assert.match(html, /命轨当前只做这些事/);
@@ -250,7 +249,11 @@ describe("workspace markup", () => {
     assert.match(html, /当前不做/);
     assert.match(html, /在线 AI 解读/);
     assert.match(html, /五行主题只改变视觉风格/);
-    assert.match(mainSource, /bindBoundaryDialog/);
+    assert.match(html, /id="product-boundary-panel"/);
+    assert.match(mainSource, /bindBoundaryPanel/);
+    assert.doesNotMatch(html, /<dialog|method="dialog"/);
+    assert.doesNotMatch(mainSource, /showModal|\.close\(\)/);
+    assert.doesNotMatch(stylesSource, /::backdrop|product-boundary-dialog/);
     assert.doesNotMatch(mainSource, /boundary.*ApiClient|ApiClient.*boundary/i);
   });
 

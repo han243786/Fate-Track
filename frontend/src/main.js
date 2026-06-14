@@ -41,7 +41,7 @@ hydrateForm();
 bindSexButtons();
 bindTopicButtons();
 bindThemeButton();
-bindBoundaryDialog();
+bindBoundaryPanel();
 syncSelectedTopic();
 syncWuxingTheme();
 
@@ -167,23 +167,12 @@ function bindThemeButton() {
   });
 }
 
-function bindBoundaryDialog() {
+function bindBoundaryPanel() {
   dom.boundary.button.addEventListener("click", () => {
-    if (typeof dom.boundary.dialog.showModal === "function") {
-      dom.boundary.dialog.showModal();
-      return;
-    }
-    dom.boundary.dialog.setAttribute("open", "");
-  });
-
-  dom.boundary.dialog.addEventListener("click", event => {
-    if (event.target === dom.boundary.dialog) {
-      dom.boundary.dialog.close();
-    }
-  });
-
-  dom.boundary.dialog.addEventListener("close", () => {
-    dom.boundary.button.focus();
+    const willOpen = dom.boundary.panel.hasAttribute("hidden");
+    dom.boundary.panel.toggleAttribute("hidden", !willOpen);
+    dom.boundary.button.setAttribute("aria-expanded", String(willOpen));
+    dom.boundary.button.textContent = willOpen ? "收起边界" : "查看边界";
   });
 }
 
