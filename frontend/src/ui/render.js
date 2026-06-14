@@ -62,7 +62,7 @@ export function renderChart(dom, result) {
 }
 
 export function renderChartError(dom, error) {
-  dom.chart.pillars.innerHTML = `<p class="empty-state">排盘失败: ${error.message}</p>`;
+  dom.chart.pillars.innerHTML = `<p class="empty-state">排盘暂时没有完成，请检查出生日期与时间后再试。</p>`;
   dom.chart.summary.innerHTML = "";
 }
 
@@ -167,7 +167,7 @@ function shouldRenderInsightTag(title) {
 }
 
 export function renderAnalysisError(dom, error) {
-  dom.analysis.elementBars.innerHTML = `<p class="empty-state">${error.message}</p>`;
+  dom.analysis.elementBars.innerHTML = `<p class="empty-state">结构分析暂时没有完成，请重新起盘后再试。</p>`;
   dom.analysis.godChips.innerHTML = "";
   dom.analysis.hiddenStemTable.innerHTML = "";
   dom.analysis.cards.innerHTML = "";
@@ -182,18 +182,18 @@ const TOPIC_LABELS = {
 
 export function renderTopicReportLoading(dom, topic) {
   const label = topicLabel(topic);
-  dom.topicReport.title.textContent = `${label}\u7ed3\u6784\u4fe1\u53f7`;
-  dom.topicReport.status.textContent = "\u751f\u6210\u4e2d";
+  dom.topicReport.title.textContent = `${label}\u7ed3\u6784\u7ebf\u7d22`;
+  dom.topicReport.status.textContent = "\u6574\u7406\u4e2d";
   dom.topicReport.content.innerHTML = "";
   const state = document.createElement("p");
   state.className = "empty-state";
-  state.textContent = "\u7ed3\u6784\u4fe1\u53f7\u6b63\u5728\u63d0\u53d6";
+  state.textContent = "\u7ed3\u6784\u7ebf\u7d22\u6b63\u5728\u6574\u7406";
   dom.topicReport.content.append(state);
 }
 
-export function renderTopicReportIdle(dom, message = "\u4e13\u9879\u62a5\u544a\u5f85\u751f\u6210") {
+export function renderTopicReportIdle(dom, message = "\u4e13\u9879\u63a8\u6f14\u5f85\u6574\u7406") {
   dom.topicReport.title.textContent = "\u4e13\u9879\u63a8\u6f14";
-  dom.topicReport.status.textContent = "\u5f85\u751f\u6210";
+  dom.topicReport.status.textContent = "\u5f85\u6574\u7406";
   dom.topicReport.content.innerHTML = "";
   const state = document.createElement("p");
   state.className = "empty-state";
@@ -203,14 +203,14 @@ export function renderTopicReportIdle(dom, message = "\u4e13\u9879\u62a5\u544a\u
 
 export function renderTopicReport(dom, report) {
   const label = report.topic_label || topicLabel(report.topic);
-  dom.topicReport.title.textContent = `${label}\u7ed3\u6784\u4fe1\u53f7`;
+  dom.topicReport.title.textContent = `${label}\u7ed3\u6784\u7ebf\u7d22`;
   dom.topicReport.status.textContent = `${report.year} \u00b7 ${yearSourceLabel(report.year_source)}`;
   dom.topicReport.content.innerHTML = "";
 
   const signals = document.createElement("section");
   signals.className = "topic-signal-section topic-signal-only";
   const title = document.createElement("h3");
-  title.textContent = "\u7ed3\u6784\u4fe1\u53f7";
+  title.textContent = "\u7ed3\u6784\u7ebf\u7d22";
   signals.append(title);
 
   if (Array.isArray(report.signals) && report.signals.length > 0) {
@@ -235,7 +235,7 @@ export function renderTopicReport(dom, report) {
   } else {
     const empty = document.createElement("p");
     empty.className = "empty-state";
-    empty.textContent = "\u6682\u65e0\u7ed3\u6784\u4fe1\u53f7";
+    empty.textContent = "\u6682\u65e0\u7ed3\u6784\u7ebf\u7d22";
     signals.append(empty);
   }
 
@@ -244,11 +244,11 @@ export function renderTopicReport(dom, report) {
 
 export function renderTopicReportError(dom, error) {
   dom.topicReport.title.textContent = "\u4e13\u9879\u63a8\u6f14";
-  dom.topicReport.status.textContent = "\u751f\u6210\u5931\u8d25";
+  dom.topicReport.status.textContent = "\u6682\u672a\u6574\u7406";
   dom.topicReport.content.innerHTML = "";
   const state = document.createElement("p");
   state.className = "empty-state";
-  state.textContent = `\u7ed3\u6784\u4fe1\u53f7\u751f\u6210\u5931\u8d25: ${error.message}`;
+  state.textContent = "\u7ed3\u6784\u7ebf\u7d22\u6682\u65f6\u6ca1\u6709\u6574\u7406\u5b8c\u6210\uff0c\u8bf7\u91cd\u65b0\u8d77\u76d8\u540e\u518d\u8bd5\u3002";
   dom.topicReport.content.append(state);
 }
 
@@ -344,7 +344,7 @@ export function renderLuckCycles(dom, data, luckReading, annualTriggerReading) {
       <div class="current-luck-meta">
         <span>观察年份 <strong>${yearText}</strong></span>
         <span>引动年份 <strong>${annualText}</strong></span>
-        <span>依据 <strong>${hasReadingBasis ? "已整理" : "待生成"}</strong></span>
+        <span>依据 <strong>${hasReadingBasis ? "已整理" : "待整理"}</strong></span>
       </div>
       <p>当前大运：<strong>${currentCycle.start_age}-${currentCycle.end_age}岁 · ${currentCycle.ganzhi}</strong></p>
       <p class="luck-reading-summary">${readingText}</p>

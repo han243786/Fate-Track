@@ -170,7 +170,7 @@ describe("workspace markup", () => {
       stylesSource
     ].join("\n");
 
-    assert.match(reportHtml, /本章节只展示已经生成的大运\/年度引动解释/);
+    assert.match(reportHtml, /本章节只展示已经整理好的大运\/年度引动解释/);
     assert.match(reportHtml, /不提供流月、流日、择日、事件预测/);
     assert.match(topicReportSource, /不构成确定性事件断语或现实决策承诺/);
     assert.match(topicReportSource, /不额外加入评分或事件断语/);
@@ -239,6 +239,45 @@ describe("workspace markup", () => {
       assert.match([reportHtml, topicReportSource, renderSource].join("\n"), /localizeVisibleText/);
       assert.match([reportHtml, topicReportSource, renderSource].join("\n"), new RegExp(internalMarker));
     }
+  });
+
+  it("keeps visible report chrome away from mechanical wording and backend errors", () => {
+    const visibleChrome = [
+      html,
+      reportHtml,
+      topicReportHtml,
+      topicReportSource,
+      renderSource
+    ].join("\n");
+
+    assert.match(reportHtml, /正在整理报告/);
+    assert.match(topicReportHtml, /正在整理专项报告/);
+    assert.match(reportHtml, /阅读依据/);
+    assert.match(reportHtml, /结构线索/);
+    assert.match(topicReportSource, /结构线索总览/);
+    assert.match(renderSource, /\\u7ed3\\u6784\\u7ebf\\u7d22/);
+
+    for (const forbidden of [
+      "正在生成报告",
+      "正在生成专项报告",
+      "报告生成失败",
+      "专项报告生成失败",
+      "生成失败",
+      "暂无报告数据",
+      "暂无专项报告数据",
+      "结构信号正在提取",
+      "结构信号生成失败",
+      "证据追踪",
+      "确定性快照",
+      "时间证据",
+      "未生成章节"
+    ]) {
+      assert.doesNotMatch(visibleChrome, new RegExp(forbidden));
+    }
+
+    assert.doesNotMatch(reportHtml, /error instanceof Error \? error\.message/);
+    assert.doesNotMatch(topicReportSource, /error instanceof Error \? error\.message/);
+    assert.doesNotMatch(renderSource, /error\.message/);
   });
 
   it("shows a user-facing inline product boundary panel without expanding features", () => {

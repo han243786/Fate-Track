@@ -35,7 +35,7 @@ async function boot() {
     const data = await client.topicReport(request);
     renderReport(data);
   } catch (error) {
-    renderError(`专项报告生成失败：${error instanceof Error ? error.message : String(error)}`);
+    renderError("专项报告暂时没有整理完成，请回到工作台重新起盘后再试。");
   }
 }
 
@@ -43,7 +43,7 @@ function renderReport(data) {
   if (!container) return;
   container.innerHTML = "";
   if (!data || !Array.isArray(data.blocks)) {
-    renderError("暂无专项报告数据");
+    renderError("暂时没有可读专项报告");
     return;
   }
 
@@ -66,10 +66,10 @@ function buildTopicBlocks(data) {
   if (Array.isArray(data.signals) && data.signals.length > 0) {
     blocks.push({
       id: "topic-signals",
-      title: "结构信号总览",
+      title: "结构线索总览",
       body: data.signals
         .map((signal) => {
-          const label = safeText(signal.label, signal.id || "结构信号");
+          const label = safeText(signal.label, signal.id || "结构线索");
           const level = safeText(signal.qualitative_level, "观察");
           const summary = safeText(signal.summary, "暂无摘要。");
           return `${label}：${level}\n${summary}`;
@@ -223,7 +223,7 @@ function createTopicTimelineGuide(data, blocks) {
     }),
     createTimelineGuideCard({
       title: "专题叠加章节",
-      value: relationshipTriggerBlock ? relationshipTriggerBlock.title : (overlayBlock ? overlayBlock.title : "未生成章节"),
+      value: relationshipTriggerBlock ? relationshipTriggerBlock.title : (overlayBlock ? overlayBlock.title : "章节待整理"),
       note: trace.length > 0 ? "已整理阅读依据" : "以章节正文为主",
       href: relationshipTriggerBlock
         ? findReportBlockHref(blocks, relationshipTriggerBlock.title)

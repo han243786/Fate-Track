@@ -27,7 +27,7 @@
     </header>
 
     <main class="report-page" id="report-page">
-      <p class="empty-state">正在生成报告…</p>
+      <p class="empty-state">正在整理报告…</p>
     </main>
 
     <script type="module">
@@ -56,14 +56,14 @@
           const data = await client.chartReport(request);
           renderReport(data);
         } catch (error) {
-          renderError(`报告生成失败：${error instanceof Error ? error.message : String(error)}`);
+          renderError("报告暂时没有整理完成，请回到工作台重新起盘后再试。");
         }
       }
 
       function renderReport(data) {
         container.innerHTML = "";
         if (!data || !Array.isArray(data.blocks)) {
-          renderError("暂无报告数据");
+          renderError("暂时没有可读报告");
           return;
         }
         const blocks = data.blocks ?? [];
@@ -181,7 +181,7 @@
         header.append(
           createEl("div", "report-block-kicker", "时间解释"),
           createEl("h2", "timeline-guide-title", "时间解释导航"),
-          createEl("p", "timeline-guide-lead", "这里集中展示已通过边界收口的大运阶段与年度引动。年份必须由页面显式传入；页面只呈现已经生成的解释、证据和边界提醒。")
+          createEl("p", "timeline-guide-lead", "这里集中展示已通过边界收口的大运阶段与年度引动。年份必须由页面显式传入；页面只呈现已经整理好的解释、依据和边界提醒。")
         );
 
         const controls = createTimelineYearControls();
@@ -196,15 +196,15 @@
           }),
           createTimelineGuideCard({
             title: "年度引动",
-            value: annual.annual_pillar?.ganzhi || "未生成",
+            value: annual.annual_pillar?.ganzhi || "待整理",
             note: annual.year ? `${annual.year} 年 · ${yearSourceLabel(annual.year_source)}` : "未收到引动年",
             href: findReportBlockHref(blocks, "年度引动"),
             tone: "annual"
           }),
           createTimelineGuideCard({
-            title: "证据追踪",
-            value: `${countItems(luck.evidence) + countItems(annual.evidence)} 条证据`,
-            note: `${countItems(luck.signals) + countItems(annual.signals)} 条结构信号，${countItems(luck.readings) + countItems(annual.readings)} 条解释`,
+            title: "阅读依据",
+            value: `${countItems(luck.evidence) + countItems(annual.evidence)} 条依据`,
+            note: `${countItems(luck.signals) + countItems(annual.signals)} 条结构线索，${countItems(luck.readings) + countItems(annual.readings)} 条解释`,
             href: "#timeline-evidence",
             tone: "evidence"
           })
@@ -213,8 +213,8 @@
         const evidence = createEl("div", "timeline-evidence-grid");
         evidence.id = "timeline-evidence";
         evidence.append(
-          createTimelineReadingDetails("大运证据", luck),
-          createTimelineReadingDetails("年度证据", annual)
+          createTimelineReadingDetails("大运依据", luck),
+          createTimelineReadingDetails("年度依据", annual)
         );
 
         section.append(header, controls, cards, evidence);
@@ -273,8 +273,8 @@
 
       function createTimelineReadingDetails(title, reading) {
         const details = createEl("details", "timeline-evidence-detail");
-        details.open = title === "大运证据";
-        details.append(createEl("summary", "", `${title} · ${countItems(reading?.signals)} 信号 / ${countItems(reading?.evidence)} 证据`));
+        details.open = title === "大运依据";
+        details.append(createEl("summary", "", `${title} · ${countItems(reading?.signals)} 线索 / ${countItems(reading?.evidence)} 依据`));
         const content = createEl("div", "timeline-evidence-content");
         const readings = Array.isArray(reading?.readings) ? reading.readings : [];
         const signals = Array.isArray(reading?.signals) ? reading.signals : [];
@@ -287,7 +287,7 @@
             content.append(createTimelineEvidenceItem("边界提醒", item.boundary));
           });
         } else {
-          content.append(createTimelineEvidenceItem("说明", "当前没有返回可展开解释，保留章节正文作为阅读主体。"));
+          content.append(createTimelineEvidenceItem("说明", "当前还没有可展开的补充解读，先以章节正文为主。"));
         }
 
         if (signals.length > 0) {
@@ -342,9 +342,9 @@
 
         const footer = createEl("footer", "report-block-footer");
         footer.append(
-          createEl("span", "", "确定性快照"),
+          createEl("span", "", "边界已锁定"),
           createEl("span", "", "只读边界"),
-          createEl("span", "", timelineKind ? "时间证据" : "命轨")
+          createEl("span", "", timelineKind ? "时间依据" : "命轨")
         );
 
         section.append(frame, aura, scan, kicker, title, rule, body, footer);
@@ -361,7 +361,7 @@
           const details = createEl("details", "timeline-inline-detail");
           details.append(
             createEl("summary", "", "阅读边界"),
-            createEl("p", "", "本章节只展示已经生成的大运/年度引动解释，不提供流月、流日、择日、事件预测或现实决策建议。")
+            createEl("p", "", "本章节只展示已经整理好的大运/年度引动解释，不提供流月、流日、择日、事件预测或现实决策建议。")
           );
           body.append(details);
         }
