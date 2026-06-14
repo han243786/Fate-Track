@@ -117,89 +117,77 @@
   --theme-shadow: 0 28px 98px rgba(0, 0, 0, 0.58), 0 0 56px color-mix(in srgb, var(--gold) 10%, transparent);
 }
 
+.report-root[data-wuxing-theme="metal"],
+.report-root[data-wuxing-theme="wood"],
+.report-root[data-wuxing-theme="water"],
+.report-root[data-wuxing-theme="fire"],
+.report-root[data-wuxing-theme="earth"] {
+  --theme-haze-c: color-mix(in srgb, var(--theme-ink) 5%, transparent);
+}
+
 .report-root[data-wuxing-theme="metal"] {
-  --theme-accent: #cfd8d3;
-  --theme-accent-2: #8fbec3;
-  --theme-ink: #f3f5ef;
-  --theme-muted: #b8c0bb;
-  --theme-panel: rgba(15, 18, 18, 0.87);
-  --theme-panel-2: rgba(22, 26, 25, 0.91);
-  --theme-line: rgba(197, 205, 199, 0.28);
-  --theme-line-strong: rgba(216, 224, 219, 0.58);
-  --theme-haze-a: rgba(210, 219, 214, 0.13);
-  --theme-haze-b: rgba(125, 166, 174, 0.10);
-  --theme-haze-c: rgba(246, 250, 245, 0.05);
-  --theme-bg: radial-gradient(circle at 18% 10%, rgba(210, 219, 214, 0.13), transparent 30rem), radial-gradient(circle at 84% 22%, rgba(125, 166, 174, 0.10), transparent 32rem), radial-gradient(circle at 48% 58%, rgba(198, 160, 103, 0.07), transparent 28rem), linear-gradient(135deg, #050606 0%, #111716 50%, #050606 100%);
-  --theme-hero: radial-gradient(circle at 20% 42%, rgba(210, 219, 214, 0.13), transparent 28rem), radial-gradient(circle at 86% 50%, rgba(125, 166, 174, 0.10), transparent 30rem), linear-gradient(145deg, rgba(22, 26, 25, 0.91), #070909);
-  --theme-shadow: 0 28px 98px rgba(0, 0, 0, 0.58), 0 0 56px rgba(210, 219, 214, 0.09);
+  --theme-accent: hsl(150 12% 82%);
+  --theme-accent-2: hsl(185 31% 66%);
+  --theme-ink: hsl(84 22% 95%);
+  --theme-muted: hsl(145 8% 74%);
+  --theme-panel: hsl(172 12% 7% / 0.87);
+  --theme-panel-2: hsl(165 10% 10% / 0.91);
+  --theme-line: hsl(150 10% 78% / 0.28);
+  --theme-line-strong: hsl(150 12% 86% / 0.58);
+  --theme-haze-a: hsl(150 13% 84% / 0.13);
+  --theme-haze-b: hsl(188 25% 59% / 0.10);
 }
 
 .report-root[data-wuxing-theme="wood"] {
-  --theme-accent: #88c77a;
-  --theme-accent-2: #d0b875;
-  --theme-ink: #eff8ee;
-  --theme-muted: #a9c3a7;
-  --theme-panel: rgba(7, 24, 14, 0.86);
-  --theme-panel-2: rgba(11, 34, 20, 0.90);
-  --theme-line: rgba(118, 178, 112, 0.29);
-  --theme-line-strong: rgba(135, 202, 123, 0.58);
-  --theme-haze-a: rgba(111, 181, 96, 0.16);
-  --theme-haze-b: rgba(202, 180, 111, 0.10);
-  --theme-haze-c: rgba(216, 240, 199, 0.05);
-  --theme-bg: radial-gradient(circle at 18% 10%, rgba(111, 181, 96, 0.16), transparent 30rem), radial-gradient(circle at 84% 22%, rgba(202, 180, 111, 0.10), transparent 32rem), radial-gradient(circle at 48% 58%, rgba(104, 172, 154, 0.08), transparent 28rem), linear-gradient(135deg, #020805 0%, #0a1f13 50%, #030704 100%);
-  --theme-hero: radial-gradient(circle at 20% 42%, rgba(111, 181, 96, 0.16), transparent 28rem), radial-gradient(circle at 86% 50%, rgba(202, 180, 111, 0.10), transparent 30rem), linear-gradient(145deg, rgba(11, 34, 20, 0.90), #041009);
-  --theme-shadow: 0 28px 98px rgba(0, 0, 0, 0.58), 0 0 56px rgba(111, 181, 96, 0.10);
+  --theme-accent: hsl(110 43% 63%);
+  --theme-accent-2: hsl(45 51% 64%);
+  --theme-ink: hsl(114 38% 95%);
+  --theme-muted: hsl(116 22% 71%);
+  --theme-panel: hsl(145 58% 6% / 0.86);
+  --theme-panel-2: hsl(145 51% 9% / 0.90);
+  --theme-line: hsl(115 33% 57% / 0.29);
+  --theme-line-strong: hsl(110 43% 64% / 0.58);
+  --theme-haze-a: hsl(110 42% 54% / 0.16);
+  --theme-haze-b: hsl(46 49% 62% / 0.10);
 }
 
 .report-root[data-wuxing-theme="water"] {
-  --theme-accent: #7eb8d6;
-  --theme-accent-2: #9e88d8;
-  --theme-ink: #eef8fb;
-  --theme-muted: #9fb9c5;
-  --theme-panel: rgba(5, 16, 24, 0.86);
-  --theme-panel-2: rgba(8, 23, 34, 0.90);
-  --theme-line: rgba(111, 176, 205, 0.27);
-  --theme-line-strong: rgba(111, 176, 205, 0.58);
-  --theme-haze-a: rgba(91, 147, 188, 0.15);
-  --theme-haze-b: rgba(112, 98, 178, 0.12);
-  --theme-haze-c: rgba(210, 238, 247, 0.05);
-  --theme-bg: radial-gradient(circle at 18% 10%, rgba(91, 147, 188, 0.15), transparent 30rem), radial-gradient(circle at 84% 22%, rgba(112, 98, 178, 0.12), transparent 32rem), radial-gradient(circle at 48% 58%, rgba(95, 151, 142, 0.08), transparent 28rem), linear-gradient(135deg, #020509 0%, #071523 50%, #030407 100%);
-  --theme-hero: radial-gradient(circle at 20% 42%, rgba(91, 147, 188, 0.15), transparent 28rem), radial-gradient(circle at 86% 50%, rgba(112, 98, 178, 0.12), transparent 30rem), linear-gradient(145deg, rgba(8, 23, 34, 0.90), #03080d);
-  --theme-shadow: 0 28px 98px rgba(0, 0, 0, 0.58), 0 0 56px rgba(91, 147, 188, 0.10);
+  --theme-accent: hsl(199 50% 67%);
+  --theme-accent-2: hsl(256 44% 69%);
+  --theme-ink: hsl(190 38% 95%);
+  --theme-muted: hsl(195 24% 72%);
+  --theme-panel: hsl(203 58% 6% / 0.86);
+  --theme-panel-2: hsl(205 48% 9% / 0.90);
+  --theme-line: hsl(199 40% 62% / 0.27);
+  --theme-line-strong: hsl(199 42% 66% / 0.58);
+  --theme-haze-a: hsl(206 39% 55% / 0.15);
+  --theme-haze-b: hsl(252 34% 54% / 0.12);
 }
 
 .report-root[data-wuxing-theme="fire"] {
-  --theme-accent: #e9825e;
-  --theme-accent-2: #e3bd69;
-  --theme-ink: #fff2e9;
-  --theme-muted: #d7ad9a;
-  --theme-panel: rgba(30, 11, 8, 0.86);
-  --theme-panel-2: rgba(45, 18, 12, 0.90);
-  --theme-line: rgba(218, 112, 81, 0.30);
-  --theme-line-strong: rgba(233, 132, 92, 0.60);
-  --theme-haze-a: rgba(225, 91, 66, 0.17);
-  --theme-haze-b: rgba(218, 171, 84, 0.11);
-  --theme-haze-c: rgba(255, 211, 182, 0.05);
-  --theme-bg: radial-gradient(circle at 18% 10%, rgba(225, 91, 66, 0.17), transparent 30rem), radial-gradient(circle at 84% 22%, rgba(218, 171, 84, 0.11), transparent 32rem), radial-gradient(circle at 48% 58%, rgba(100, 151, 156, 0.07), transparent 28rem), linear-gradient(135deg, #090303 0%, #24100b 50%, #080302 100%);
-  --theme-hero: radial-gradient(circle at 20% 42%, rgba(225, 91, 66, 0.17), transparent 28rem), radial-gradient(circle at 86% 50%, rgba(218, 171, 84, 0.11), transparent 30rem), linear-gradient(145deg, rgba(45, 18, 12, 0.90), #130707);
-  --theme-shadow: 0 28px 98px rgba(0, 0, 0, 0.58), 0 0 56px rgba(225, 91, 66, 0.10);
+  --theme-accent: hsl(16 76% 64%);
+  --theme-accent-2: hsl(43 69% 65%);
+  --theme-ink: hsl(24 100% 96%);
+  --theme-muted: hsl(18 44% 73%);
+  --theme-panel: hsl(10 58% 8% / 0.86);
+  --theme-panel-2: hsl(13 58% 11% / 0.90);
+  --theme-line: hsl(14 64% 59% / 0.30);
+  --theme-line-strong: hsl(15 78% 64% / 0.60);
+  --theme-haze-a: hsl(9 72% 57% / 0.17);
+  --theme-haze-b: hsl(40 64% 59% / 0.11);
 }
 
 .report-root[data-wuxing-theme="earth"] {
-  --theme-accent: #d6b45d;
-  --theme-accent-2: #9faf72;
-  --theme-ink: #fbf4df;
-  --theme-muted: #c9b985;
-  --theme-panel: rgba(29, 22, 9, 0.86);
-  --theme-panel-2: rgba(41, 31, 12, 0.90);
-  --theme-line: rgba(202, 169, 87, 0.30);
-  --theme-line-strong: rgba(221, 186, 93, 0.60);
-  --theme-haze-a: rgba(215, 177, 87, 0.16);
-  --theme-haze-b: rgba(131, 151, 96, 0.10);
-  --theme-haze-c: rgba(246, 221, 160, 0.05);
-  --theme-bg: radial-gradient(circle at 18% 10%, rgba(215, 177, 87, 0.16), transparent 30rem), radial-gradient(circle at 84% 22%, rgba(131, 151, 96, 0.10), transparent 32rem), radial-gradient(circle at 48% 58%, rgba(162, 107, 79, 0.08), transparent 28rem), linear-gradient(135deg, #080603 0%, #1f1709 50%, #080603 100%);
-  --theme-hero: radial-gradient(circle at 20% 42%, rgba(215, 177, 87, 0.16), transparent 28rem), radial-gradient(circle at 86% 50%, rgba(131, 151, 96, 0.10), transparent 30rem), linear-gradient(145deg, rgba(41, 31, 12, 0.90), #110d05);
-  --theme-shadow: 0 28px 98px rgba(0, 0, 0, 0.58), 0 0 56px rgba(215, 177, 87, 0.10);
+  --theme-accent: hsl(43 60% 60%);
+  --theme-accent-2: hsl(76 30% 57%);
+  --theme-ink: hsl(44 68% 93%);
+  --theme-muted: hsl(45 39% 65%);
+  --theme-panel: hsl(39 54% 7% / 0.86);
+  --theme-panel-2: hsl(40 54% 10% / 0.90);
+  --theme-line: hsl(42 55% 57% / 0.30);
+  --theme-line-strong: hsl(43 64% 62% / 0.60);
+  --theme-haze-a: hsl(42 61% 59% / 0.16);
+  --theme-haze-b: hsl(82 25% 48% / 0.10);
 }
 
 .report-root[data-report-theme] body.report-body {

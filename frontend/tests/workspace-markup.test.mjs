@@ -80,6 +80,22 @@ describe("workspace markup", () => {
     assert.doesNotMatch(mainSource, /wuxing.*ApiClient|ApiClient.*wuxing/i);
   });
 
+  it("keeps wuxing palettes systematic instead of single-hue recolors", () => {
+    assert.match(stylesSource, /HSL palettes keep hue, saturation, lightness, and contrast explicit/);
+    for (const theme of ["metal", "wood", "water", "fire", "earth"]) {
+      const block = stylesSource.match(new RegExp(`html\\[data-wuxing-theme="${theme}"\\] \\{[\\s\\S]*?\\n\\}`));
+      assert.ok(block, `${theme} palette exists`);
+      assert.match(block[0], /--bg: hsl\(/);
+      assert.match(block[0], /--ink: hsl\(/);
+      assert.match(block[0], /--gold: hsl\(/);
+      assert.match(block[0], /--jade: hsl\(/);
+      assert.match(block[0], /--bg-glow-a: hsl\(/);
+    }
+    assert.match(reportThemesSource, /data-wuxing-theme="metal"[\s\S]*--theme-accent: hsl\(/);
+    assert.match(reportThemesSource, /data-wuxing-theme="earth"[\s\S]*--theme-accent-2: hsl\(/);
+    assert.doesNotMatch(reportThemesSource, /data-wuxing-theme="metal"[\s\S]*#cfd8d3/);
+  });
+
   it("clears stale topic output when the chart is recalculated", () => {
     assert.match(mainSource, /renderTopicReportIdle/);
     assert.match(mainSource, /排盘资料已更新，请重新选择专项推演/);
