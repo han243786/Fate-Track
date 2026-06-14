@@ -215,9 +215,9 @@ function createTopicTimelineGuide(data, blocks) {
       tone: "topic"
     }),
     createTimelineGuideCard({
-      title: "显式年度",
+      title: "已选年份",
       value: `${data.year || request.year} 年`,
-      note: data.year_source === "explicit" ? "显式年份" : safeText(data.year_source, "年度"),
+      note: data.year_source === "explicit" ? "按当前选择" : safeText(data.year_source, "年度"),
       href: "#topic-timeline-guide",
       tone: "annual"
     }),
@@ -241,7 +241,7 @@ function createTopicTimelineGuide(data, blocks) {
 
 function createTopicYearControls() {
   const form = createEl("form", "timeline-year-control");
-  form.setAttribute("aria-label", "专项报告显式年份选择");
+  form.setAttribute("aria-label", "专项报告年份选择");
   form.append(createYearField("专题观察年", "year", request.year), createEl("button", "timeline-year-submit", "应用年份"));
   form.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -292,7 +292,7 @@ function createTopicTraceDetails(trace, warnings) {
   if (trace.length > 0) {
     trace.forEach((item) => {
       const label = traceSourceLabel(item.source || item.id);
-      const interpretation = safeText(item.interpretation, "本段依据当前命盘结构与显式年份合参。");
+      const interpretation = safeText(item.interpretation, "本段依据当前命盘结构与已选年份合参。");
       content.append(createTimelineEvidenceItem(label, interpretation));
     });
   } else {
@@ -344,7 +344,7 @@ function createReportBlock(block, indexNumber) {
   const footer = createEl("footer", "report-block-footer");
   footer.append(
     createEl("span", "", topicMeta.capability),
-    createEl("span", "", "显式年份"),
+    createEl("span", "", "已选年份"),
     createEl("span", "", timelineKind ? "专题时间解释" : "命轨")
   );
 

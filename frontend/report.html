@@ -181,7 +181,7 @@
         header.append(
           createEl("div", "report-block-kicker", "时间解释"),
           createEl("h2", "timeline-guide-title", "时间解释导航"),
-          createEl("p", "timeline-guide-lead", "这里集中展示已通过边界收口的大运阶段与年度引动。年份必须由页面显式传入；页面只呈现已经整理好的解释、依据和边界提醒。")
+          createEl("p", "timeline-guide-lead", "这里集中展示已通过边界收口的大运阶段与年度引动。年份以页面当前选择为准；页面只呈现已经整理好的解释、依据和边界提醒。")
         );
 
         const controls = createTimelineYearControls();
@@ -223,7 +223,7 @@
 
       function createTimelineYearControls() {
         const form = createEl("form", "timeline-year-control");
-        form.setAttribute("aria-label", "显式年份选择");
+        form.setAttribute("aria-label", "年份选择");
         form.append(
           createYearField("大运观察年", "reading_year", request.readingYear),
           createYearField("年度引动年", "year", request.year),
@@ -510,7 +510,7 @@
         return /^\d{4}$/.test(text) ? text : String(fallback || new Date().getFullYear());
       }
       function yearSourceLabel(source) {
-        return source === "explicit" ? "显式年份" : safeText(source, "年度");
+        return source === "explicit" ? "已选年份" : safeText(source, "年度");
       }
       function timelineSourceLabel(source) {
         const labels = {

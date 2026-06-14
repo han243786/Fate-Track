@@ -218,6 +218,8 @@ describe("workspace markup", () => {
       "Archive Section",
       "Topic Section",
       "explicit year",
+      "\u663e\u5f0f\u5e74\u4efd",
+      "\u663e\u5f0f\u5e74\u5ea6",
       "timeline evidence",
       "deterministic snapshot",
       "observation year",

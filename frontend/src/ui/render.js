@@ -257,7 +257,7 @@ function topicLabel(topic) {
 }
 
 function yearSourceLabel(source) {
-  return source === "explicit" ? "\u663e\u5f0f\u5e74\u5ea6" : source || "\u5e74\u5ea6";
+  return source === "explicit" ? "\u5df2\u9009\u5e74\u4efd" : source || "\u5e74\u5ea6";
 }
 
 function localizeVisibleText(value) {
