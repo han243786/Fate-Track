@@ -383,7 +383,7 @@ fn block_overview(chart: &crate::domain::bazi::ChartResult) -> ReportBlock {
         .unwrap_or_else(|| "未知（时辰未提供）".to_string());
 
     let unknown_note = if chart.chart.hour.is_none() {
-        "\n\n因为当前时辰没有完整提供，时柱部分会显示为未知或候选状态。命轨不会在前端或报告中强行补推时辰，因此这一部分需要按「信息不完整」来阅读。"
+        "\n\n因为当前时辰没有完整提供，时柱部分会显示为未知或候选状态。命轨不会在界面或报告中强行补推时辰，因此这一部分需要按「信息不完整」来阅读。"
     } else {
         ""
     };
@@ -1718,11 +1718,23 @@ mod tests {
     fn report_passes_forbidden_output_audit() {
         let result = generate(&sample_config(), &sample_request()).unwrap();
         assert!(result.body.contains("\"status\":\"passed\""));
-        assert!(!result.body.contains("diagnosis"));
-        assert!(!result.body.contains("guaranteed wealth"));
-        assert!(!result.body.contains("death"));
-        assert!(!result.body.contains("disease"));
-        assert!(!result.body.contains("divorce is certain"));
+        for forbidden in [
+            "diagnosis",
+            "guaranteed wealth",
+            "death",
+            "disease",
+            "divorce is certain",
+            "前端",
+            "后端",
+            "DTO",
+            "score_internal",
+            "error.message",
+        ] {
+            assert!(
+                !result.body.contains(forbidden),
+                "main report leaked forbidden public wording: {forbidden}"
+            );
+        }
     }
 
     #[test]
@@ -1733,5 +1745,7 @@ mod tests {
         let resp = result.unwrap();
         assert!(resp.body.contains("未知（时辰未提供）"));
         assert!(resp.body.contains("信息不完整"));
+        assert!(!resp.body.contains("前端"));
+        assert!(!resp.body.contains("后端"));
     }
 }
