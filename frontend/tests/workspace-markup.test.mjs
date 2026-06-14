@@ -173,7 +173,7 @@ describe("workspace markup", () => {
     assert.match(reportHtml, /本章节只展示已经整理好的大运\/年度引动解释/);
     assert.match(reportHtml, /不提供流月、流日、择日、事件预测/);
     assert.match(topicReportSource, /不构成确定性事件断语或现实决策承诺/);
-    assert.match(topicReportSource, /不额外加入评分或事件断语/);
+    assert.match(topicReportSource, /不额外加入等级化结论或事件断语/);
     assert.match(reportHtml, /input\.min = "1901"/);
     assert.match(reportHtml, /input\.max = "2100"/);
     assert.match(topicReportSource, /input\.min = "1901"/);
@@ -181,6 +181,7 @@ describe("workspace markup", () => {
 
     for (const forbidden of [
       "score_internal",
+      "评分",
       "0-100",
       "后端返回",
       "前端追加",

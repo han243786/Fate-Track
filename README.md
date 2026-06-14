@@ -19,7 +19,7 @@ Windows 预览版：
 当前包的 SHA256：
 
 ```text
-65dae09c488e803d7e24f79f6ab1b79140d500314bcc597b67202cf2369a99a3  Fate-Track-Windows-x64.zip
+2e1e1382a33af8f438e9dd21c4f66ea92fe600dec5f81367c26c42d43d716cc8  Fate-Track-Windows-x64.zip
 ```
 
 ## 安装与启动
@@ -109,7 +109,7 @@ Windows 预览版：
 - 农历日期直接输入
 - 真太阳时
 - IANA 历史时区
-- 账号系统
+- 账号功能
 - 云端同步
 - 自动更新
 - 在线智能解读
@@ -128,7 +128,7 @@ Get-FileHash -Algorithm SHA256 .\Fate-Track-Windows-x64.zip
 得到的值应为：
 
 ```text
-65dae09c488e803d7e24f79f6ab1b79140d500314bcc597b67202cf2369a99a3
+2e1e1382a33af8f438e9dd21c4f66ea92fe600dec5f81367c26c42d43d716cc8
 ```
 
 ## 常见问题

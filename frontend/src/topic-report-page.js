@@ -201,7 +201,7 @@ function createTopicTimelineGuide(data, blocks) {
   header.append(
     createEl("div", "report-block-kicker", "专题时间解释"),
     createEl("h2", "timeline-guide-title", "本专题的时间解释"),
-    createEl("p", "timeline-guide-lead", "这里把大运与流年的结构线索落到当前专题。页面只呈现专题叠加、阅读依据和阅读边界，不额外加入评分或事件断语。")
+    createEl("p", "timeline-guide-lead", "这里把大运与流年的结构线索落到当前专题。页面只呈现专题叠加、阅读依据和阅读边界，不额外加入等级化结论或事件断语。")
   );
 
   const controls = createTopicYearControls();
