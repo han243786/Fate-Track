@@ -3,7 +3,7 @@ use crate::domain::bazi::{ChartResult, Pillar, TimePrecision};
 pub const ANALYSIS_ALGO_VERSION: &str = "structured-analysis-v1";
 pub const DISCLAIMER_ID: &str = "traditional-interpretation-not-professional-advice-v1";
 
-const FORBIDDEN_PATTERNS: [&str; 13] = [
+const FORBIDDEN_PATTERNS: &[&str] = &[
     "diagnosis",
     "disease",
     "death",
@@ -17,6 +17,8 @@ const FORBIDDEN_PATTERNS: [&str; 13] = [
     "criminal",
     "abuse certainty",
     "destiny requires",
+    "综合评分",
+    "/10",
 ];
 
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -145,7 +147,7 @@ impl AnalysisSnapshot {
                 title: "日主强弱".into(),
                 severity: "info".into(),
                 body: format!(
-                    "日主「{}」属{}{}，得令{}，得地{}支，得势{}干。综合评分{}/10，判定为「{}」。",
+                    "日主「{}」属{}{}，得令{}，得地{}支，得势{}干。综合这些结构，当前判为「{}」。",
                     day_master,
                     stem_element(&day_master),
                     if ["甲", "丙", "戊", "庚", "壬"].contains(&day_master.as_str()) {
@@ -156,7 +158,6 @@ impl AnalysisSnapshot {
                     if strength.deling { "✓" } else { "✗" },
                     strength.dedi,
                     strength.deshi,
-                    strength.score,
                     strength.level
                 ),
             },
@@ -420,9 +421,25 @@ mod tests {
 
     #[test]
     fn forbidden_output_audit_rejects_high_risk_claims() {
-        let audit = audit_text("This is guaranteed wealth and medical diagnosis.");
+        let audit = audit_text("This is guaranteed wealth and medical diagnosis. 综合评分9/10。");
 
         assert_eq!(audit.status, "rejected");
         assert!(audit.checked_patterns > 5);
+    }
+
+    #[test]
+    fn analysis_cards_do_not_expose_numeric_scoring_copy() {
+        let snapshot = AnalysisSnapshot::build(&chart());
+        let body = snapshot
+            .cards
+            .iter()
+            .find(|card| card.id == "day-master-strength")
+            .map(|card| card.body.as_str())
+            .unwrap();
+
+        assert!(!body.contains("综合评分"));
+        assert!(!body.contains("/10"));
+        assert!(body.contains("综合这些结构，当前判为"));
+        assert_eq!(snapshot.forbidden_output_audit.status, "passed");
     }
 }

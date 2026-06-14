@@ -48,7 +48,11 @@ const TOPIC_FORBIDDEN_PATTERNS: &[&str] = &[
     "确定发生",
     "当前算法",
     "系统给出",
+    "评分",
     "综合评分",
+    "自动生成",
+    "不生成年度解释",
+    "本追踪",
     "相关信号共",
     "未见明显显性信号",
     "这份盘面目前没有触发",
@@ -1344,7 +1348,7 @@ fn topic_timeline_trace(overlay: &TopicTimelineOverlay) -> TopicTrace {
         id: "topic-timeline-overlay",
         source: overlay.rule_version,
         evidence: overlay.selected_evidence.clone(),
-        interpretation: "本追踪只把大运与流年的结构线索对应到当前专题，不额外生成现实事件判断。"
+        interpretation: "本段只把大运与流年的结构线索对应到当前专题，不额外加入现实事件判断。"
             .to_string(),
     }
 }
