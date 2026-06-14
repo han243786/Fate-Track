@@ -10,16 +10,16 @@
 
 Windows 预览版：
 
-[下载 Fate-Track-Windows-x64.zip](https://github.com/han243786/Fate-Track/raw/main/release-artifacts/desktop-windows/63cb0cb/Fate-Track-Windows-x64.zip)
+[下载 Fate-Track-Windows-x64.zip](https://github.com/han243786/Fate-Track/raw/main/release-artifacts/desktop-windows/latest/Fate-Track-Windows-x64.zip)
 
 校验文件：
 
-[SHA256SUMS.txt](https://github.com/han243786/Fate-Track/raw/main/release-artifacts/desktop-windows/63cb0cb/SHA256SUMS.txt)
+[SHA256SUMS.txt](https://github.com/han243786/Fate-Track/raw/main/release-artifacts/desktop-windows/latest/SHA256SUMS.txt)
 
 当前包的 SHA256：
 
 ```text
-0027647628d3614a93f861ff1babc43ab9f3412f58cd86f8ba4d350e05a3a766  Fate-Track-Windows-x64.zip
+5bcc3e73f4b1183e8306486af642cafb1f30c6cd33a39e8680ef7f2534ac316b  Fate-Track-Windows-x64.zip
 ```
 
 ## 安装与启动
@@ -128,7 +128,7 @@ Get-FileHash -Algorithm SHA256 .\Fate-Track-Windows-x64.zip
 得到的值应为：
 
 ```text
-0027647628d3614a93f861ff1babc43ab9f3412f58cd86f8ba4d350e05a3a766
+5bcc3e73f4b1183e8306486af642cafb1f30c6cd33a39e8680ef7f2534ac316b
 ```
 
 ## 常见问题

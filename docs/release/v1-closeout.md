@@ -111,5 +111,7 @@ LOOP-134 已完成静态兜底与前端异常文案产品化：桌面壳层静�
 
 LOOP-135 已完成用户封装包内容收束：本地 Windows 打包脚本和三平台 GitHub Actions 产物不再把 `v1-release-candidate.md`、`v1-closeout.md`、`desktop-packaging.md`、`current-product-boundary.md` 等治理文档放进普通用户包；封装包内 `README.md` 改由 `docs/release/user-package-readme.md` 生成，只保留启动、使用说明、能力边界和常见问题。新增 release 门禁防止治理文档、后端变量、raw/DTO/score 语境通过封装产物外露。能力状态不变，不新增 API、DTO、报告能力、score、存储或云同步能力。
 
+LOOP-136 已完成已发布用户下载产物排空：仓库内 Windows 预览包从旧提交目录迁移到 `release-artifacts/desktop-windows/latest`，旧 zip 中携带的 `docs/release` 治理文档已从当前主分支产物移除；根 README 下载链接与 SHA256 同步指向 `latest`。`tools/check-product-surface.ps1` 现在会直接打开最新 zip，校验包内仅含桌面程序与用户 README，并阻断治理文档、后端变量、raw/DTO/score 语境通过实际下载包回流。能力状态不变，不新增窗口、API、DTO、报告能力、score、存储或云同步能力。
+
 ---
 Closed: 2026-06-09

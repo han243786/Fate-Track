@@ -52,6 +52,8 @@ $mainSource = Read-Text "frontend/src/main.js"
 $topicReportSource = Read-Text "frontend/src/topic-report-page.js"
 $renderSource = Read-Text "frontend/src/ui/render.js"
 $apiClientSource = Read-Text "frontend/src/api/client.js"
+$releaseZipPath = Join-Path $projectPath "release-artifacts/desktop-windows/latest/Fate-Track-Windows-x64.zip"
+$releaseChecksumPath = Join-Path $projectPath "release-artifacts/desktop-windows/latest/SHA256SUMS.txt"
 
 $userDocs = $rootReadme + "`n" + $packageReadme
 $publicUiSources = @(
@@ -127,6 +129,69 @@ foreach ($forbiddenWindowPattern in @(
 )) {
     Assert-NotContains $publicUiSources $forbiddenWindowPattern "Public UI must not add window/dialog behavior: $forbiddenWindowPattern"
 }
+
+if (-not (Test-Path -LiteralPath $releaseZipPath)) {
+    throw "Missing latest Windows release zip: $releaseZipPath"
+}
+if (-not (Test-Path -LiteralPath $releaseChecksumPath)) {
+    throw "Missing latest Windows release checksum: $releaseChecksumPath"
+}
+
+Add-Type -AssemblyName System.IO.Compression.FileSystem
+$zip = [System.IO.Compression.ZipFile]::OpenRead($releaseZipPath)
+try {
+    $entries = @($zip.Entries | ForEach-Object { $_.FullName.Replace('\', '/') })
+    $entryText = $entries -join "`n"
+    foreach ($requiredEntry in @(
+        'Fate-Track-Windows-x64/minggui-desktop.exe',
+        'Fate-Track-Windows-x64/README.md'
+    )) {
+        Assert-Contains $entryText $requiredEntry "Latest Windows release zip is missing: $requiredEntry"
+    }
+    foreach ($forbiddenEntry in @(
+        '/docs/',
+        'BUILD-MANIFEST',
+        'v1-release-candidate',
+        'v1-closeout',
+        'desktop-packaging',
+        'current-product-boundary'
+    )) {
+        Assert-NotContains $entryText $forbiddenEntry "Latest Windows release zip leaked internal file: $forbiddenEntry"
+    }
+
+    $readmeEntry = $zip.Entries | Where-Object { $_.FullName.Replace('\', '/') -eq 'Fate-Track-Windows-x64/README.md' } | Select-Object -First 1
+    if ($null -eq $readmeEntry) {
+        throw "Latest Windows release zip is missing packaged README.md"
+    }
+    $reader = [System.IO.StreamReader]::new($readmeEntry.Open(), [System.Text.Encoding]::UTF8)
+    try {
+        $packagedReadme = $reader.ReadToEnd()
+    } finally {
+        $reader.Dispose()
+    }
+    foreach ($forbidden in @(
+        'docs/release/',
+        'v1-release-candidate',
+        'v1-closeout',
+        'desktop-packaging',
+        'current-product-boundary',
+        'GET /api',
+        'POST /api',
+        'DTO',
+        'score_internal',
+        'backend',
+        'frontend',
+        ' AI '
+    )) {
+        Assert-NotContains $packagedReadme $forbidden "Packaged README leaked developer or governance wording: $forbidden"
+    }
+} finally {
+    $zip.Dispose()
+}
+
+$checksumText = [System.IO.File]::ReadAllText($releaseChecksumPath, [System.Text.Encoding]::UTF8).Trim()
+$checksum = ($checksumText -split '\s+')[0]
+Assert-Contains $rootReadme $checksum "Root README SHA256 does not match latest Windows release checksum"
 
 Write-Host "Product surface check OK: $projectPath"
 exit 0
