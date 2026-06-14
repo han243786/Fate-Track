@@ -139,17 +139,30 @@ describe("workspace markup", () => {
     assert.doesNotMatch(stylesSource, /score_internal/);
   });
 
-  it("uses the provided report visual theme layer without changing report data", () => {
+  it("uses one main report layout for primary and topic reports without changing report data", () => {
     assert.match(reportHtml, /data-report-theme="main"/);
-    assert.match(topicReportHtml, /data-report-theme="relationship"/);
+    assert.match(topicReportHtml, /data-report-theme="main"/);
+    assert.match(topicReportHtml, /dataset\.reportTheme = "main"/);
+    assert.doesNotMatch(topicReportHtml, /dataset\.reportTheme = allowed\.has\(topic\)/);
     assert.match(reportHtml, /src\/report-themes\.css/);
     assert.match(topicReportHtml, /src\/report-themes\.css/);
     assert.match(reportHtml, /ft-wuxing-theme/);
     assert.match(topicReportHtml, /ft-wuxing-theme/);
     assert.match(reportThemesSource, /\.report-root\[data-wuxing-theme\]/);
-    for (const theme of ["main", "relationship", "wealth", "family", "career"]) {
-      assert.match(reportThemesSource, new RegExp(`data-report-theme="${theme}"`));
+    assert.match(reportThemesSource, /data-report-theme="main"/);
+    for (const topicTheme of ["relationship", "wealth", "family", "career"]) {
+      assert.doesNotMatch(reportThemesSource, new RegExp(`data-report-theme="${topicTheme}"`));
+      assert.doesNotMatch(topicReportHtml, new RegExp(`data-report-theme="${topicTheme}"`));
     }
+    assert.doesNotMatch(reportThemesSource, /grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);
+    assert.doesNotMatch(reportThemesSource, /overflow-x: auto/);
+    assert.doesNotMatch(reportThemesSource, /clip-path: polygon/);
+    assert.doesNotMatch(reportThemesSource, /columns: 2 280px/);
+    assert.doesNotMatch(reportThemesSource, /grid-column: [12]/);
+    assert.doesNotMatch(reportThemesSource, /grid-row: 1 \/ span 5/);
+    assert.doesNotMatch(reportThemesSource, /border-left: 1px solid var\(--theme-line\)/);
+    assert.match(reportThemesSource, /max-width: min\(1080px, 100%\)/);
+    assert.match(reportThemesSource, /border-top: 1px solid var\(--theme-line\)/);
     for (const theme of ["metal", "wood", "water", "fire", "earth"]) {
       assert.match(stylesSource, new RegExp(`data-wuxing-theme="${theme}"`));
       assert.match(reportThemesSource, new RegExp(`data-wuxing-theme="${theme}"`));

@@ -1,16 +1,14 @@
 <!doctype html>
-<html lang="zh-CN" class="report-root" data-report-theme="relationship">
+<html lang="zh-CN" class="report-root" data-report-theme="main">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>专项报告 - 命轨</title>
     <script>
       (() => {
-        const allowed = new Set(["relationship", "wealth", "family", "career"]);
         const wuxingThemes = new Set(["metal", "wood", "water", "fire", "earth"]);
         const savedTheme = localStorage.getItem("ft-wuxing-theme");
-        const topic = new URLSearchParams(window.location.search).get("topic") || "relationship";
-        document.documentElement.dataset.reportTheme = allowed.has(topic) ? topic : "relationship";
+        document.documentElement.dataset.reportTheme = "main";
         document.documentElement.dataset.wuxingTheme = wuxingThemes.has(savedTheme) ? savedTheme : "water";
       })();
     </script>
