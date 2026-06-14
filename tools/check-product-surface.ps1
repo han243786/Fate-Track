@@ -43,6 +43,11 @@ function Assert-NotContains {
     }
 }
 
+function Text-FromCodepoints {
+    param([int[]]$Codepoints)
+    return -join ($Codepoints | ForEach-Object { [char]$_ })
+}
+
 $rootReadme = Read-Text "README.md"
 $packageReadme = Read-Text "docs/release/user-package-readme.md"
 $workspaceHtml = Read-Text "frontend/index.html"
@@ -102,7 +107,12 @@ foreach ($forbidden in @(
     'DTO',
     'score_internal',
     'backend',
-    'frontend'
+    'frontend',
+    (Text-FromCodepoints @(0x751f, 0x6210, 0x547d, 0x76d8)),
+    (Text-FromCodepoints @(0x7cfb, 0x7edf, 0x4f1a)),
+    (Text-FromCodepoints @(0x6307, 0x5b9a, 0x5e74, 0x4efd)),
+    (Text-FromCodepoints @(0x663e, 0x5f0f, 0x5e74, 0x4efd)),
+    (Text-FromCodepoints @(0x663e, 0x5f0f, 0x5e74, 0x5ea6))
 )) {
     Assert-NotContains $userDocs $forbidden "User docs leaked developer or governance wording: $forbidden"
 }
@@ -181,7 +191,12 @@ try {
         'score_internal',
         'backend',
         'frontend',
-        ' AI '
+        ' AI ',
+        (Text-FromCodepoints @(0x751f, 0x6210, 0x547d, 0x76d8)),
+        (Text-FromCodepoints @(0x7cfb, 0x7edf, 0x4f1a)),
+        (Text-FromCodepoints @(0x6307, 0x5b9a, 0x5e74, 0x4efd)),
+        (Text-FromCodepoints @(0x663e, 0x5f0f, 0x5e74, 0x4efd)),
+        (Text-FromCodepoints @(0x663e, 0x5f0f, 0x5e74, 0x5ea6))
     )) {
         Assert-NotContains $packagedReadme $forbidden "Packaged README leaked developer or governance wording: $forbidden"
     }
