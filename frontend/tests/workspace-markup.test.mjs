@@ -326,7 +326,13 @@ describe("workspace markup", () => {
     assert.match(renderSource, /SEVERITY_LABELS/);
     assert.match(renderSource, /INSIGHT_TAG_HIDDEN_TITLES = \["日主", "格局", "用神"\]/);
     assert.match(renderSource, /shouldRenderInsightTag\(card\.title\)/);
-    assert.match(renderSource, /info: "提示"/);
+    assert.match(renderSource, /info: "留意"/);
+    assert.match(renderSource, /function metricLabel\(id\)/);
+    assert.doesNotMatch(renderSource, /METRIC_LABELS\[m\.id\]\s*\|\|\s*m\.id/);
+    assert.doesNotMatch(renderSource, /大运解释层未返回/);
+    assert.doesNotMatch(renderSource, /未返回日常摘要/);
+    assert.doesNotMatch(reportHtml, /未收到观察年|未收到引动年/);
+    assert.match(reportHtml, /publicTimelinePart/);
     assert.doesNotMatch(renderSource, /<div class="insight-tag">\$\{card\.severity\}<\/div>/);
     assert.doesNotMatch(renderSource, /证据 <strong>/);
     assert.doesNotMatch(renderSource, /证据追踪/);

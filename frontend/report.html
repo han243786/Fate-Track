@@ -190,14 +190,14 @@
           createTimelineGuideCard({
             title: "大运阶段",
             value: luck.current_cycle ? `${luck.current_cycle.start_age}-${luck.current_cycle.end_age}岁 · ${luck.current_cycle.ganzhi}` : "未定位",
-            note: luck.reference_year ? `${luck.reference_year} 年，虚岁 ${luck.reference_age || "--"}` : "未收到观察年",
+            note: luck.reference_year ? `${luck.reference_year} 年，虚岁 ${luck.reference_age || "--"}` : "等待观察年份",
             href: findReportBlockHref(blocks, "大运走势"),
             tone: "luck"
           }),
           createTimelineGuideCard({
             title: "年度引动",
             value: annual.annual_pillar?.ganzhi || "待整理",
-            note: annual.year ? `${annual.year} 年 · ${yearSourceLabel(annual.year_source)}` : "未收到引动年",
+            note: annual.year ? `${annual.year} 年 · ${yearSourceLabel(annual.year_source)}` : "等待引动年份",
             href: findReportBlockHref(blocks, "年度引动"),
             tone: "annual"
           }),
@@ -293,7 +293,7 @@
         if (signals.length > 0) {
           const list = createEl("ul", "timeline-evidence-list");
           signals.slice(0, 6).forEach((signal) => {
-            list.append(createEl("li", "", `${signal.label || "结构线索"}：${signal.summary || ""}`));
+            list.append(createEl("li", "", `${publicTimelinePart(signal.label, "结构线索")}：${publicTimelinePart(signal.summary, "本条线索以章节正文为准。")}`));
           });
           content.append(list);
         }
@@ -301,7 +301,7 @@
         if (evidence.length > 0) {
           const list = createEl("ul", "timeline-evidence-list");
           evidence.slice(0, 8).forEach((item) => {
-            list.append(createEl("li", "", `${timelineSourceLabel(item.source)} · ${item.chart_anchor || ""} → ${item.trigger || ""}：${item.detail || item.relation || ""}`));
+            list.append(createEl("li", "", `${timelineSourceLabel(item.source)} · ${publicTimelinePart(item.chart_anchor, "命盘结构")} → ${publicTimelinePart(item.trigger, "年度线索")}：${publicTimelinePart(item.detail || item.relation, "本条依据以章节正文为准。")}`));
           });
           content.append(list);
         }
@@ -521,6 +521,10 @@
           "luck-annual-overlay": "大运年度叠加"
         };
         return labels[source] || "结构证据";
+      }
+      function publicTimelinePart(value, fallback) {
+        const text = safeText(value, fallback);
+        return /[A-Za-z_]/.test(text) ? fallback : text;
       }
       function createEl(tag, className = "", text = "") {
         const el = document.createElement(tag);

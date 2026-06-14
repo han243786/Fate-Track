@@ -121,5 +121,7 @@ LOOP-139 已完成报告壳层系统感词汇收束：主盘报告页与专项�
 
 LOOP-140 已完成专项报告 warning 与来源字段防泄露：专项报告页不再将 `warnings`、`signal.id`、`year_source` 等后端字段作为兜底文案直接展示；内部 warning 标识会先转成“时辰信息不完整”“部分大运或年度线索暂不完整”等用户可读提醒，未知英文或下划线标识统一压成通用谨慎阅读提醒。前端门禁新增 `unknown_hour_timeline_evidence_downgraded`、`topic_timeline_`、`annual_trigger_not_requested` 等禁用项。能力状态不变，不新增窗口、API、DTO、报告能力、score、存储或云同步能力。
 
+LOOP-141 已完成工作台与主盘时间依据兜底再收束：五行/十神指标未知枚举不再回退显示原始 `m.id`，专项短栏的 `signal.label` / `qualitative_level` / `summary` 会先过滤未知英文或下划线标识；主盘报告时间依据不再出现“未收到观察年/引动年”“大运解释层未返回”等机器口吻，证据项中的未知后端字段会压成“命盘结构”“年度线索”或“以章节正文为准”的用户可读兜底。前端门禁同步阻断这些回退点。能力状态不变，不新增窗口、API、DTO、报告能力、score、存储或云同步能力。
+
 ---
 Closed: 2026-06-09

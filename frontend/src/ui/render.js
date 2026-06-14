@@ -9,7 +9,7 @@ const METRIC_LABELS = {
   direct_resource:"正印", indirect_resource:"偏印"
 };
 const SEVERITY_LABELS = {
-  info: "提示",
+  info: "留意",
   warn: "关注",
   warning: "关注",
   danger: "重要",
@@ -80,7 +80,7 @@ export function renderAnalysis(dom, snapshot, chartResult) {
   const elements = metrics.elements ?? [];
   const maxVal = Math.max(...elements.map(m => m.weight_x2), 1);
   elements.forEach(m => {
-    const cn = METRIC_LABELS[m.id] || m.id;
+    const cn = metricLabel(m.id);
     const tone = ELEMENT_TONES[cn] || "earth";
     const row = document.createElement("div");
     row.className = `element-row ${tone}`;
@@ -100,7 +100,7 @@ export function renderAnalysis(dom, snapshot, chartResult) {
     if (m.weight_x2 > 0) {
       const chip = document.createElement("span");
       chip.className = "god-chip";
-      chip.innerHTML = `<em>${METRIC_LABELS[m.id]||m.id}</em><strong>${m.weight_x2}</strong>`;
+      chip.innerHTML = `<em>${metricLabel(m.id)}</em><strong>${m.weight_x2}</strong>`;
       dom.analysis.godChips.append(chip);
       total += m.weight_x2;
     }
@@ -151,7 +151,7 @@ export function renderAnalysis(dom, snapshot, chartResult) {
     const article = document.createElement("article");
     article.className = "insight-card ornament-card";
     const severityTag = shouldRenderInsightTag(card.title)
-      ? `<div class="insight-tag">${SEVERITY_LABELS[card.severity] || "提示"}</div>`
+      ? `<div class="insight-tag">${SEVERITY_LABELS[card.severity] || "留意"}</div>`
       : "";
     article.innerHTML = `
       <div class="insight-title"><span>◉</span><h2>${card.title}</h2></div>
@@ -164,6 +164,10 @@ export function renderAnalysis(dom, snapshot, chartResult) {
 
 function shouldRenderInsightTag(title) {
   return !INSIGHT_TAG_HIDDEN_TITLES.some(keyword => String(title || "").includes(keyword));
+}
+
+function metricLabel(id) {
+  return METRIC_LABELS[id] || "结构项";
 }
 
 export function renderAnalysisError(dom, error) {
@@ -222,12 +226,12 @@ export function renderTopicReport(dom, report) {
       const head = document.createElement("div");
       head.className = "topic-signal-head";
       const labelNode = document.createElement("span");
-      labelNode.textContent = signal.label || "\u7ed3\u6784\u7ebf\u7d22";
+      labelNode.textContent = publicTopicSignalText(signal.label, "\u7ed3\u6784\u7ebf\u7d22");
       const level = document.createElement("strong");
-      level.textContent = signal.qualitative_level || "";
+      level.textContent = publicTopicSignalText(signal.qualitative_level, "");
       head.append(labelNode, level);
       const summary = document.createElement("p");
-      summary.textContent = localizeVisibleText(signal.summary || "");
+      summary.textContent = publicTopicSignalText(signal.summary, "");
       item.append(head, summary);
       grid.append(item);
     });
@@ -258,6 +262,12 @@ function topicLabel(topic) {
 
 function yearSourceLabel(source) {
   return source === "explicit" ? "\u5df2\u9009\u5e74\u4efd" : "\u5e74\u5ea6";
+}
+
+function publicTopicSignalText(value, fallback) {
+  const text = localizeVisibleText(value || "").trim();
+  if (!text) return fallback;
+  return /[A-Za-z_]/.test(text) ? fallback : text;
 }
 
 function localizeVisibleText(value) {
@@ -333,7 +343,7 @@ export function renderLuckCycles(dom, data, luckReading, annualTriggerReading) {
     const annualText = annualTriggerReading?.year
       ? `${annualTriggerReading.year}年 · ${annualTriggerReading.annual_pillar?.ganzhi || "年度干支"}`
       : "未指定年度引动";
-    const readingText = firstReading || "大运解释层未返回日常摘要，当前仅展示阶段坐标。";
+    const readingText = firstReading || "当前只显示大运阶段，完整解读可进入命盘报告页查看。";
     const hasReadingBasis = (
       (luckReading?.signals?.length || 0)
       + (annualTriggerReading?.signals?.length || 0)
