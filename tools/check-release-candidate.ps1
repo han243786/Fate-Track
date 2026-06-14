@@ -182,8 +182,7 @@ Assert-NotContains $release "cloud sync supported" "Release document overclaims 
 foreach ($needle in @(
     "cargo clippy --all-targets -- -D warnings",
     "cargo test",
-    "docs/release/v1-release-candidate.md",
-    "docs/release/current-product-boundary.md",
+    "user-package-readme.md",
     "Fate-Track-Windows-x64.zip",
     "SHA256SUMS.txt"
 )) {
@@ -194,7 +193,7 @@ foreach ($needle in @(
     "Run strict Rust lint",
     "cargo clippy --all-targets -- -D warnings",
     "Run governance release gate",
-    "docs/release/v1-release-candidate.md",
+    "docs/release/user-package-readme.md",
     "Fate-Track-Desktop-All-Platforms.zip"
 )) {
     Assert-Contains $desktopWorkflow $needle "Desktop release workflow missing: $needle"
@@ -205,13 +204,34 @@ foreach ($needle in @(
     "clippy",
     "npm.cmd",
     "tools\check-project.ps1",
-    "docs\release\current-product-boundary.md",
+    "docs\release\user-package-readme.md",
     "cargo",
     "build",
     "Fate-Track-Windows-x64.zip",
     "SHA256SUMS.txt"
 )) {
     Assert-Contains $desktopPackageScript $needle "Windows desktop packaging script missing: $needle"
+}
+
+foreach ($forbiddenPackageCopy in @(
+    "Copy-Item -LiteralPath (Join-Path `$projectPath `"README.md`") -Destination `$stagePath",
+    "Copy-Item -LiteralPath (Join-Path `$projectPath `"docs\release\v1-release-candidate.md`")",
+    "Copy-Item -LiteralPath (Join-Path `$projectPath `"docs\release\v1-closeout.md`")",
+    "Copy-Item -LiteralPath (Join-Path `$projectPath `"docs\release\desktop-packaging.md`")",
+    "Copy-Item -LiteralPath (Join-Path `$projectPath `"docs\release\current-product-boundary.md`")"
+)) {
+    Assert-NotContains $desktopPackageScript $forbiddenPackageCopy "Windows user package must not include governance document copy: $forbiddenPackageCopy"
+}
+
+foreach ($forbiddenWorkflowCopy in @(
+    "cp README.md dist/Fate-Track",
+    "Copy-Item README.md dist/Fate-Track",
+    "v1-release-candidate.md dist/Fate-Track",
+    "v1-closeout.md dist/Fate-Track",
+    "desktop-packaging.md dist/Fate-Track",
+    "current-product-boundary.md dist/Fate-Track"
+)) {
+    Assert-NotContains $desktopWorkflow $forbiddenWorkflowCopy "Desktop workflow user artifact must not include governance document copy: $forbiddenWorkflowCopy"
 }
 
 Write-Host "Release candidate check OK: $projectPath"

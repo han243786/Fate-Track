@@ -51,10 +51,9 @@ jobs:
         run: cargo build -p minggui-desktop --release --locked
       - name: Create Linux archive
         run: |
-          mkdir -p dist/Fate-Track-Linux-x64/docs/release
+          mkdir -p dist/Fate-Track-Linux-x64
           cp target/release/minggui-desktop dist/Fate-Track-Linux-x64/
-          cp README.md dist/Fate-Track-Linux-x64/
-          cp docs/release/desktop-packaging.md docs/release/v1-release-candidate.md docs/release/v1-closeout.md dist/Fate-Track-Linux-x64/docs/release/
+          cp docs/release/user-package-readme.md dist/Fate-Track-Linux-x64/README.md
           tar czf Fate-Track-Linux-x64.tar.gz -C dist Fate-Track-Linux-x64
       - name: Upload Linux artifact
         uses: actions/upload-artifact@v4
@@ -81,10 +80,9 @@ jobs:
       - name: Create Windows zip
         run: |
           $ErrorActionPreference = 'Stop'
-          New-Item -ItemType Directory -Path dist/Fate-Track-Windows-x64/docs/release -Force | Out-Null
+          New-Item -ItemType Directory -Path dist/Fate-Track-Windows-x64 -Force | Out-Null
           Copy-Item target/release/minggui-desktop.exe dist/Fate-Track-Windows-x64/
-          Copy-Item README.md dist/Fate-Track-Windows-x64/
-          Copy-Item docs/release/desktop-packaging.md, docs/release/v1-release-candidate.md, docs/release/v1-closeout.md dist/Fate-Track-Windows-x64/docs/release/
+          Copy-Item docs/release/user-package-readme.md dist/Fate-Track-Windows-x64/README.md
           Compress-Archive -Path dist/Fate-Track-Windows-x64 -DestinationPath Fate-Track-Windows-x64.zip
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v4
@@ -107,10 +105,9 @@ jobs:
         run: cargo build -p minggui-desktop --release --locked
       - name: Create macOS zip
         run: |
-          mkdir -p dist/Fate-Track-macOS-arm64/docs/release
+          mkdir -p dist/Fate-Track-macOS-arm64
           cp target/release/minggui-desktop dist/Fate-Track-macOS-arm64/
-          cp README.md dist/Fate-Track-macOS-arm64/
-          cp docs/release/desktop-packaging.md docs/release/v1-release-candidate.md docs/release/v1-closeout.md dist/Fate-Track-macOS-arm64/docs/release/
+          cp docs/release/user-package-readme.md dist/Fate-Track-macOS-arm64/README.md
           cd dist
           zip -r ../Fate-Track-macOS-arm64.zip Fate-Track-macOS-arm64
       - name: Upload macOS artifact

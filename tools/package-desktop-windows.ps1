@@ -55,15 +55,10 @@ $packageName = "Fate-Track-Windows-x64"
 $zipFileName = "Fate-Track-Windows-x64.zip"
 $stageRoot = Join-Path ([System.IO.Path]::GetTempPath()) "fate-track-desktop-package-$stamp"
 $stagePath = Join-Path $stageRoot $packageName
-$releaseDocsPath = Join-Path $stagePath "docs\release"
-New-Item -ItemType Directory -Path $releaseDocsPath -Force | Out-Null
+New-Item -ItemType Directory -Path $stagePath -Force | Out-Null
 
 Copy-Item -LiteralPath (Join-Path $projectPath "target\release\minggui-desktop.exe") -Destination $stagePath
-Copy-Item -LiteralPath (Join-Path $projectPath "README.md") -Destination $stagePath
-Copy-Item -LiteralPath (Join-Path $projectPath "docs\release\desktop-packaging.md") -Destination $releaseDocsPath
-Copy-Item -LiteralPath (Join-Path $projectPath "docs\release\current-product-boundary.md") -Destination $releaseDocsPath
-Copy-Item -LiteralPath (Join-Path $projectPath "docs\release\v1-release-candidate.md") -Destination $releaseDocsPath
-Copy-Item -LiteralPath (Join-Path $projectPath "docs\release\v1-closeout.md") -Destination $releaseDocsPath
+Copy-Item -LiteralPath (Join-Path $projectPath "docs\release\user-package-readme.md") -Destination (Join-Path $stagePath "README.md")
 
 $zipPath = Join-Path $outputPath $zipFileName
 if (Test-Path -LiteralPath $zipPath) {

@@ -109,5 +109,7 @@ LOOP-133 已完成公开错误响应与首屏状态再收束：HTTP JSON 错误�
 
 LOOP-134 已完成静态兜底与前端异常文案产品化：桌面壳层静态资源错误 body 从 `Bad Request` / `Not Found` / `Method Not Allowed` 改为中文产品提示，前端 `ApiClient` 非 OK 异常不再携带 `404 Not Found` 这类 HTTP 术语；新增桌面单测与前端门禁防止英文机械错误、窗口形态和内部错误细节回流。能力状态不变，不新增 API、DTO、报告能力、score、存储或云同步能力。
 
+LOOP-135 已完成用户封装包内容收束：本地 Windows 打包脚本和三平台 GitHub Actions 产物不再把 `v1-release-candidate.md`、`v1-closeout.md`、`desktop-packaging.md`、`current-product-boundary.md` 等治理文档放进普通用户包；封装包内 `README.md` 改由 `docs/release/user-package-readme.md` 生成，只保留启动、使用说明、能力边界和常见问题。新增 release 门禁防止治理文档、后端变量、raw/DTO/score 语境通过封装产物外露。能力状态不变，不新增 API、DTO、报告能力、score、存储或云同步能力。
+
 ---
 Closed: 2026-06-09
