@@ -36,6 +36,10 @@ describe("workspace markup", () => {
       "wuxing-theme-button",
       "wuxing-theme-mark",
       "wuxing-theme-label",
+      "product-boundary-button",
+      "product-boundary-dialog",
+      "product-boundary-title",
+      "product-boundary-close",
       "topic-report-panel",
       "topic-report-content",
       "lunar-display"
@@ -236,6 +240,18 @@ describe("workspace markup", () => {
       assert.match([reportHtml, topicReportSource, renderSource].join("\n"), /localizeVisibleText/);
       assert.match([reportHtml, topicReportSource, renderSource].join("\n"), new RegExp(internalMarker));
     }
+  });
+
+  it("shows a user-facing product boundary dialog without expanding features", () => {
+    assert.match(html, /id="product-boundary-button"/);
+    assert.match(html, /查看边界/);
+    assert.match(html, /命轨当前只做这些事/);
+    assert.match(html, /可以查看/);
+    assert.match(html, /当前不做/);
+    assert.match(html, /在线 AI 解读/);
+    assert.match(html, /五行主题只改变视觉风格/);
+    assert.match(mainSource, /bindBoundaryDialog/);
+    assert.doesNotMatch(mainSource, /boundary.*ApiClient|ApiClient.*boundary/i);
   });
 
   it("keeps workspace runtime enum labels out of visible cards", () => {

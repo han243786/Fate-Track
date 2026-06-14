@@ -41,6 +41,7 @@ hydrateForm();
 bindSexButtons();
 bindTopicButtons();
 bindThemeButton();
+bindBoundaryDialog();
 syncSelectedTopic();
 syncWuxingTheme();
 
@@ -163,6 +164,26 @@ function bindThemeButton() {
     state.wuxingTheme = next.id;
     persistTheme();
     syncWuxingTheme();
+  });
+}
+
+function bindBoundaryDialog() {
+  dom.boundary.button.addEventListener("click", () => {
+    if (typeof dom.boundary.dialog.showModal === "function") {
+      dom.boundary.dialog.showModal();
+      return;
+    }
+    dom.boundary.dialog.setAttribute("open", "");
+  });
+
+  dom.boundary.dialog.addEventListener("click", event => {
+    if (event.target === dom.boundary.dialog) {
+      dom.boundary.dialog.close();
+    }
+  });
+
+  dom.boundary.dialog.addEventListener("close", () => {
+    dom.boundary.button.focus();
   });
 }
 

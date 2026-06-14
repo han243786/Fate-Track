@@ -22,6 +22,11 @@ export function getDom() {
       wuxingMark: required("#wuxing-theme-mark"),
       wuxingLabel: required("#wuxing-theme-label")
     },
+    boundary: {
+      button: required("#product-boundary-button"),
+      dialog: required("#product-boundary-dialog"),
+      closeButton: required("#product-boundary-close")
+    },
     topicReport: {
       panel: required("#topic-report-panel"),
       title: required("#topic-report-title"),
