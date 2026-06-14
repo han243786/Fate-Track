@@ -130,12 +130,7 @@ foreach ($needle in @(
     Assert-Contains $productBoundary $needle "Current product boundary missing: $needle"
 }
 
-foreach ($needle in @(
-    'docs/release/current-product-boundary.md',
-    'current-product-boundary.md'
-)) {
-    Assert-Contains $readme $needle "README missing current product boundary link: $needle"
-}
+Assert-NotContains $readme "docs/release/" "README must stay user-facing and avoid governance document links"
 
 foreach ($needle in @(
     "GET /api/charts?date=",

@@ -16,10 +16,6 @@ Windows 预览版：
 
 [SHA256SUMS.txt](https://github.com/han243786/Fate-Track/raw/main/release-artifacts/desktop-windows/63cb0cb/SHA256SUMS.txt)
 
-构建清单：
-
-[BUILD-MANIFEST.md](https://github.com/han243786/Fate-Track/blob/main/release-artifacts/desktop-windows/63cb0cb/BUILD-MANIFEST.md)
-
 当前包的 SHA256：
 
 ```text
@@ -116,14 +112,10 @@ Windows 预览版：
 - 账号系统
 - 云端同步
 - 自动更新
-- 在线 AI 解读
+- 在线智能解读
 - 流月、流日、择日、每日运势
 - 安装包格式，如 `.msi`、`.dmg`、`.deb`
 - 公开代码签名和 macOS 公证
-
-更完整的封版范围见：
-
-[当前产品边界](docs/release/current-product-boundary.md)
 
 ## 校验下载文件
 
@@ -160,49 +152,3 @@ Get-FileHash -Algorithm SHA256 .\Fate-Track-Windows-x64.zip
 ### 每个人的起运年龄一样吗？
 
 不一样。起运年龄会受到出生时间、节气位置、性别和顺逆规则影响。命轨会按当前规则计算大运起点。
-
-## 手动发布到 GitHub Release
-
-如果您是项目维护者，需要把当前 Windows zip 挂到 GitHub Release：
-
-1. 打开 [Releases](https://github.com/han243786/Fate-Track/releases)
-2. 选择或创建 `v1.0.0-preview`
-3. Release title 填写 `Fate Track v1.0.0 Preview`
-4. 上传 `dist/desktop-windows/Fate-Track-Windows-x64.zip`
-5. 上传 `dist/desktop-windows/SHA256SUMS.txt`
-6. 勾选 `Set as a pre-release`
-7. 点击发布
-
-发布后的页面：
-
-[v1.0.0-preview](https://github.com/han243786/Fate-Track/releases/tag/v1.0.0-preview)
-
-## 开发者入口
-
-本地运行桌面版：
-
-```powershell
-cargo run -p minggui-desktop
-```
-
-本地重新封装：
-
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File tools\package-desktop-windows.ps1
-```
-
-质量检查：
-
-```powershell
-cargo clippy --all-targets -- -D warnings
-cargo test
-npm.cmd run check --prefix frontend
-powershell -File tools\check-project.ps1
-```
-
-更多工程治理、决策记录和里程碑文档请见：
-
-- [发布候选边界](docs/release/v1-release-candidate.md)
-- [当前产品边界](docs/release/current-product-boundary.md)
-- [V1 收口记录](docs/release/v1-closeout.md)
-- [桌面封装说明](docs/release/desktop-packaging.md)

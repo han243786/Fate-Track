@@ -25,6 +25,7 @@ try {
     }
 
     powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $projectPath "tools\check-governance-scaffold.ps1") -ProjectRoot $projectPath
+    powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $projectPath "tools\check-product-surface.ps1") -ProjectRoot $projectPath
     powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $projectPath "tools\check-release-candidate.ps1") -ProjectRoot $projectPath
     powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $projectPath "tools\check-astronomy-preflight.ps1") -ProjectRoot $projectPath
 } finally {

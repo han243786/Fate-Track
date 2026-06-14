@@ -297,7 +297,7 @@ describe("workspace markup", () => {
     assert.match(html, /命轨当前只做这些事/);
     assert.match(html, /可以查看/);
     assert.match(html, /当前不做/);
-    assert.match(html, /在线 AI 解读/);
+    assert.match(html, /在线智能解读/);
     assert.match(html, /五行主题只改变视觉风格/);
     assert.match(html, /id="product-boundary-panel"/);
     assert.match(mainSource, /bindBoundaryPanel/);
