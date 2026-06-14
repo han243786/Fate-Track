@@ -206,11 +206,11 @@ describe("workspace markup", () => {
     assert.match(html, /本地排盘与报告/);
     assert.match(html, /本地计算/);
     assert.match(html, /可查看/);
-    assert.match(reportHtml, /命轨只读卷宗/);
+    assert.match(reportHtml, /命轨报告/);
     assert.match(reportHtml, /报告章节/);
-    assert.match(topicReportHtml, /命轨专项卷宗/);
+    assert.match(topicReportHtml, /命轨专项报告/);
     assert.match(topicReportSource, /专项章节/);
-    assert.match(topicReportSource, /共享时间解释规则/);
+    assert.match(topicReportSource, /共同时间解读脉络/);
 
     for (const visibleEnglish of [
       "Fate Track Archive",
@@ -220,6 +220,14 @@ describe("workspace markup", () => {
       "explicit year",
       "\u663e\u5f0f\u5e74\u4efd",
       "\u663e\u5f0f\u5e74\u5ea6",
+      "只读卷宗",
+      "专项卷宗",
+      "结构化卷宗",
+      "等待归档",
+      "已归档",
+      "时间解释引擎",
+      "共享时间解释引擎",
+      "投射到当前专题",
       "timeline evidence",
       "deterministic snapshot",
       "observation year",

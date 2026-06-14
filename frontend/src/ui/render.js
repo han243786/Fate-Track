@@ -262,9 +262,9 @@ function yearSourceLabel(source) {
 
 function localizeVisibleText(value) {
   return String(value || "")
-    .replaceAll("shared timeline engine", "共享时间解释引擎")
-    .replaceAll("timeline engine", "时间解释引擎")
-    .replaceAll("timeline-core-v1", "共享时间解释规则")
+    .replaceAll("shared timeline engine", "共同时间解读脉络")
+    .replaceAll("timeline engine", "时间解读脉络")
+    .replaceAll("timeline-core-v1", "共同时间解读脉络")
     .replaceAll("topic-timeline-overlay", "专题时间叠加")
     .replaceAll("luck-annual-overlay", "大运年度叠加")
     .replaceAll("major-luck-current", "当前大运")
@@ -284,7 +284,7 @@ function localizeVisibleText(value) {
     .replaceAll("wealth-report", "金钱专项")
     .replaceAll("family-report", "家庭专项")
     .replaceAll("career-report", "事业专项")
-    .replaceAll("restricted", "边界锁定");
+    .replaceAll("restricted", "当前可读");
 }
 
 export function renderLuckCycles(dom, data, luckReading, annualTriggerReading) {

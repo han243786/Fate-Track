@@ -105,11 +105,11 @@ function createHero(data, blocks) {
   luopan.append(createEl("span", "report-hero-star"));
 
   const inner = createEl("div", "report-hero-inner");
-  const kicker = createEl("div", "report-kicker", "命轨专项卷宗");
+  const kicker = createEl("div", "report-kicker", "命轨专项解读");
   const title = createEl("h1", "report-hero-title", `${topicMeta.label}专项报告`);
   const rule = createEl("i", "report-hero-rule");
   rule.setAttribute("aria-hidden", "true");
-  const intro = createEl("p", "report-hero-lead", "只读排盘工作台 · 四专题结构推演 · 边界锁定");
+  const intro = createEl("p", "report-hero-lead", "本地排盘 · 四专题结构解读 · 谨慎参考");
 
   const meta = createEl("div", "report-meta");
   [
@@ -125,7 +125,7 @@ function createHero(data, blocks) {
     meta.append(chip);
   });
 
-  const enter = createEl("a", "report-enter", blocks.length > 0 ? "进入专项卷宗" : "等待归档");
+  const enter = createEl("a", "report-enter", blocks.length > 0 ? "开始阅读" : "等待整理");
   enter.href = blocks.length > 0 ? "#report-section-1" : "#report-cover";
   enter.setAttribute("aria-label", `开始阅读${topicMeta.label}专项报告`);
 
@@ -362,7 +362,7 @@ function createReportBody(block, timelineKind) {
     const details = createEl("details", "timeline-inline-detail");
     details.append(
       createEl("summary", "", "专题边界"),
-      createEl("p", "", "本章节只展示共享时间解释引擎投射到当前专题后的解释，不是现实事件预告，也不构成确定性事件断语或现实决策承诺。")
+      createEl("p", "", "本章节只说明大运与年度线索落到当前专题后的读法，不是现实事件预告，也不构成确定性事件断语或现实决策承诺。")
     );
     body.append(details);
   }
@@ -375,8 +375,8 @@ function createArchiveFooter(blockCount) {
   footer.dataset.sectionIndex = "end";
   footer.append(
     createEl("div", "archive-seal", "专"),
-    createEl("h2", "", "专项报告已归档"),
-    createEl("p", "", `本次${topicMeta.label}专项报告共 ${blockCount} 个章节。页面仅展示只读结构化内容，不追加现实断言。`)
+    createEl("h2", "", "专项报告已完成"),
+    createEl("p", "", `本次${topicMeta.label}专项报告共 ${blockCount} 个章节。页面只呈现整理后的结构内容，不追加现实断言。`)
   );
   return footer;
 }
@@ -405,7 +405,7 @@ function mountReportEffects() {
     root.style.setProperty("--scroll-y", `${ratio * -128}px`);
     root.style.setProperty("--ambient-rotate", `${-8 + ratio * 6}deg`);
     if (progress) progress.style.transform = `scaleX(${ratio})`;
-    if (progressLabel) progressLabel.textContent = `只读报告 · ${String(percent).padStart(2, "0")}%`;
+    if (progressLabel) progressLabel.textContent = `阅读进度 · ${String(percent).padStart(2, "0")}%`;
 
     if (hero) {
       const rect = hero.getBoundingClientRect();
@@ -511,7 +511,7 @@ function normalizeTopic(value) {
 
 function traceSourceLabel(source) {
   const labels = {
-    "timeline-core-v1": "共享时间解释规则",
+    "timeline-core-v1": "共同时间解读脉络",
     "analysis.ten_gods": "十神结构分析",
     "deep_analysis.pattern": "格局与用神分析",
     "luck/year ten-gods and branches": "大运流年十神与宫位关系",
@@ -560,9 +560,9 @@ function safeText(value, fallback) {
 
 function localizeVisibleText(value) {
   return String(value || "")
-    .replaceAll("shared timeline engine", "共享时间解释引擎")
-    .replaceAll("timeline engine", "时间解释引擎")
-    .replaceAll("timeline-core-v1", "共享时间解释规则")
+    .replaceAll("shared timeline engine", "共同时间解读脉络")
+    .replaceAll("timeline engine", "时间解读脉络")
+    .replaceAll("timeline-core-v1", "共同时间解读脉络")
     .replaceAll("topic-timeline-overlay", "专题时间叠加")
     .replaceAll("luck-annual-overlay", "大运年度叠加")
     .replaceAll("major-luck-current", "当前大运")
@@ -582,7 +582,7 @@ function localizeVisibleText(value) {
     .replaceAll("wealth-report", "金钱专项")
     .replaceAll("family-report", "家庭专项")
     .replaceAll("career-report", "事业专项")
-    .replaceAll("restricted", "边界锁定");
+    .replaceAll("restricted", "当前可读");
 }
 
 function sexLabel(value) {
